@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nifty Filter Dashboard</title>
+<meta name="robots" content="noindex">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f4f3ef; --surface: #fcfcfb; --border: #e3e1da; --grid: #ecebe5;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #8a8882;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --good: #0ca30c; --critical: #d03b3b; --cash-band: rgba(120,118,110,.13);
+  --chip-buy: rgba(12,163,12,.12); --chip-sell: rgba(208,59,59,.12); --chip-hold: rgba(120,118,110,.12);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --border: #2e2d2b; --grid: #262624;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8d86;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --cash-band: rgba(200,198,190,.10);
+    --chip-buy: rgba(12,163,12,.22); --chip-sell: rgba(208,59,59,.25); --chip-hold: rgba(200,198,190,.12);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --border: #2e2d2b; --grid: #262624;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8d86;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --cash-band: rgba(200,198,190,.10);
+  --chip-buy: rgba(12,163,12,.22); --chip-sell: rgba(208,59,59,.25); --chip-hold: rgba(200,198,190,.12);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 20px 16px 48px; }
+header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+h1 { font-size: 22px; margin: 0; letter-spacing: -.01em; }
+h2 { font-size: 17px; margin: 0 0 4px; }
+.sub { color: var(--text-2); font-size: 13px; }
+.muted { color: var(--muted); }
+button.theme { background: var(--surface); color: var(--text-2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 13px; cursor: pointer; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 16px; }
+.hero { display: grid; grid-template-columns: auto 1fr; gap: 16px 24px; align-items: center; }
+.state { font-size: 28px; font-weight: 700; letter-spacing: .01em; display: flex; align-items: center; gap: 10px; }
+.state .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+.changed { display: inline-block; margin-left: 8px; font-size: 12px; font-weight: 600; padding: 2px 8px;
+  border-radius: 999px; background: var(--chip-sell); color: var(--text); vertical-align: middle; }
+.action { font-size: 16px; font-weight: 600; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 16px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+.kpi .l { font-size: 12px; color: var(--text-2); }
+.kpi .v { font-size: 20px; font-weight: 650; font-variant-numeric: tabular-nums; margin-top: 2px; }
+.kpi .n { font-size: 12px; color: var(--muted); }
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-2); margin: 6px 0 4px; }
+.legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.legend i.band { height: 10px; background: var(--cash-band); border: 1px solid var(--border); }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  white-space: nowrap; display: none; z-index: 5; }
+.tip b { font-variant-numeric: tabular-nums; }
+.tip .sw { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { color: var(--text-2); font-weight: 600; font-size: 12px; position: sticky; top: 0; background: var(--surface); }
+th.sort { cursor: pointer; user-select: none; }
+td.num, th.num { text-align: right; }
+.scroll { overflow-x: auto; max-height: 560px; overflow-y: auto; margin-top: 8px; }
+.chip { display: inline-block; min-width: 54px; text-align: center; padding: 1px 8px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; }
+.chip.BUY { background: var(--chip-buy); color: var(--good); }
+.chip.SELL { background: var(--chip-sell); color: var(--critical); }
+.chip.HOLD, .chip.na { background: var(--chip-hold); color: var(--text-2); font-weight: 500; }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+.controls input, .controls select { font: inherit; font-size: 13px; padding: 6px 8px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+.counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin-top: 10px; }
+.count { border: 1px solid var(--grid); border-radius: 10px; padding: 8px 10px; font-size: 12px; }
+.count b { display: block; font-size: 13px; margin-bottom: 4px; }
+.bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; gap: 2px; margin-top: 4px; background: var(--surface); }
+.bar span { display: block; height: 100%; }
+.warn { border-left: 3px solid var(--critical); padding: 6px 10px; margin-top: 8px; font-size: 13px; background: var(--chip-sell); border-radius: 6px; }
+.note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+details summary { cursor: pointer; color: var(--text-2); font-size: 13px; margin-top: 8px; }
+footer { margin-top: 28px; font-size: 12px; color: var(--muted); }
+@media (max-width: 640px) {
+  .hero { grid-template-columns: 1fr; }
+  .state { font-size: 24px; }
+  .hide-sm { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Nifty crash-filter · paper trading</h1>
+      <div class="sub" id="updated"></div>
+    </div>
+    <button class="theme" id="themeBtn" type="button" aria-label="Toggle light or dark theme">Theme</button>
+  </header>
+
+  <section class="card hero" aria-label="Today's signal">
+    <div>
+      <div class="sub">Nifty filter</div>
+      <div class="state" id="state"></div>
+    </div>
+    <div>
+      <div class="sub" id="nextLabel"></div>
+      <div class="action" id="action"></div>
+      <div class="sub" id="regime"></div>
+    </div>
+  </section>
+  <div id="warnings"></div>
+
+  <section class="kpis" id="kpis" aria-label="Key numbers"></section>
+
+  <section class="card">
+    <h2>Nifty 50 and the filter</h2>
+    <div class="sub">The filter goes to cash when the 20-day average is below the 100-day average with a strong trend (ADX ≥ 20), and back in when the trend turns up.</div>
+    <div class="legend" id="niftyLegend"></div>
+    <div class="chart" id="niftyChart"></div>
+  </section>
+
+  <section class="card">
+    <h2>Paper book value</h2>
+    <div class="sub" id="paperSub"></div>
+    <div class="chart" id="paperChart"></div>
+  </section>
+
+  <section class="card" id="ordersCard" hidden>
+    <h2>Orders for the next session</h2>
+    <div class="sub">Paper only. Amounts are targets at the next open; share counts are rounded down at today's close.</div>
+    <div class="scroll"><table id="ordersTable"></table></div>
+  </section>
+
+  <section class="card">
+    <h2>Agent panel <span class="muted" style="font-weight:400;font-size:13px">· advisory only, does not change the paper trades</span></h2>
+    <div class="sub">Each agent's view at today's close. Their calls are scored after 20 sessions (see the scorecard below).</div>
+    <div class="scroll" style="max-height:none"><table id="niftyPanel"></table></div>
+    <div class="counts" id="counts"></div>
+    <div class="controls">
+      <input id="search" type="search" placeholder="Search stock…" aria-label="Search stock">
+      <label class="sub">Show where
+        <select id="fAgent" aria-label="Agent"></select>
+        says
+        <select id="fSignal" aria-label="Signal">
+          <option value="">anything</option><option>BUY</option><option>SELL</option><option>HOLD</option>
+        </select>
+      </label>
+      <span class="sub" id="shown"></span>
+    </div>
+    <div class="scroll"><table id="stockTable"></table></div>
+    <div class="note">Hover (or tap) a chip to read the agent's reason.</div>
+  </section>
+
+  <section class="card">
+    <h2>Live scorecard</h2>
+    <div class="sub" id="scoreSub"></div>
+    <div class="scroll" style="max-height:none"><table id="scoreTable"></table></div>
+  </section>
+
+  <section class="card">
+    <h2>Journal</h2>
+    <div class="sub">One line per trading day, written on the day and never changed.</div>
+    <div class="scroll"><table id="journalTable"></table></div>
+  </section>
+
+  <footer>
+    Paper trading only - no orders are sent anywhere. Backtest and paper results are not a promise of future returns.
+    Data: Yahoo Finance daily prices (free, unofficial). Universe: <span id="universe"></span>.
+  </footer>
+</div>
+<div class="tip" id="tip" role="status"></div>
+
+<script>
+const D = {"universe":"nifty50","updated":"19-Oct-2026 01:26 IST","as_of":"Fri 16-Oct-2026","next_session":"Mon 19-Oct","filter":"IN CASH","filter_changed":false,"action":"NO TRADE (stay in cash)","nifty":{"close":23146.150390625,"ema_fast":22892.09785452917,"ema_slow":23655.898361056334,"adx":39.931658784762476,"regime":"regime trend_down (ADX 40, EMA gap -3.2%)"},"paper":{"start":"15-Oct-2026","capital":1000000.0,"value":1000503.9253210161,"ret":0.0005039253210161743,"invested":0.0,"cash":1000503.9253210161,"tax":0.0,"sessions":2},"orders":[],"warnings":[],"skipped":[],"nifty_hist":[{"d":"2025-09-26","c":24654.7,"f":24992.0,"s":24747.39,"m":1},{"d":"2025-09-29","c":24634.9,"f":24957.99,"s":24745.17,"m":1},{"d":"2025-09-30","c":24611.1,"f":24924.95,"s":24742.51,"m":1},{"d":"2025-10-01","c":24836.3,"f":24916.51,"s":24744.37,"m":1},{"d":"2025-10-03","c":24894.25,"f":24914.39,"s":24747.34,"m":1},{"d":"2025-10-06","c":25077.65,"f":24929.94,"s":24753.88,"m":1},{"d":"2025-10-07","c":25108.3,"f":24946.92,"s":24760.9,"m":1},{"d":"2025-10-08","c":25046.15,"f":24956.37,"s":24766.54,"m":1},{"d":"2025-10-09","c":25181.8,"f":24977.84,"s":24774.77,"m":1},{"d":"2025-10-10","c":25285.35,"f":25007.13,"s":24784.88,"m":1},{"d":"2025-10-13","c":25227.35,"f":25028.1,"s":24793.64,"m":1},{"d":"2025-10-14","c":25145.5,"f":25039.28,"s":24800.61,"m":1},{"d":"2025-10-15","c":25323.55,"f":25066.36,"s":24810.96,"m":1},{"d":"2025-10-16","c":25585.3,"f":25115.78,"s":24826.3,"m":1},{"d":"2025-10-17","c":25709.85,"f":25172.36,"s":24843.79,"m":1},{"d":"2025-10-20","c":25843.15,"f":25236.24,"s":24863.58,"m":1},{"d":"2025-10-21","c":25868.6,"f":25296.47,"s":24883.48,"m":1},{"d":"2025-10-23","c":25891.4,"f":25353.13,"s":24903.44,"m":1},{"d":"2025-10-24","c":25795.15,"f":25395.23,"s":24921.1,"m":1},{"d":"2025-10-27","c":25966.05,"f":25449.59,"s":24941.79,"m":1},{"d":"2025-10-28","c":25936.2,"f":25495.93,"s":24961.48,"m":1},{"d":"2025-10-29","c":26053.9,"f":25549.07,"s":24983.11,"m":1},{"d":"2025-10-30","c":25877.85,"f":25580.39,"s":25000.83,"m":1},{"d":"2025-10-31","c":25722.1,"f":25593.88,"s":25015.11,"m":1},{"d":"2025-11-03","c":25763.35,"f":25610.02,"s":25029.93,"m":1},{"d":"2025-11-04","c":25597.65,"f":25608.84,"s":25041.17,"m":1},{"d":"2025-11-06","c":25509.7,"f":25599.4,"s":25050.45,"m":1},{"d":"2025-11-07","c":25492.3,"f":25589.2,"s":25059.2,"m":1},{"d":"2025-11-10","c":25574.35,"f":25587.79,"s":25069.4,"m":1},{"d":"2025-11-11","c":25694.95,"f":25597.99,"s":25081.79,"m":1},{"d":"2025-11-12","c":25875.8,"f":25624.45,"s":25097.51,"m":1},{"d":"2025-11-13","c":25879.15,"f":25648.71,"s":25112.99,"m":1},{"d":"2025-11-14","c":25910.05,"f":25673.6,"s":25128.77,"m":1},{"d":"2025-11-17","c":26013.45,"f":25705.96,"s":25146.29,"m":1},{"d":"2025-11-18","c":25910.05,"f":25725.4,"s":25161.41,"m":1},{"d":"2025-11-19","c":26052.65,"f":25756.57,"s":25179.06,"m":1},{"d":"2025-11-20","c":26192.15,"f":25798.05,"s":25199.12,"m":1},{"d":"2025-11-21","c":26068.15,"f":25823.78,"s":25216.33,"m":1},{"d":"2025-11-24","c":25959.5,"f":25836.7,"s":25231.05,"m":1},{"d":"2025-11-25","c":25884.8,"f":25841.28,"s":25243.99,"m":1},{"d":"2025-11-26","c":26205.3,"f":25875.95,"s":25263.03,"m":1},{"d":"2025-11-27","c":26215.55,"f":25908.29,"s":25281.89,"m":1},{"d":"2025-11-28","c":26202.95,"f":25936.36,"s":25300.13,"m":1},{"d":"2025-12-01","c":26175.75,"f":25959.16,"s":25317.47,"m":1},{"d":"2025-12-02","c":26032.2,"f":25966.11,"s":25331.62,"m":1},{"d":"2025-12-03","c":25986.0,"f":25968.01,"s":25344.58,"m":1},{"d":"2025-12-04","c":26033.75,"f":25974.27,"s":25358.23,"m":1},{"d":"2025-12-05","c":26186.45,"f":25994.48,"s":25374.63,"m":1},{"d":"2025-12-08","c":25960.55,"f":25991.24,"s":25386.23,"m":1},{"d":"2025-12-09","c":25839.65,"f":25976.81,"s":25395.21,"m":1},{"d":"2025-12-10","c":25758.0,"f":25955.97,"s":25402.39,"m":1},{"d":"2025-12-11","c":25898.55,"f":25950.5,"s":25412.22,"m":1},{"d":"2025-12-12","c":26046.95,"f":25959.69,"s":25424.79,"m":1},{"d":"2025-12-15","c":26027.3,"f":25966.13,"s":25436.72,"m":1},{"d":"2025-12-16","c":25860.1,"f":25956.03,"s":25445.1,"m":1},{"d":"2025-12-17","c":25818.55,"f":25942.93,"s":25452.5,"m":1},{"d":"2025-12-18","c":25815.55,"f":25930.8,"s":25459.69,"m":1},{"d":"2025-12-19","c":25966.4,"f":25934.19,"s":25469.72,"m":1},{"d":"2025-12-22","c":26172.4,"f":25956.88,"s":25483.63,"m":1},{"d":"2025-12-23","c":26177.15,"f":25977.86,"s":25497.37,"m":1},{"d":"2025-12-24","c":26142.1,"f":25993.5,"s":25510.13,"m":1},{"d":"2025-12-26","c":26042.3,"f":25998.15,"s":25520.67,"m":1},{"d":"2025-12-29","c":25942.1,"f":25992.81,"s":25529.02,"m":1},{"d":"2025-12-30","c":25938.85,"f":25987.67,"s":25537.13,"m":1},{"d":"2025-12-31","c":26129.6,"f":26001.19,"s":25548.86,"m":1},{"d":"2026-01-01","c":26146.55,"f":26015.03,"s":25560.7,"m":1},{"d":"2026-01-02","c":26328.55,"f":26044.89,"s":25575.91,"m":1},{"d":"2026-01-05","c":26250.3,"f":26064.45,"s":25589.26,"m":1},{"d":"2026-01-06","c":26178.7,"f":26075.33,"s":25600.93,"m":1},{"d":"2026-01-07","c":26140.75,"f":26081.56,"s":25611.62,"m":1},{"d":"2026-01-08","c":25876.85,"f":26062.07,"s":25616.87,"m":1},{"d":"2026-01-09","c":25683.3,"f":26025.99,"s":25618.19,"m":1},{"d":"2026-01-12","c":25790.25,"f":26003.54,"s":25621.6,"m":1},{"d":"2026-01-13","c":25732.3,"f":25977.71,"s":25623.79,"m":1},{"d":"2026-01-14","c":25665.6,"f":25947.99,"s":25624.62,"m":1},{"d":"2026-01-16","c":25694.35,"f":25923.83,"s":25626.0,"m":1},{"d":"2026-01-19","c":25585.5,"f":25891.61,"s":25625.19,"m":1},{"d":"2026-01-20","c":25232.5,"f":25828.84,"s":25617.42,"m":1},{"d":"2026-01-21","c":25157.5,"f":25764.9,"s":25608.31,"m":1},{"d":"2026-01-22","c":25289.9,"f":25719.66,"s":25602.01,"m":1},{"d":"2026-01-23","c":25048.65,"f":25655.76,"s":25591.05,"m":1},{"d":"2026-01-27","c":25175.4,"f":25610.01,"s":25582.82,"m":1},{"d":"2026-01-28","c":25342.75,"f":25584.55,"s":25578.06,"m":1},{"d":"2026-01-29","c":25418.9,"f":25568.78,"s":25574.91,"m":0},{"d":"2026-01-30","c":25320.65,"f":25545.15,"s":25569.88,"m":0},{"d":"2026-02-02","c":25088.4,"f":25501.65,"s":25560.34,"m":0},{"d":"2026-02-03","c":25727.55,"f":25523.16,"s":25563.65,"m":0},{"d":"2026-02-04","c":25776.0,"f":25547.24,"s":25567.86,"m":0},{"d":"2026-02-05","c":25642.8,"f":25556.34,"s":25569.34,"m":0},{"d":"2026-02-06","c":25693.7,"f":25569.42,"s":25571.81,"m":0},{"d":"2026-02-09","c":25867.3,"f":25597.79,"s":25577.66,"m":1},{"d":"2026-02-10","c":25935.15,"f":25629.92,"s":25584.74,"m":1},{"d":"2026-02-11","c":25953.85,"f":25660.77,"s":25592.05,"m":1},{"d":"2026-02-12","c":25807.2,"f":25674.72,"s":25596.31,"m":1},{"d":"2026-02-13","c":25471.1,"f":25655.33,"s":25593.83,"m":1},{"d":"2026-02-16","c":25682.75,"f":25657.94,"s":25595.59,"m":1},{"d":"2026-02-17","c":25725.4,"f":25664.36,"s":25598.16,"m":1},{"d":"2026-02-18","c":25819.35,"f":25679.12,"s":25602.54,"m":1},{"d":"2026-02-19","c":25454.35,"f":25657.72,"s":25599.6,"m":1},{"d":"2026-02-20","c":25571.25,"f":25649.48,"s":25599.04,"m":1},{"d":"2026-02-23","c":25713.0,"f":25655.53,"s":25601.3,"m":1},{"d":"2026-02-24","c":25424.65,"f":25633.54,"s":25597.8,"m":1},{"d":"2026-02-25","c":25482.5,"f":25619.16,"s":25595.52,"m":1},{"d":"2026-02-26","c":25496.55,"f":25607.48,"s":25593.56,"m":1},{"d":"2026-02-27","c":25178.65,"f":25566.64,"s":25585.34,"m":1},{"d":"2026-03-02","c":24865.7,"f":25499.88,"s":25571.09,"m":1},{"d":"2026-03-04","c":24480.5,"f":25402.8,"s":25549.5,"m":0},{"d":"2026-03-05","c":24765.9,"f":25342.14,"s":25533.98,"m":0},{"d":"2026-03-06","c":24450.45,"f":25257.22,"s":25512.52,"m":0},{"d":"2026-03-09","c":24028.05,"f":25140.16,"s":25483.13,"m":0},{"d":"2026-03-10","c":24261.6,"f":25056.48,"s":25458.94,"m":0},{"d":"2026-03-11","c":23866.85,"f":24943.18,"s":25427.41,"m":0},{"d":"2026-03-12","c":23639.15,"f":24818.99,"s":25392.0,"m":0},{"d":"2026-03-13","c":23151.1,"f":24660.14,"s":25347.63,"m":0},{"d":"2026-03-16","c":23408.8,"f":24540.97,"s":25309.23,"m":0},{"d":"2026-03-17","c":23581.15,"f":24449.56,"s":25275.01,"m":0},{"d":"2026-03-18","c":23777.8,"f":24385.58,"s":25245.37,"m":0},{"d":"2026-03-19","c":23002.15,"f":24253.83,"s":25200.95,"m":0},{"d":"2026-03-20","c":23114.5,"f":24145.32,"s":25159.63,"m":0},{"d":"2026-03-23","c":22512.65,"f":23989.83,"s":25107.22,"m":0},{"d":"2026-03-24","c":22912.4,"f":23887.21,"s":25063.75,"m":0},{"d":"2026-03-25","c":23306.45,"f":23831.9,"s":25028.96,"m":0},{"d":"2026-03-27","c":22819.6,"f":23735.49,"s":24985.21,"m":0},{"d":"2026-03-30","c":22331.4,"f":23601.77,"s":24932.66,"m":0},{"d":"2026-04-01","c":22679.4,"f":23513.93,"s":24888.04,"m":0},{"d":"2026-04-02","c":22713.1,"f":23437.66,"s":24844.97,"m":0},{"d":"2026-04-06","c":22968.25,"f":23392.95,"s":24807.81,"m":0},{"d":"2026-04-07","c":23123.65,"f":23367.3,"s":24774.46,"m":0},{"d":"2026-04-08","c":23997.35,"f":23427.31,"s":24759.07,"m":0},{"d":"2026-04-09","c":23775.1,"f":23460.43,"s":24739.58,"m":0},{"d":"2026-04-10","c":24050.6,"f":23516.64,"s":24725.94,"m":0},{"d":"2026-04-13","c":23842.65,"f":23547.69,"s":24708.45,"m":0},{"d":"2026-04-15","c":24231.3,"f":23612.79,"s":24699.0,"m":0},{"d":"2026-04-16","c":24196.75,"f":23668.41,"s":24689.06,"m":0},{"d":"2026-04-17","c":24353.55,"f":23733.66,"s":24682.41,"m":0},{"d":"2026-04-20","c":24364.85,"f":23793.77,"s":24676.12,"m":0},{"d":"2026-04-21","c":24576.6,"f":23868.33,"s":24674.15,"m":0},{"d":"2026-04-22","c":24378.1,"f":23916.88,"s":24668.29,"m":0},{"d":"2026-04-23","c":24173.05,"f":23941.27,"s":24658.48,"m":0},{"d":"2026-04-24","c":23897.95,"f":23937.15,"s":24643.42,"m":0},{"d":"2026-04-27","c":24092.7,"f":23951.96,"s":24632.52,"m":0},{"d":"2026-04-28","c":23995.7,"f":23956.13,"s":24619.91,"m":0},{"d":"2026-04-29","c":24177.65,"f":23977.23,"s":24611.15,"m":0},{"d":"2026-04-30","c":23997.55,"f":23979.16,"s":24599.0,"m":0},{"d":"2026-05-04","c":24119.3,"f":23992.51,"s":24589.5,"m":0},{"d":"2026-05-05","c":24032.8,"f":23996.35,"s":24578.48,"m":0},{"d":"2026-05-06","c":24330.95,"f":24028.21,"s":24573.58,"m":0},{"d":"2026-05-07","c":24326.65,"f":24056.64,"s":24568.69,"m":0},{"d":"2026-05-08","c":24176.15,"f":24068.02,"s":24560.91,"m":0},{"d":"2026-05-11","c":23815.85,"f":24044.0,"s":24546.16,"m":0},{"d":"2026-05-12","c":23379.55,"f":23980.72,"s":24523.06,"m":0},{"d":"2026-05-13","c":23412.6,"f":23926.61,"s":24501.07,"m":0},{"d":"2026-05-14","c":23689.6,"f":23904.04,"s":24485.0,"m":0},{"d":"2026-05-15","c":23643.5,"f":23879.23,"s":24468.34,"m":0},{"d":"2026-05-18","c":23649.95,"f":23857.39,"s":24452.13,"m":0},{"d":"2026-05-19","c":23618.0,"f":23834.59,"s":24435.61,"m":0},{"d":"2026-05-20","c":23659.0,"f":23817.87,"s":24420.23,"m":0},{"d":"2026-05-21","c":23654.7,"f":23802.33,"s":24405.08,"m":0},{"d":"2026-05-22","c":23719.3,"f":23794.42,"s":24391.5,"m":0},{"d":"2026-05-25","c":24031.7,"f":23817.02,"s":24384.37,"m":0},{"d":"2026-05-26","c":23913.7,"f":23826.23,"s":24375.05,"m":0},{"d":"2026-05-27","c":23907.15,"f":23833.93,"s":24365.79,"m":0},{"d":"2026-05-29","c":23547.75,"f":23806.68,"s":24349.59,"m":0},{"d":"2026-06-01","c":23382.6,"f":23766.29,"s":24330.44,"m":0},{"d":"2026-06-02","c":23483.55,"f":23739.36,"s":24313.67,"m":0},{"d":"2026-06-03","c":23405.6,"f":23707.58,"s":24295.69,"m":0},{"d":"2026-06-04","c":23416.55,"f":23679.86,"s":24278.28,"m":0},{"d":"2026-06-05","c":23366.7,"f":23650.03,"s":24260.23,"m":0},{"d":"2026-06-08","c":23123.0,"f":23599.84,"s":24237.71,"m":0},{"d":"2026-06-09","c":23242.1,"f":23565.77,"s":24217.99,"m":0},{"d":"2026-06-10","c":23214.95,"f":23532.36,"s":24198.13,"m":0},{"d":"2026-06-11","c":23161.6,"f":23497.05,"s":24177.61,"m":0},{"d":"2026-06-12","c":23622.9,"f":23509.03,"s":24166.62,"m":0},{"d":"2026-06-15","c":23853.9,"f":23541.88,"s":24160.43,"m":0},{"d":"2026-06-16","c":23989.15,"f":23584.48,"s":24157.04,"m":0},{"d":"2026-06-17","c":24085.7,"f":23632.21,"s":24155.62,"m":0},{"d":"2026-06-18","c":24168.0,"f":23683.24,"s":24155.87,"m":0},{"d":"2026-06-19","c":24013.1,"f":23714.65,"s":24153.04,"m":0},{"d":"2026-06-22","c":24102.9,"f":23751.63,"s":24152.05,"m":0},{"d":"2026-06-23","c":23824.1,"f":23758.53,"s":24145.56,"m":0},{"d":"2026-06-24","c":24021.65,"f":23783.59,"s":24143.1,"m":0},{"d":"2026-06-25","c":24056.0,"f":23809.53,"s":24141.38,"m":0},{"d":"2026-06-29","c":23946.25,"f":23822.55,"s":24137.51,"m":0},{"d":"2026-06-30","c":23865.75,"f":23826.67,"s":24132.13,"m":0},{"d":"2026-07-01","c":24005.85,"f":23843.73,"s":24129.63,"m":0},{"d":"2026-07-02","c":24175.7,"f":23875.35,"s":24130.54,"m":0},{"d":"2026-07-03","c":24270.85,"f":23913.02,"s":24133.32,"m":0},{"d":"2026-07-06","c":24430.35,"f":23962.29,"s":24139.2,"m":0},{"d":"2026-07-07","c":24398.7,"f":24003.85,"s":24144.34,"m":0},{"d":"2026-07-08","c":23882.05,"f":23992.25,"s":24139.15,"m":0},{"d":"2026-07-09","c":23962.8,"f":23989.44,"s":24135.66,"m":0},{"d":"2026-07-10","c":24206.9,"f":24010.15,"s":24137.07,"m":0},{"d":"2026-07-13","c":24211.0,"f":24029.28,"s":24138.53,"m":0},{"d":"2026-07-14","c":24052.05,"f":24031.45,"s":24136.82,"m":0},{"d":"2026-07-15","c":24078.5,"f":24035.93,"s":24135.66,"m":0},{"d":"2026-07-16","c":24072.75,"f":24039.44,"s":24134.42,"m":0},{"d":"2026-07-17","c":24334.3,"f":24067.52,"s":24138.38,"m":0},{"d":"2026-07-20","c":24238.5,"f":24083.8,"s":24140.36,"m":0},{"d":"2026-07-21","c":24187.7,"f":24093.7,"s":24141.3,"m":0},{"d":"2026-07-22","c":23996.25,"f":24084.42,"s":24138.42,"m":0},{"d":"2026-07-23","c":23869.6,"f":24063.96,"s":24133.1,"m":0},{"d":"2026-07-24","c":23767.45,"f":24035.72,"s":24125.86,"m":0},{"d":"2026-07-27","c":23995.95,"f":24031.93,"s":24123.29,"m":0},{"d":"2026-07-28","c":23985.35,"f":24027.5,"s":24120.56,"m":0},{"d":"2026-07-29","c":24250.2,"f":24048.71,"s":24123.12,"m":0},{"d":"2026-07-30","c":24317.15,"f":24074.27,"s":24126.97,"m":0},{"d":"2026-07-31","c":24383.6,"f":24103.73,"s":24132.05,"m":0},{"d":"2026-08-03","c":24774.3,"f":24167.6,"s":24144.76,"m":0},{"d":"2026-08-04","c":24614.9,"f":24210.2,"s":24154.07,"m":0},{"d":"2026-08-05","c":24624.65,"f":24249.67,"s":24163.39,"m":0},{"d":"2026-08-06","c":24636.0,"f":24286.46,"s":24172.75,"m":0},{"d":"2026-08-07","c":24570.65,"f":24313.53,"s":24180.63,"m":0},{"d":"2026-08-10","c":24583.8,"f":24339.27,"s":24188.61,"m":0},{"d":"2026-08-11","c":24471.7,"f":24351.88,"s":24194.22,"m":0},{"d":"2026-08-12","c":24435.95,"f":24359.89,"s":24199.01,"m":0},{"d":"2026-08-13","c":24395.85,"f":24363.31,"s":24202.9,"m":0},{"d":"2026-08-14","c":24366.0,"f":24363.57,"s":24206.13,"m":0},{"d":"2026-08-17","c":24287.65,"f":24356.34,"s":24207.75,"m":0},{"d":"2026-08-18","c":24154.9,"f":24337.15,"s":24206.7,"m":0},{"d":"2026-08-19","c":24078.3,"f":24312.5,"s":24204.16,"m":0},{"d":"2026-08-20","c":24231.85,"f":24304.82,"s":24204.71,"m":0},{"d":"2026-08-21","c":24252.0,"f":24299.79,"s":24205.64,"m":0},{"d":"2026-08-24","c":24219.05,"f":24292.1,"s":24205.91,"m":0},{"d":"2026-08-25","c":24334.55,"f":24296.14,"s":24208.46,"m":0},{"d":"2026-08-26","c":24207.75,"f":24287.72,"s":24208.44,"m":0},{"d":"2026-08-27","c":24090.85,"f":24268.97,"s":24206.11,"m":0},{"d":"2026-08-28","c":24175.65,"f":24260.09,"s":24205.51,"m":0},{"d":"2026-08-31","c":24080.4,"f":24242.97,"s":24203.03,"m":0},{"d":"2026-09-01","c":24055.8,"f":24225.15,"s":24200.12,"m":0},{"d":"2026-09-02","c":23914.45,"f":24195.56,"s":24194.46,"m":0},{"d":"2026-09-03","c":23873.45,"f":24164.88,"s":24188.1,"m":0},{"d":"2026-09-04","c":23897.7,"f":24139.43,"s":24182.35,"m":0},{"d":"2026-09-07","c":23779.15,"f":24105.12,"s":24174.37,"m":0},{"d":"2026-09-08","c":23635.1,"f":24060.36,"s":24163.69,"m":0},{"d":"2026-09-09","c":23431.5,"f":24000.47,"s":24149.19,"m":0},{"d":"2026-09-10","c":23477.8,"f":23950.69,"s":24135.9,"m":0},{"d":"2026-09-11","c":23398.1,"f":23898.06,"s":24121.29,"m":0},{"d":"2026-09-15","c":23118.6,"f":23823.83,"s":24101.43,"m":0},{"d":"2026-09-16","c":23217.6,"f":23766.09,"s":24083.93,"m":0},{"d":"2026-09-17","c":23270.6,"f":23718.9,"s":24067.83,"m":0},{"d":"2026-09-18","c":23346.4,"f":23683.42,"s":24053.54,"m":0},{"d":"2026-09-21","c":23414.3,"f":23657.79,"s":24040.88,"m":0},{"d":"2026-09-22","c":23329.0,"f":23626.48,"s":24026.78,"m":0},{"d":"2026-09-23","c":23446.8,"f":23609.37,"s":24015.3,"m":0},{"d":"2026-09-24","c":23063.1,"f":23557.34,"s":23996.44,"m":0},{"d":"2026-09-25","c":23140.5,"f":23517.64,"s":23979.49,"m":0},{"d":"2026-09-28","c":22780.25,"f":23447.42,"s":23955.75,"m":0},{"d":"2026-09-29","c":22716.2,"f":23377.78,"s":23931.2,"m":0},{"d":"2026-09-30","c":22620.45,"f":23305.65,"s":23905.25,"m":0},{"d":"2026-10-01","c":22421.95,"f":23221.49,"s":23875.87,"m":0},{"d":"2026-10-05","c":22555.75,"f":23158.08,"s":23849.73,"m":0},{"d":"2026-10-06","c":22776.1,"f":23121.7,"s":23828.47,"m":0},{"d":"2026-10-07","c":22603.05,"f":23072.31,"s":23804.21,"m":0},{"d":"2026-10-08","c":22231.8,"f":22992.26,"s":23773.07,"m":0},{"d":"2026-10-09","c":22520.45,"f":22947.33,"s":23748.27,"m":0},{"d":"2026-10-12","c":22363.35,"f":22891.71,"s":23720.84,"m":0},{"d":"2026-10-13","c":22721.95,"f":22875.54,"s":23701.06,"m":0},{"d":"2026-10-14","c":22622.7,"f":22851.46,"s":23679.71,"m":0},{"d":"2026-10-15","c":22997.35,"f":22865.36,"s":23666.2,"m":0},{"d":"2026-10-16","c":23146.15,"f":22892.1,"s":23655.9,"m":0}],"paper_hist":[{"d":"2026-10-15","v":1000251.93,"i":0.0},{"d":"2026-10-16","v":1000503.93,"i":0.0}],"agent_labels":{"market_intel":"Market flow","risk_engine":"Risk","liquidity_engine":"Liquidity","market_mood":"Market mood","sentiment_engine":"Sentiment","regime_detector":"Trend","on_chain":"On-chain","boss":"BOSS (combined)"},"panel_nifty":[{"as_of":"2026-10-16","symbol":"NIFTY50","close":23146.150390625,"agent":"market_intel","signal":"HOLD","confidence":0.061,"available":true,"summary":"proxy flow -0.23 and momentum -0.07 (no real order-flow data)"},{"as_of":"2026-10-16","symbol":"NIFTY50","close":23146.150390625,"agent":"risk_engine","signal":"HOLD","confidence":0.893,"available":true,"summary":"risk_score 0.11 (low)"},{"as_of":"2026-10-16","symbol":"NIFTY50","close":23146.150390625,"agent":"liquidity_engine","signal":"HOLD","confidence":0.0,"available":true,"summary":"no liquidity sweep"},{"as_of":"2026-10-16","symbol":"NIFTY50","close":23146.150390625,"agent":"market_mood","signal":"HOLD","confidence":0.162,"available":true,"summary":"market mood -0.16 (3/3 inputs)"},{"as_of":"2026-10-16","symbol":"NIFTY50","close":23146.150390625,"agent":"regime_detector","signal":"SELL","confidence":0.997,"available":true,"summary":"regime trend_down (ADX 40, EMA gap -3.2%)"},{"as_of":"2026-10-16","symbol":"NIFTY50","close":23146.150390625,"agent":"boss","signal":"SELL","confidence":0.387,"available":true,"summary":"score -0.20, agreement 100%"}],"panel_stocks":{"ADANIENT":{"close":2692.0,"views":{"market_intel":["SELL",0.09,"proxy flow -0.10 and momentum -0.22 (no real order-flow data)"],"risk_engine":["HOLD",0.429,"risk_score 0.57 (elevated)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.466,"market mood -0.47 (3/3 inputs)"],"regime_detector":["SELL",0.529,"regime trend_down (ADX 31, EMA gap -2.1%)"],"boss":["HOLD",0.248,"min_confidence"]}},"ADANIPORTS":{"close":1750.800048828125,"views":{"market_intel":["HOLD",0.001,"proxy flow -0.09 and momentum +0.04 (no real order-flow data)"],"risk_engine":["HOLD",0.606,"risk_score 0.39 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.156,"market mood -0.16 (3/3 inputs)"],"regime_detector":["HOLD",0.0,"regime range (ADX 19, EMA gap +1.8%)"],"boss":["HOLD",0.0,"directional_score_floor;min_confidence"]}},"APOLLOHOSP":{"close":7890.0,"views":{"market_intel":["SELL",0.294,"proxy flow -0.21 and momentum -0.78 (no real order-flow data)"],"risk_engine":["HOLD",0.554,"risk_score 0.45 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.366,"market mood -0.37 (3/3 inputs)"],"regime_detector":["SELL",0.671,"regime trend_down (ADX 33, EMA gap -3.0%)"],"boss":["HOLD",0.317,"min_confidence"]}},"ASIANPAINT":{"close":2331.89990234375,"views":{"market_intel":["SELL",0.162,"proxy flow -0.19 and momentum -0.39 (no real order-flow data)"],"risk_engine":["HOLD",0.652,"risk_score 0.35 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.437,"market mood -0.44 (3/3 inputs)"],"regime_detector":["SELL",1.0,"regime trend_down (ADX 44, EMA gap -5.4%)"],"boss":["SELL",0.357,"score -0.27, agreement 100%"]}},"AXISBANK":{"close":1290.0,"views":{"market_intel":["BUY",0.143,"proxy flow +0.10 and momentum +0.38 (no real order-flow data)"],"risk_engine":["HOLD",0.743,"risk_score 0.26 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.084,"market mood -0.08 (3/3 inputs)"],"regime_detector":["HOLD",0.0,"regime range (ADX 18, EMA gap -0.8%)"],"boss":["HOLD",0.0,"directional_score_floor;min_confidence"]}},"BAJAJ-AUTO":{"close":10405.0,"views":{"market_intel":["SELL",0.204,"proxy flow -0.18 and momentum -0.52 (no real order-flow data)"],"risk_engine":["HOLD",0.551,"risk_score 0.45 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.007,"market mood +0.01 (3/3 inputs)"],"regime_detector":["SELL",1.0,"regime trend_down (ADX 45, EMA gap -2.1%)"],"boss":["HOLD",0.319,"min_confidence"]}},"BAJFINANCE":{"close":982.0999755859375,"views":{"market_intel":["SELL",0.11,"proxy flow -0.15 and momentum -0.25 (no real order-flow data)"],"risk_engine":["HOLD",0.552,"risk_score 0.45 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.247,"market mood -0.25 (3/3 inputs)"],"regime_detector":["SELL",0.1,"regime trend_down (ADX 21, EMA gap -2.3%)"],"boss":["HOLD",0.116,"directional_score_floor;min_confidence"]}},"BAJAJFINSV":{"close":1729.0,"views":{"market_intel":["SELL",0.238,"proxy flow -0.08 and momentum -0.67 (no real order-flow data)"],"risk_engine":["HOLD",0.63,"risk_score 0.37 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.236,"market mood -0.24 (3/3 inputs)"],"regime_detector":["SELL",1.0,"regime trend_down (ADX 51, EMA gap -4.8%)"],"boss":["HOLD",0.332,"min_confidence"]}},"BEL":{"close":376.8500061035156,"views":{"market_intel":["SELL",0.097,"proxy flow +0.11 and momentum -0.35 (no real order-flow data)"],"risk_engine":["HOLD",0.663,"risk_score 0.34 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.277,"market mood -0.28 (3/3 inputs)"],"regime_detector":["SELL",0.344,"regime trend_down (ADX 27, EMA gap -4.4%)"],"boss":["HOLD",0.167,"directional_score_floor;min_confidence"]}},"BHARTIARTL":{"close":1905.0,"views":{"market_intel":["BUY",0.1,"proxy flow -0.02 and momentum +0.31 (no real order-flow data)"],"risk_engine":["HOLD",0.734,"risk_score 0.27 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.051,"market mood +0.05 (3/3 inputs)"],"regime_detector":["SELL",0.1,"regime trend_down (ADX 21, EMA gap -2.0%)"],"boss":["HOLD",0.024,"directional_score_floor;min_confidence"]}},"BSE":{"close":3363.0,"views":{"market_intel":["BUY",0.08,"proxy flow +0.09 and momentum +0.19 (no real order-flow data)"],"risk_engine":["HOLD",0.35,"risk_score 0.65 (elevated)"],"liquidity_engine":["SELL",0.6,"a sweep above 3,445.00 with no clear absorption (1 flow confirmations)"],"market_mood":["SELL",0.211,"market mood -0.21 (3/3 inputs)"],"regime_detector":["HOLD",0.0,"regime range (ADX 15, EMA gap -3.1%)"],"boss":["HOLD",0.25,"directional_score_floor;min_confidence"]}},"CIPLA":{"close":1325.0999755859375,"views":{"market_intel":["SELL",0.172,"proxy flow -0.27 and momentum -0.38 (no real order-flow data)"],"risk_engine":["HOLD",0.773,"risk_score 0.23 (low)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.23,"market mood -0.23 (3/3 inputs)"],"regime_detector":["SELL",0.126,"regime trend_down (ADX 23, EMA gap -2.9%)"],"boss":["HOLD",0.137,"directional_score_floor;min_confidence"]}},"COALINDIA":{"close":417.20001220703125,"views":{"market_intel":["HOLD",0.061,"proxy flow +0.38 and momentum -0.01 (no real order-flow data)"],"risk_engine":["HOLD",0.712,"risk_score 0.29 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.022,"market mood +0.02 (3/3 inputs)"],"regime_detector":["HOLD",0.0,"regime range (ADX 16, EMA gap -0.5%)"],"boss":["HOLD",0.0,"directional_score_floor;min_confidence"]}},"DRREDDY":{"close":1233.0,"views":{"market_intel":["BUY",0.208,"proxy flow +0.06 and momentum +0.60 (no real order-flow data)"],"risk_engine":["HOLD",0.707,"risk_score 0.29 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.071,"market mood +0.07 (3/3 inputs)"],"regime_detector":["SELL",0.108,"regime trend_down (ADX 22, EMA gap -0.4%)"],"boss":["HOLD",0.081,"directional_score_floor;min_confidence"]}},"EICHERMOT":{"close":7284.5,"views":{"market_intel":["SELL",0.082,"proxy flow -0.17 and momentum -0.16 (no real order-flow data)"],"risk_engine":["HOLD",0.703,"risk_score 0.30 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.076,"market mood -0.08 (3/3 inputs)"],"regime_detector":["SELL",1.0,"regime trend_down (ADX 44, EMA gap -2.8%)"],"boss":["HOLD",0.272,"min_confidence"]}},"ETERNAL":{"close":325.29998779296875,"views":{"market_intel":["HOLD",0.045,"proxy flow +0.20 and momentum +0.04 (no real order-flow data)"],"risk_engine":["HOLD",0.68,"risk_score 0.32 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["BUY",0.218,"market mood +0.22 (3/3 inputs)"],"regime_detector":["HOLD",0.0,"regime range (ADX 16, EMA gap +6.2%)"],"boss":["HOLD",0.092,"directional_score_floor;min_confidence"]}},"GRASIM":{"close":2920.0,"views":{"market_intel":["HOLD",0.059,"proxy flow +0.04 and momentum -0.20 (no real order-flow data)"],"risk_engine":["HOLD",0.682,"risk_score 0.32 (moderate)"],"liquidity_engine":["BUY",0.6,"a sweep below 2,853.50 with no clear absorption (1 flow confirmations)"],"market_mood":["HOLD",0.199,"market mood -0.20 (3/3 inputs)"],"regime_detector":["SELL",1.0,"regime trend_down (ADX 44, EMA gap -2.9%)"],"boss":["HOLD",0.259,"directional_score_floor;min_confidence"]}},"HCLTECH":{"close":1380.0,"views":{"market_intel":["BUY",0.267,"proxy flow +0.15 and momentum +0.72 (no real order-flow data)"],"risk_engine":["HOLD",0.598,"risk_score 0.40 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["BUY",0.225,"market mood +0.22 (3/3 inputs)"],"regime_detector":["BUY",0.1,"regime trend_up (ADX 21, EMA gap +0.4%)"],"boss":["HOLD",0.169,"directional_score_floor;min_confidence"]}},"HDFCBANK":{"close":728.8499755859375,"views":{"market_intel":["HOLD",0.035,"proxy flow -0.12 and momentum +0.17 (no real order-flow data)"],"risk_engine":["HOLD",0.699,"risk_score 0.30 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.383,"market mood -0.38 (3/3 inputs)"],"regime_detector":["HOLD",0.0,"regime range (ADX 15, EMA gap -3.9%)"],"boss":["HOLD",0.162,"directional_score_floor;min_confidence"]}},"HDFCLIFE":{"close":553.0,"views":{"market_intel":["HOLD",0.023,"proxy flow -0.04 and momentum -0.05 (no real order-flow data)"],"risk_engine":["HOLD",0.524,"risk_score 0.48 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.046,"market mood -0.05 (3/3 inputs)"],"regime_detector":["HOLD",0.0,"regime range (ADX 14, EMA gap -3.0%)"],"boss":["HOLD",0.0,"directional_score_floor;min_confidence"]}},"HINDALCO":{"close":908.0,"views":{"market_intel":["SELL",0.191,"proxy flow -0.09 and momentum -0.53 (no real order-flow data)"],"risk_engine":["HOLD",0.547,"risk_score 0.45 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.12,"market mood -0.12 (3/3 inputs)"],"regime_detector":["SELL",0.558,"regime trend_down (ADX 31, EMA gap -4.7%)"],"boss":["HOLD",0.208,"directional_score_floor;min_confidence"]}},"HINDUNILVR":{"close":1893.800048828125,"views":{"market_intel":["SELL",0.098,"proxy flow -0.16 and momentum -0.21 (no real order-flow data)"],"risk_engine":["HOLD",0.663,"risk_score 0.34 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.399,"market mood -0.40 (3/3 inputs)"],"regime_detector":["SELL",0.682,"regime trend_down (ADX 34, EMA gap -6.7%)"],"boss":["HOLD",0.264,"min_confidence"]}},"ICICIBANK":{"close":1397.0,"views":{"market_intel":["BUY",0.089,"proxy flow -0.06 and momentum +0.30 (no real order-flow data)"],"risk_engine":["HOLD",0.805,"risk_score 0.20 (low)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.067,"market mood -0.07 (3/3 inputs)"],"regime_detector":["SELL",0.1,"regime trend_down (ADX 21, EMA gap -0.7%)"],"boss":["HOLD",0.024,"directional_score_floor;min_confidence"]}},"INDIGO":{"close":4686.89990234375,"views":{"market_intel":["SELL",0.121,"proxy flow -0.24 and momentum -0.24 (no real order-flow data)"],"risk_engine":["HOLD",0.601,"risk_score 0.40 (moderate)"],"liquidity_engine":["HOLD",0.0,"sweep below 4,679.60 with CVD divergence"],"market_mood":["SELL",0.372,"market mood -0.37 (3/3 inputs)"],"regime_detector":["SELL",0.148,"regime trend_down (ADX 23, EMA gap -1.9%)"],"boss":["HOLD",0.16,"directional_score_floor;min_confidence"]}},"INFY":{"close":1161.199951171875,"views":{"market_intel":["BUY",0.205,"proxy flow +0.05 and momentum +0.59 (no real order-flow data)"],"risk_engine":["HOLD",0.571,"risk_score 0.43 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.155,"market mood +0.15 (3/3 inputs)"],"regime_detector":["SELL",0.188,"regime trend_down (ADX 24, EMA gap -4.9%)"],"boss":["HOLD",0.045,"directional_score_floor;min_confidence"]}},"ITC":{"close":263.5,"views":{"market_intel":["HOLD",0.062,"proxy flow -0.23 and momentum -0.07 (no real order-flow data)"],"risk_engine":["HOLD",0.592,"risk_score 0.41 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.212,"market mood -0.21 (3/3 inputs)"],"regime_detector":["SELL",0.184,"regime trend_down (ADX 24, EMA gap -4.8%)"],"boss":["HOLD",0.116,"directional_score_floor;min_confidence"]}},"JIOFIN":{"close":216.25,"views":{"market_intel":["SELL",0.181,"proxy flow -0.23 and momentum -0.43 (no real order-flow data)"],"risk_engine":["HOLD",0.622,"risk_score 0.38 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.375,"market mood -0.37 (3/3 inputs)"],"regime_detector":["SELL",0.646,"regime trend_down (ADX 33, EMA gap -6.4%)"],"boss":["HOLD",0.278,"min_confidence"]}},"JSWSTEEL":{"close":1216.300048828125,"views":{"market_intel":["HOLD",0.069,"proxy flow -0.05 and momentum -0.18 (no real order-flow data)"],"risk_engine":["HOLD",0.652,"risk_score 0.35 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.039,"market mood -0.04 (3/3 inputs)"],"regime_detector":["SELL",0.24,"regime trend_down (ADX 25, EMA gap -2.2%)"],"boss":["HOLD",0.093,"directional_score_floor;min_confidence"]}},"KOTAKBANK":{"close":447.3999938964844,"views":{"market_intel":["BUY",0.284,"proxy flow +0.18 and momentum +0.76 (no real order-flow data)"],"risk_engine":["HOLD",0.805,"risk_score 0.20 (low)"],"liquidity_engine":["SELL",0.6,"a sweep above 447.95 with no clear absorption (1 flow confirmations)"],"market_mood":["BUY",0.222,"market mood +0.22 (3/3 inputs)"],"regime_detector":["BUY",0.956,"regime trend_up (ADX 39, EMA gap +5.3%)"],"boss":["HOLD",0.301,"min_confidence"]}},"LT":{"close":3627.10009765625,"views":{"market_intel":["SELL",0.178,"proxy flow -0.20 and momentum -0.43 (no real order-flow data)"],"risk_engine":["HOLD",0.694,"risk_score 0.31 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.164,"market mood -0.16 (3/3 inputs)"],"regime_detector":["SELL",0.64,"regime trend_down (ADX 33, EMA gap -4.0%)"],"boss":["HOLD",0.223,"directional_score_floor;min_confidence"]}},"M&M":{"close":2920.89990234375,"views":{"market_intel":["SELL",0.199,"proxy flow -0.29 and momentum -0.45 (no real order-flow data)"],"risk_engine":["HOLD",0.624,"risk_score 0.38 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.288,"market mood -0.29 (3/3 inputs)"],"regime_detector":["SELL",1.0,"regime trend_down (ADX 56, EMA gap -6.5%)"],"boss":["HOLD",0.332,"min_confidence"]}},"MARUTI":{"close":11489.0,"views":{"market_intel":["SELL",0.204,"proxy flow -0.29 and momentum -0.47 (no real order-flow data)"],"risk_engine":["HOLD",0.615,"risk_score 0.39 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.483,"market mood -0.48 (3/3 inputs)"],"regime_detector":["SELL",1.0,"regime trend_down (ADX 57, EMA gap -8.9%)"],"boss":["SELL",0.382,"score -0.30, agreement 100%"]}},"MAXHEALTH":{"close":846.0,"views":{"market_intel":["SELL",0.325,"proxy flow -0.26 and momentum -0.84 (no real order-flow data)"],"risk_engine":["HOLD",0.38,"risk_score 0.62 (elevated)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.539,"market mood -0.54 (3/3 inputs)"],"regime_detector":["SELL",1.0,"regime trend_down (ADX 40, EMA gap -8.5%)"],"boss":["SELL",0.434,"score -0.32, agreement 100%"]}},"NESTLEIND":{"close":1265.5,"views":{"market_intel":["SELL",0.187,"proxy flow -0.20 and momentum -0.46 (no real order-flow data)"],"risk_engine":["HOLD",0.466,"risk_score 0.53 (elevated)"],"liquidity_engine":["HOLD",0.0,"sweep below 1,260.50 with CVD divergence"],"market_mood":["SELL",0.39,"market mood -0.39 (3/3 inputs)"],"regime_detector":["SELL",0.524,"regime trend_down (ADX 30, EMA gap -3.7%)"],"boss":["HOLD",0.26,"min_confidence"]}},"NTPC":{"close":315.1499938964844,"views":{"market_intel":["SELL",0.137,"proxy flow -0.07 and momentum -0.38 (no real order-flow data)"],"risk_engine":["HOLD",0.669,"risk_score 0.33 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.239,"market mood -0.24 (3/3 inputs)"],"regime_detector":["SELL",0.739,"regime trend_down (ADX 35, EMA gap -5.4%)"],"boss":["HOLD",0.249,"min_confidence"]}},"ONGC":{"close":222.0,"views":{"market_intel":["SELL",0.134,"proxy flow -0.11 and momentum -0.35 (no real order-flow data)"],"risk_engine":["HOLD",0.628,"risk_score 0.37 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.346,"market mood -0.35 (3/3 inputs)"],"regime_detector":["SELL",0.108,"regime trend_down (ADX 22, EMA gap -5.6%)"],"boss":["HOLD",0.15,"directional_score_floor;min_confidence"]}},"POWERGRID":{"close":250.4499969482422,"views":{"market_intel":["SELL",0.142,"proxy flow -0.10 and momentum -0.37 (no real order-flow data)"],"risk_engine":["HOLD",0.611,"risk_score 0.39 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.388,"market mood -0.39 (3/3 inputs)"],"regime_detector":["SELL",0.494,"regime trend_down (ADX 30, EMA gap -5.8%)"],"boss":["HOLD",0.239,"min_confidence"]}},"RELIANCE":{"close":1211.199951171875,"views":{"market_intel":["SELL",0.096,"proxy flow -0.12 and momentum -0.23 (no real order-flow data)"],"risk_engine":["HOLD",0.653,"risk_score 0.35 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.31,"market mood -0.31 (3/3 inputs)"],"regime_detector":["SELL",0.796,"regime trend_down (ADX 36, EMA gap -5.7%)"],"boss":["HOLD",0.264,"min_confidence"]}},"SBILIFE":{"close":1656.800048828125,"views":{"market_intel":["SELL",0.246,"proxy flow -0.23 and momentum -0.63 (no real order-flow data)"],"risk_engine":["HOLD",0.599,"risk_score 0.40 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.333,"market mood -0.33 (3/3 inputs)"],"regime_detector":["SELL",0.697,"regime trend_down (ADX 34, EMA gap -4.3%)"],"boss":["HOLD",0.299,"min_confidence"]}},"SBIN":{"close":962.5999755859375,"views":{"market_intel":["SELL",0.101,"proxy flow -0.03 and momentum -0.29 (no real order-flow data)"],"risk_engine":["HOLD",0.748,"risk_score 0.25 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.277,"market mood -0.28 (3/3 inputs)"],"regime_detector":["SELL",1.0,"regime trend_down (ADX 41, EMA gap -3.9%)"],"boss":["HOLD",0.298,"min_confidence"]}},"SHRIRAMFIN":{"close":939.9500122070312,"views":{"market_intel":["SELL",0.137,"proxy flow -0.27 and momentum -0.27 (no real order-flow data)"],"risk_engine":["HOLD",0.443,"risk_score 0.56 (elevated)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.324,"market mood -0.32 (3/3 inputs)"],"regime_detector":["SELL",0.903,"regime trend_down (ADX 38, EMA gap -3.9%)"],"boss":["HOLD",0.302,"min_confidence"]}},"SUNPHARMA":{"close":1758.800048828125,"views":{"market_intel":["SELL",0.182,"proxy flow -0.19 and momentum -0.45 (no real order-flow data)"],"risk_engine":["HOLD",0.76,"risk_score 0.24 (low)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.318,"market mood -0.32 (3/3 inputs)"],"regime_detector":["SELL",0.833,"regime trend_down (ADX 37, EMA gap -2.6%)"],"boss":["HOLD",0.301,"min_confidence"]}},"TATACONSUM":{"close":978.9000244140625,"views":{"market_intel":["SELL",0.127,"proxy flow -0.16 and momentum -0.30 (no real order-flow data)"],"risk_engine":["HOLD",0.633,"risk_score 0.37 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.353,"market mood -0.35 (3/3 inputs)"],"regime_detector":["SELL",0.882,"regime trend_down (ADX 38, EMA gap -6.4%)"],"boss":["HOLD",0.302,"min_confidence"]}},"TATASTEEL":{"close":175.5,"views":{"market_intel":["SELL",0.138,"proxy flow -0.26 and momentum -0.28 (no real order-flow data)"],"risk_engine":["HOLD",0.57,"risk_score 0.43 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.191,"market mood -0.19 (3/3 inputs)"],"regime_detector":["HOLD",0.0,"regime range (ADX 19, EMA gap -4.0%)"],"boss":["HOLD",0.055,"directional_score_floor;min_confidence"]}},"TCS":{"close":2465.0,"views":{"market_intel":["BUY",0.289,"proxy flow +0.11 and momentum +0.81 (no real order-flow data)"],"risk_engine":["HOLD",0.598,"risk_score 0.40 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.193,"market mood +0.19 (3/3 inputs)"],"regime_detector":["SELL",0.375,"regime trend_down (ADX 28, EMA gap -2.7%)"],"boss":["HOLD",0.09,"directional_score_floor;min_confidence"]}},"TECHM":{"close":1790.0,"views":{"market_intel":["BUY",0.288,"proxy flow +0.24 and momentum +0.75 (no real order-flow data)"],"risk_engine":["HOLD",0.583,"risk_score 0.42 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["BUY",0.219,"market mood +0.22 (3/3 inputs)"],"regime_detector":["HOLD",0.0,"regime range (ADX 17, EMA gap +2.2%)"],"boss":["HOLD",0.147,"directional_score_floor;min_confidence"]}},"TITAN":{"close":4444.7998046875,"views":{"market_intel":["SELL",0.268,"proxy flow -0.11 and momentum -0.75 (no real order-flow data)"],"risk_engine":["HOLD",0.68,"risk_score 0.32 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.134,"market mood -0.13 (3/3 inputs)"],"regime_detector":["SELL",1.0,"regime trend_down (ADX 42, EMA gap -1.3%)"],"boss":["HOLD",0.344,"min_confidence"]}},"TMPV":{"close":286.8500061035156,"views":{"market_intel":["SELL",0.227,"proxy flow -0.37 and momentum -0.50 (no real order-flow data)"],"risk_engine":["HOLD",0.462,"risk_score 0.54 (elevated)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["SELL",0.461,"market mood -0.46 (3/3 inputs)"],"regime_detector":["SELL",0.103,"regime trend_down (ADX 22, EMA gap -10.0%)"],"boss":["HOLD",0.207,"min_confidence"]}},"TRENT":{"close":2958.699951171875,"views":{"market_intel":["BUY",0.085,"proxy flow -0.29 and momentum +0.40 (no real order-flow data)"],"risk_engine":["HOLD",0.518,"risk_score 0.48 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.124,"market mood +0.12 (3/3 inputs)"],"regime_detector":["SELL",0.445,"regime trend_down (ADX 29, EMA gap -1.4%)"],"boss":["HOLD",0.107,"directional_score_floor;min_confidence"]}},"ULTRACEMCO":{"close":10907.0,"views":{"market_intel":["HOLD",0.014,"proxy flow -0.14 and momentum +0.11 (no real order-flow data)"],"risk_engine":["HOLD",0.705,"risk_score 0.29 (moderate)"],"liquidity_engine":["HOLD",0.0,"no liquidity sweep"],"market_mood":["HOLD",0.171,"market mood -0.17 (3/3 inputs)"],"regime_detector":["SELL",0.313,"regime trend_down (ADX 26, EMA gap -3.4%)"],"boss":["HOLD",0.122,"directional_score_floor;min_confidence"]}}},"scorecard":{"horizon":20,"matured_days":0,"baseline":null,"scores":[{"agent":"market_intel","calls":0,"buys":0,"sells":0,"hit_rate":null,"avg_signed_return":null},{"agent":"risk_engine","calls":0,"buys":0,"sells":0,"hit_rate":null,"avg_signed_return":null},{"agent":"liquidity_engine","calls":0,"buys":0,"sells":0,"hit_rate":null,"avg_signed_return":null},{"agent":"market_mood","calls":0,"buys":0,"sells":0,"hit_rate":null,"avg_signed_return":null},{"agent":"regime_detector","calls":0,"buys":0,"sells":0,"hit_rate":null,"avg_signed_return":null},{"agent":"boss","calls":0,"buys":0,"sells":0,"hit_rate":null,"avg_signed_return":null}]},"journal":[{"run_time":"2026-10-18 03:49","as_of_close":"2026-10-16","nifty_close":"23146.15","ema_fast":"22892.1","ema_slow":"23655.9","adx":"39.9","regime":"regime trend_down (ADX 40, EMA gap -3.2%)","filter":"CASH","action_next_session":"NO TRADE (stay in cash)","orders":"0","paper_value":"1000503.93","paper_invested":"0.0","paper_start":"2026-10-15"},{"run_time":"2026-10-14 22:46","as_of_close":"2026-10-14","nifty_close":"22622.7","ema_fast":"22851.46","ema_slow":"23679.71","adx":"44.2","regime":"regime trend_down (ADX 44, EMA gap -3.5%)","filter":"CASH","action_next_session":"START: STAY IN CASH (Nifty filter is off)","orders":"0","paper_value":"1000000.0","paper_invested":"0.0","paper_start":"2026-10-15"}]};
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const inr = (v, d = 0) => v == null ? "–" : Number(v).toLocaleString("en-IN", {maximumFractionDigits: d, minimumFractionDigits: d});
+const pct = (v, d = 2) => v == null ? "–" : (v >= 0 ? "+" : "") + (v * 100).toFixed(d) + "%";
+const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const tip = $("tip");
+
+/* theme toggle (remembered per browser) */
+(function () {
+  const root = document.documentElement;
+  try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch (e) {}
+  $("themeBtn").onclick = () => {
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+    drawCharts();
+  };
+})();
+
+/* header + hero */
+$("updated").textContent = `As of close ${D.as_of} · updated ${D.updated}`;
+$("universe").textContent = D.universe;
+const on = D.filter === "INVESTED";
+$("state").innerHTML = `<span class="dot" style="background:${on ? "var(--good)" : "var(--muted)"}"></span>${on ? "▲ INVESTED" : "■ IN CASH"}` +
+  (D.filter_changed ? `<span class="changed">changed today</span>` : "");
+$("nextLabel").textContent = `Action for the next session (~${D.next_session}, at the open)`;
+$("action").textContent = D.action;
+$("regime").textContent = D.nifty.regime;
+$("warnings").innerHTML = (D.warnings || []).map(w => `<div class="warn">⚠ ${esc(w)}</div>`).join("");
+
+const P = D.paper;
+const kpis = [
+  ["Nifty 50 close", inr(D.nifty.close, 2), ""],
+  ["20-day average", inr(D.nifty.ema_fast, 2), D.nifty.close >= D.nifty.ema_fast ? "Nifty above it" : "Nifty below it"],
+  ["100-day average", inr(D.nifty.ema_slow, 2), D.nifty.close >= D.nifty.ema_slow ? "Nifty above it" : "Nifty below it"],
+  ["Trend strength (ADX)", Number(D.nifty.adx).toFixed(1), D.nifty.adx >= 20 ? "trend is strong (≥ 20)" : "no clear trend (< 20)"],
+  ["Paper book value", "₹" + inr(P.value), pct(P.ret) + " since " + P.start],
+  ["Invested", (P.invested * 100).toFixed(0) + "%", "cash ₹" + inr(P.cash)],
+];
+$("kpis").innerHTML = kpis.map(([l, v, n]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="n">${n}</div></div>`).join("");
+
+/* ---------- line chart (inline SVG, crosshair tooltip) ---------- */
+function lineChart(el, rows, series, opts = {}) {
+  el.innerHTML = "";
+  if (!rows.length) { el.innerHTML = `<div class="note">${opts.empty || "No data yet."}</div>`; return; }
+  const W = Math.max(320, el.clientWidth || 800), H = opts.height || 300;
+  const m = {t: 10, r: opts.rightPad ?? 84, b: 26, l: 58};
+  const iw = W - m.l - m.r, ih = H - m.t - m.b, n = rows.length;
+  const vals = [];
+  rows.forEach(r => series.forEach(s => { const v = r[s.key]; if (v != null) vals.push(v); }));
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  if (opts.baseline != null) { lo = Math.min(lo, opts.baseline); hi = Math.max(hi, opts.baseline); }
+  const pad = (hi - lo) * 0.06 || Math.abs(hi) * 0.01 || 1; lo -= pad; hi += pad;
+  const x = i => m.l + (n === 1 ? iw / 2 : i * iw / (n - 1));
+  const y = v => m.t + ih - (v - lo) / (hi - lo) * ih;
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", opts.label || "chart");
+  let g = "";
+  // cash bands
+  if (opts.band) {
+    let s = null;
+    rows.forEach((r, i) => {
+      const inBand = opts.band(r);
+      if (inBand && s == null) s = i;
+      if ((!inBand || i === n - 1) && s != null) {
+        const e = inBand ? i : i - 1;
+        const x0 = x(s) - (s > 0 ? iw / (n - 1) / 2 : 0), x1 = x(e) + (e < n - 1 ? iw / (n - 1) / 2 : 0);
+        g += `<rect x="${x0}" y="${m.t}" width="${Math.max(1, x1 - x0)}" height="${ih}" fill="var(--cash-band)"/>`;
+        s = null;
+      }
+    });
+  }
+  // grid + y labels
+  const ticks = 5;
+  for (let k = 0; k <= ticks; k++) {
+    const v = lo + (hi - lo) * k / ticks, yy = y(v);
+    g += `<line x1="${m.l}" x2="${m.l + iw}" y1="${yy}" y2="${yy}" stroke="var(--grid)" stroke-width="1"/>`;
+    g += `<text x="${m.l - 8}" y="${yy + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${opts.yfmt ? opts.yfmt(v) : inr(v)}</text>`;
+  }
+  if (opts.baseline != null) g += `<line x1="${m.l}" x2="${m.l + iw}" y1="${y(opts.baseline)}" y2="${y(opts.baseline)}" stroke="var(--muted)" stroke-dasharray="3 4" stroke-width="1"/>`;
+  // x labels (month starts)
+  let lastMonth = "", lastX = -99;
+  rows.forEach((r, i) => {
+    const mo = r.d.slice(0, 7);
+    if (mo !== lastMonth) {
+      lastMonth = mo;
+      const xx = x(i);
+      if (xx - lastX > 56 && xx < m.l + iw - 20) {
+        const dt = new Date(r.d + "T00:00:00");
+        g += `<text x="${xx}" y="${H - 6}" text-anchor="middle" font-size="11" fill="var(--muted)">${dt.toLocaleString("en-IN", {month: "short"})}${dt.getMonth() === 0 ? " " + dt.getFullYear() : ""}</text>`;
+        lastX = xx;
+      }
+    }
+  });
+  // lines
+  series.forEach(s => {
+    let d = "", pen = false;
+    rows.forEach((r, i) => { const v = r[s.key]; if (v == null) { pen = false; return; } d += (pen ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1); pen = true; });
+    g += `<path d="${d}" fill="none" stroke="var(${s.color})" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    if (n === 1) g += `<circle cx="${x(0)}" cy="${y(rows[0][s.key])}" r="4" fill="var(${s.color})"/>`;
+  });
+  // direct labels at line ends (nudged apart)
+  if (opts.endLabels) {
+    const ends = series.map(s => ({s, v: rows[n - 1][s.key]})).filter(e => e.v != null).map(e => ({...e, yy: y(e.v)})).sort((a, b) => a.yy - b.yy);
+    for (let k = 1; k < ends.length; k++) if (ends[k].yy - ends[k - 1].yy < 14) ends[k].yy = ends[k - 1].yy + 14;
+    ends.forEach(e => g += `<text x="${m.l + iw + 8}" y="${e.yy + 4}" font-size="11" fill="var(--text-2)">${e.s.short || e.s.name}</text>`);
+  }
+  g += `<line id="xh" x1="0" x2="0" y1="${m.t}" y2="${m.t + ih}" stroke="var(--muted)" stroke-width="1" visibility="hidden"/>`;
+  series.forEach((s, k) => g += `<circle class="hd" data-k="${k}" r="4.5" fill="var(${s.color})" stroke="var(--surface)" stroke-width="2" visibility="hidden"/>`);
+  g += `<rect x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent" class="hit"/>`;
+  svg.innerHTML = g;
+  el.appendChild(svg);
+  const hit = svg.querySelector(".hit"), xh = svg.querySelector("#xh"), dots = svg.querySelectorAll(".hd");
+  const move = (ev) => {
+    const pt = svg.getBoundingClientRect(), sx = W / pt.width;
+    const px = ((ev.touches ? ev.touches[0].clientX : ev.clientX) - pt.left) * sx;
+    const i = Math.max(0, Math.min(n - 1, Math.round((px - m.l) / (n === 1 ? 1 : iw / (n - 1)))));
+    const r = rows[i];
+    xh.setAttribute("x1", x(i)); xh.setAttribute("x2", x(i)); xh.setAttribute("visibility", "visible");
+    dots.forEach(c => { const s = series[c.dataset.k], v = r[s.key]; if (v == null) { c.setAttribute("visibility", "hidden"); return; }
+      c.setAttribute("cx", x(i)); c.setAttribute("cy", y(v)); c.setAttribute("visibility", "visible"); });
+    tip.innerHTML = `<div class="muted">${new Date(r.d + "T00:00:00").toLocaleDateString("en-IN", {day: "2-digit", month: "short", year: "numeric"})}</div>` +
+      series.map(s => `<div><span class="sw" style="background:var(${s.color})"></span>${s.name}: <b>${r[s.key] == null ? "–" : (s.fmt ? s.fmt(r[s.key]) : inr(r[s.key], 2))}</b></div>`).join("") +
+      (opts.tipExtra ? opts.tipExtra(r) : "");
+    tip.style.display = "block";
+    const tx = (x(i) / sx) + pt.left + window.scrollX, ty = pt.top + window.scrollY + 10;
+    const tw = tip.offsetWidth;
+    tip.style.left = (tx + 14 + tw > window.scrollX + document.documentElement.clientWidth ? tx - tw - 14 : tx + 14) + "px";
+    tip.style.top = ty + "px";
+  };
+  const leave = () => { tip.style.display = "none"; xh.setAttribute("visibility", "hidden"); dots.forEach(c => c.setAttribute("visibility", "hidden")); };
+  hit.addEventListener("mousemove", move); hit.addEventListener("touchstart", move, {passive: true});
+  hit.addEventListener("touchmove", move, {passive: true}); hit.addEventListener("mouseleave", leave); hit.addEventListener("touchend", leave);
+}
+
+const niftySeries = [
+  {key: "c", name: "Nifty 50", short: "Nifty", color: "--s1"},
+  {key: "f", name: "20-day average", short: "20-day", color: "--s2"},
+  {key: "s", name: "100-day average", short: "100-day", color: "--s3"},
+];
+$("niftyLegend").innerHTML = niftySeries.map(s => `<span><i style="background:var(${s.color})"></i>${s.name}</span>`).join("") +
+  `<span><i class="band"></i>filter in cash</span>`;
+function drawCharts() {
+  lineChart($("niftyChart"), D.nifty_hist || [], niftySeries, {label: "Nifty 50 with 20 and 100 day averages", endLabels: true,
+    band: r => r.m === 0, tipExtra: r => `<div class="muted">filter: ${r.m ? "invested" : "in cash"}</div>`});
+  const ph = D.paper_hist || [];
+  lineChart($("paperChart"), ph, [{key: "v", name: "Paper value", color: "--s1", fmt: v => "₹" + inr(v)}],
+    {label: "Paper book value", rightPad: 16, baseline: P.capital, height: 220, yfmt: v => "₹" + inr(v / 1e5, 2) + "L",
+     empty: `The paper book starts trading on ${P.start}; the line appears after the first sessions.`,
+     tipExtra: r => `<div class="muted">invested ${(r.i * 100).toFixed(0)}%</div>`});
+}
+$("paperSub").textContent = `Started ${P.start} with ₹${inr(P.capital)} · ${P.sessions} sessions · tax provisioned ₹${inr(P.tax)} · dashed line = starting capital`;
+drawCharts();
+let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(drawCharts, 150); });
+
+/* orders */
+if ((D.orders || []).length) {
+  $("ordersCard").hidden = false;
+  $("ordersTable").innerHTML = `<thead><tr><th>Stock</th><th>Side</th><th class="num">Amount (₹)</th><th class="num">~Shares</th><th class="num">At close</th></tr></thead><tbody>` +
+    D.orders.map(o => `<tr><td>${esc(o.symbol)}</td><td><span class="chip ${o.side === "BUY" ? "BUY" : "SELL"}">${o.side === "BUY" ? "▲" : "▼"} ${o.side}</span></td><td class="num">${inr(o.rupees)}</td><td class="num">${o.approx_shares}</td><td class="num">${inr(o.ref_price, 2)}</td></tr>`).join("") + "</tbody>";
+}
+
+/* agent panel */
+const L = D.agent_labels;
+const order = ["regime_detector", "market_intel", "market_mood", "risk_engine", "liquidity_engine", "boss"];
+const chip = (sig, conf, why) => {
+  const cls = sig === "n/a" ? "na" : sig;
+  const icon = sig === "BUY" ? "▲ " : sig === "SELL" ? "▼ " : "";
+  return `<span class="chip ${cls}" title="${esc(why)}${conf != null ? " (confidence " + Number(conf).toFixed(2) + ")" : ""}">${icon}${sig}</span>`;
+};
+$("niftyPanel").innerHTML = `<thead><tr><th>Agent (on the Nifty 50)</th><th>View</th><th class="num hide-sm">Confidence</th><th>Reason</th></tr></thead><tbody>` +
+  (D.panel_nifty || []).sort((a, b) => order.indexOf(a.agent) - order.indexOf(b.agent)).map(r => {
+    const sig = r.available ? r.signal : "n/a";
+    return `<tr><td>${esc(L[r.agent] || r.agent)}</td><td>${chip(sig, null, r.summary)}</td><td class="num hide-sm">${Number(r.confidence).toFixed(2)}</td><td class="sub">${esc(r.summary)}</td></tr>`;
+  }).join("") + "</tbody>";
+
+const stocks = Object.entries(D.panel_stocks || {}).map(([sym, s]) => ({sym, ...s}));
+const agentsPresent = order.filter(a => stocks.some(s => s.views[a]));
+$("counts").innerHTML = agentsPresent.map(a => {
+  const c = {BUY: 0, SELL: 0, HOLD: 0, "n/a": 0};
+  stocks.forEach(s => { const v = s.views[a]; if (v) c[v[0]] = (c[v[0]] || 0) + 1; });
+  const tot = stocks.length || 1;
+  return `<div class="count"><b>${esc(L[a] || a)}</b>▲ ${c.BUY} buy · ▼ ${c.SELL} sell · ${c.HOLD} hold${c["n/a"] ? " · " + c["n/a"] + " n/a" : ""}
+    <div class="bar" aria-hidden="true"><span style="width:${c.BUY / tot * 100}%;background:var(--good)"></span><span style="width:${c.SELL / tot * 100}%;background:var(--critical)"></span><span style="width:${(c.HOLD + c["n/a"]) / tot * 100}%;background:var(--grid)"></span></div></div>`;
+}).join("");
+$("fAgent").innerHTML = agentsPresent.map(a => `<option value="${a}" ${a === "boss" ? "selected" : ""}>${esc(L[a] || a)}</option>`).join("");
+let sortKey = "sym", sortDir = 1;
+function renderStocks() {
+  const q = $("search").value.trim().toUpperCase(), fa = $("fAgent").value, fs = $("fSignal").value;
+  const rank = {BUY: 0, SELL: 1, HOLD: 2, "n/a": 3};
+  let rows = stocks.filter(s => (!q || s.sym.includes(q)) && (!fs || (s.views[fa] && s.views[fa][0] === fs)));
+  rows.sort((a, b) => {
+    if (sortKey === "sym") return a.sym.localeCompare(b.sym) * sortDir;
+    if (sortKey === "close") return (a.close - b.close) * sortDir;
+    const va = a.views[sortKey], vb = b.views[sortKey];
+    const ra = va ? rank[va[0]] : 9, rb = vb ? rank[vb[0]] : 9;
+    return ra !== rb ? (ra - rb) * sortDir : ((vb ? vb[1] : 0) - (va ? va[1] : 0));
+  });
+  $("shown").textContent = `${rows.length} of ${stocks.length} stocks`;
+  const head = `<thead><tr><th class="sort" data-k="sym">Stock</th><th class="sort num hide-sm" data-k="close">Close</th>` +
+    agentsPresent.map(a => `<th class="sort" data-k="${a}">${esc(L[a] || a)}</th>`).join("") + "</tr></thead>";
+  $("stockTable").innerHTML = head + "<tbody>" + rows.map(s => `<tr><td><b>${esc(s.sym)}</b></td><td class="num hide-sm">${inr(s.close, 2)}</td>` +
+    agentsPresent.map(a => { const v = s.views[a]; return `<td>${v ? chip(v[0], v[1], v[2]) : "–"}</td>`; }).join("") + "</tr>").join("") + "</tbody>";
+  $("stockTable").querySelectorAll("th.sort").forEach(th => th.onclick = () => {
+    sortDir = sortKey === th.dataset.k ? -sortDir : 1; sortKey = th.dataset.k; renderStocks(); });
+}
+["search", "fAgent", "fSignal"].forEach(id => $(id).addEventListener("input", renderStocks));
+renderStocks();
+// tap-to-read reasons on phones
+document.addEventListener("click", e => { const c = e.target.closest(".chip[title]"); if (c && matchMedia("(hover: none)").matches) alert(c.title); });
+
+/* scorecard */
+const SC = D.scorecard;
+if (!SC || !SC.scores.some(s => s.calls)) {
+  $("scoreSub").textContent = `No calls have matured yet. The first scores appear ${SC ? SC.horizon : 20} trading sessions after the first panel day.`;
+} else {
+  $("scoreSub").textContent = `${SC.horizon}-session outcome · ${SC.matured_days} matured days · baseline (share of stock-days that went up): ${SC.baseline == null ? "–" : (SC.baseline * 100).toFixed(0) + "%"}. An agent is useful only if it clearly beats the baseline over many calls.`;
+  $("scoreTable").innerHTML = `<thead><tr><th>Agent</th><th class="num">Calls</th><th class="num">Buy</th><th class="num">Sell</th><th class="num">Right</th><th class="num">Avg result</th></tr></thead><tbody>` +
+    SC.scores.map(s => `<tr><td>${esc(L[s.agent] || s.agent)}</td><td class="num">${s.calls}</td><td class="num">${s.buys}</td><td class="num">${s.sells}</td><td class="num">${s.hit_rate == null ? "–" : (s.hit_rate * 100).toFixed(0) + "%"}</td><td class="num">${pct(s.avg_signed_return)}</td></tr>`).join("") + "</tbody>";
+}
+
+/* journal */
+$("journalTable").innerHTML = `<thead><tr><th>Close</th><th class="num">Nifty</th><th class="num hide-sm">20-day</th><th class="num hide-sm">100-day</th><th class="num hide-sm">ADX</th><th>Filter</th><th>Action</th><th class="num">Paper value</th></tr></thead><tbody>` +
+  (D.journal || []).map(j => `<tr><td>${esc(j.as_of_close)}</td><td class="num">${inr(+j.nifty_close, 2)}</td><td class="num hide-sm">${inr(+j.ema_fast, 2)}</td><td class="num hide-sm">${inr(+j.ema_slow, 2)}</td><td class="num hide-sm">${(+j.adx).toFixed(1)}</td><td>${esc(j.filter)}</td><td class="sub">${esc(j.action_next_session)}</td><td class="num">₹${inr(+j.paper_value)}</td></tr>`).join("") + "</tbody>";
+</script>
+</body>
+</html>
