@@ -1,0 +1,5 @@
+numpy>=1.26
+pandas>=2.1
+scipy>=1.11
+pydantic>=2.5
+pyyaml>=6.0

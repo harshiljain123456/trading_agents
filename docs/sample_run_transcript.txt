@@ -1,0 +1,405 @@
+$ python main.py --mode backtest --symbol BTCUSDT --start 2023-01-01 --end 2024-01-01 --synthetic --seed 42
+2026-10-12 06:29:18,290 INFO data.feed: synthetic feed: symbol=BTCUSDT seed=42 bars=2440 (warm-up 250, tradable 2190) 2022-11-20 08:00:00+00:00..2023-12-31 20:00:00+00:00
+2026-10-12 06:29:18,391 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-01-21 00:00:00+00:00: rolling Sharpe -2.66 < -1.00
+2026-10-12 06:29:18,419 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-01-31 00:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:18,553 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-03-28 04:00:00+00:00: rolling Sharpe -1.23 < -1.00
+2026-10-12 06:29:18,577 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-04-07 04:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:18,739 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-06-16 00:00:00+00:00: rolling Sharpe -1.29 < -1.00
+2026-10-12 06:29:18,763 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-06-26 00:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:18,976 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-09-25 08:00:00+00:00: rolling Sharpe -1.84 < -1.00
+2026-10-12 06:29:19,002 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-10-05 08:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:19,071 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-11-08 08:00:00+00:00: rolling Sharpe -1.11 < -1.00
+2026-10-12 06:29:19,095 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-11-18 08:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:19,324 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-01-11 00:00:00+00:00: drawdown 20.2% > cap 20.0%
+2026-10-12 06:29:19,339 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-01-21 00:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:19,416 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-03-04 04:00:00+00:00: rolling Sharpe -4.27 < -1.00
+2026-10-12 06:29:19,438 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-03-14 04:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:19,470 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-04-03 20:00:00+00:00: rolling Sharpe -1.52 < -1.00
+2026-10-12 06:29:19,509 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-04-13 20:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:19,665 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-06-11 08:00:00+00:00: rolling Sharpe -4.27 < -1.00
+2026-10-12 06:29:19,688 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-06-21 08:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:19,879 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-09-25 08:00:00+00:00: rolling Sharpe -2.62 < -1.00
+2026-10-12 06:29:19,900 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-10-05 08:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:19,963 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-11-08 08:00:00+00:00: rolling Sharpe -1.11 < -1.00
+2026-10-12 06:29:20,084 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-11-18 08:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:20,189 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-01-11 00:00:00+00:00: drawdown 20.0% > cap 20.0%
+2026-10-12 06:29:20,210 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-01-21 00:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:20,350 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-03-26 00:00:00+00:00: rolling Sharpe -1.07 < -1.00
+2026-10-12 06:29:20,372 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-04-05 00:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:20,538 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-06-11 20:00:00+00:00: rolling Sharpe -4.27 < -1.00
+2026-10-12 06:29:20,565 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-06-21 20:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:20,760 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-09-24 12:00:00+00:00: rolling Sharpe -4.27 < -1.00
+2026-10-12 06:29:20,783 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-10-04 12:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:20,857 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-11-08 08:00:00+00:00: rolling Sharpe -1.09 < -1.00
+2026-10-12 06:29:20,877 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-11-18 08:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:20,994 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-01-11 04:00:00+00:00: drawdown 20.2% > cap 20.0%
+2026-10-12 06:29:21,009 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-01-21 04:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:21,176 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-03-26 00:00:00+00:00: rolling Sharpe -1.07 < -1.00
+2026-10-12 06:29:21,196 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-04-05 00:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:21,318 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-06-12 04:00:00+00:00: rolling Sharpe -4.27 < -1.00
+2026-10-12 06:29:21,352 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-06-22 04:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:21,532 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-09-24 12:00:00+00:00: rolling Sharpe -4.27 < -1.00
+2026-10-12 06:29:21,553 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-10-04 12:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:21,613 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-11-08 08:00:00+00:00: rolling Sharpe -1.09 < -1.00
+2026-10-12 06:29:21,633 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-11-18 08:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:21,746 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-01-11 00:00:00+00:00: drawdown 20.3% > cap 20.0%
+2026-10-12 06:29:21,771 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-01-21 00:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:21,896 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-03-26 00:00:00+00:00: rolling Sharpe -1.07 < -1.00
+2026-10-12 06:29:21,920 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-04-05 00:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:22,044 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-06-11 20:00:00+00:00: rolling Sharpe -4.27 < -1.00
+2026-10-12 06:29:22,067 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-06-21 20:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:22,276 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-09-24 12:00:00+00:00: rolling Sharpe -4.27 < -1.00
+2026-10-12 06:29:22,299 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-10-04 12:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:22,359 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-11-08 08:00:00+00:00: rolling Sharpe -1.09 < -1.00
+2026-10-12 06:29:22,379 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-11-18 08:00:00+00:00 (cooldown elapsed)
+2026-10-12 06:29:22,656 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-03-26 20:00:00+00:00: rolling Sharpe -1.18 < -1.00
+2026-10-12 06:29:22,687 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-04-05 20:00:00+00:00 (cooldown elapsed)
+Data source: synthetic(seed=42) | symbol BTCUSDT | timeframe 4h | bars traded 2190 (2023-01-01 00:00:00+00:00 .. 2023-12-31 20:00:00+00:00, UTC) | warm-up bars 250
+
+NOTE: synthetic data - results say nothing about real-market profitability.
+
+== Bar-level decision @ 2023-01-01T00:00:00+00:00 ==
+  [market_intel] BUY conf=0.280 available=True
+      reason: BUY: buying pressure dominates - OFI +0.145, CVD change +0.091, institutional-style momentum +0.510, price/volume corr +0.05; composite +0.280 beyond +/-0.15 [inputs: synthetic]
+      features: ofi=0.1448, cvd_norm=0.09126, inst_momentum=0.5099, pv_corr=0.05401, score=0.2801, cvd_is_proxy=False, input_provenance=synthetic
+  [risk_engine] HOLD conf=0.400 available=True
+      reason: HOLD (risk agent does not vote direction): elevated market risk, risk_score 0.60 (below veto 0.80); components: realized vol 120% -> 0.75, ATR 4.57% -> 1.00, market drawdown 0.0% -> 0.00
+      features: realized_vol=1.199, atr_pct=0.04567, market_drawdown=0, vol_score=0.7492, atr_score=1, drawdown_score=0, risk_score=0.5997, risk_veto=False, parkinson_vol=1.53, garman_klass_vol=1.63
+  [liquidity_engine] HOLD conf=0.000 available=True
+      reason: HOLD: no sweep - price stayed within the prior 35,185.67-45,310.92 range or failed to reverse; CVD(3) +0.38, depth imbalance -0.09, absorption ratio 1.55
+      features: bullish_sweep=False, bearish_sweep=False, prior_low=3.519e+04, prior_high=4.531e+04, cvd_norm_short=0.3754, depth_imbalance=-0.08517, absorption_ratio=1.553, cvd_is_proxy=False
+  [sentiment_engine] BUY conf=0.236 available=True
+      reason: BUY: social +0.74, news +0.73, funding +9.53bp/8h -> contrarian term -0.93 (extreme funding -> contrarian bearish); composite +0.236 using 3/3 components
+      features: social_norm=0.7421, news_norm=0.7323, funding_rate=0.0009532, funding_term=-0.9331, composite=0.2361, components_available=3, weight_coverage=1, input_provenance=synthetic
+  [regime_detector] BUY conf=1.000 available=True
+      reason: BUY: regime 'trend_up' because ADX confirms a trend and the fast EMA is above the slow EMA; EMA_fast 39,969.12 > EMA_slow 32,236.58 (+23.99%), ADX 41.8 (trend >= 20), realized vol 120% (volatile >= 120%)
+      features: regime=trend_up, ema_fast=3.997e+04, ema_slow=3.224e+04, adx=41.75, realized_vol=1.199, plus_di=29.01, minus_di=8.607
+  weights (base x regime x family -> learned/effective):
+      market_intel       base 1.00 learned 1.00 regime x1.40 family x1.00 -> eff 1.40; input +0.280 contrib +0.075
+      risk_engine        base 1.00 learned 1.00 regime x1.00 family x1.00 -> eff 1.00; input +0.000 contrib +0.000
+      liquidity_engine   base 1.00 learned 1.00 regime x0.90 family x1.00 -> eff 0.90; input +0.000 contrib +0.000
+      sentiment_engine   base 1.00 learned 1.00 regime x1.10 family x1.00 -> eff 1.10; input +0.236 contrib +0.050
+      regime_detector    base 1.00 learned 1.00 regime x0.80 family x1.00 -> eff 0.80; input +1.000 contrib +0.154
+  regime=trend_up directional_score=+0.2792 agreement=1.000 coverage=0.635 data_coverage=1.000
+  ensemble strength=0.350 (uncalibrated_ensemble_strength)
+  risk_score=0.60 risk_veto=False kill_switch=False
+  raw_action=BUY action=BUY forced_hold_rule=None
+  analyst note: Regime trend_up (ADX 42, EMA gap +24.0%) (regime_detector BUY, contribution +0.154); OFI +0.14 and positive institutional-style momentum (+0.51) indicate buying pressure (market_intel BUY, contribution +0.075); bullish sentiment composite +0.24 (funding +9.53bp/8h) (sentiment_engine BUY, contribution +0.050); risk_score 0.60 is below the veto threshold 0.80; overall weighted direction is positive (S=+0.279) with strong agreement 1.00, coverage 0.63, ensemble strength 0.35 (uncalibrated) in regime 'trend_up'; decision: BUY.
+
+== Sample trade ==
+  LONG entry 2023-01-01 04:00:00+00:00 @ 45,937.12 (qty peak 0.7634)
+  exit 2023-01-21 04:00:00+00:00 @ 35,673.35 after 120 bars
+  gross PnL -7,834.99 (slippage inside fill prices: 31.15) fees 62.30 net PnL -7,897.29
+  entry reason: BUY: raise exposure 0.00 -> 0.35 | Regime trend_up (ADX 42, EMA gap +24.0%) (regime_detector BUY, contribution +0.154); OFI +0.14 and positive institutional-style momentum (+0.51) indicate buying pressure (market_intel BUY, contribution +0.075); bullish sentiment composite +0.24 (funding +9.53bp/8h)
+  exit reason: kill switch active: flatten existing position | OFI -0.41 and negative institutional-style momentum (-0.31) indicate selling pressure (market_intel SELL, contribution -0.067); regime trend_down (ADX 26, EMA gap -5.5%) (regime_detector SELL, contribution -0.050); risk_score 0.59 is below the veto thr
+
+== Agent leaderboard (matured outcomes only; hit = direction of 20-bar forward return) ==
+  agent              preds   dir   mat    hit    cw_ret standalone  incr(bp)      t  w_now  w_sugg
+  market_intel        2190  1224  1208  63.2%   +0.0061     -0.087     +5.21  +1.99   1.00    1.04
+  regime_detector     2190  1024  1024  57.0%   +0.0075     +0.624     +2.55  +0.57   1.00    1.00
+  sentiment_engine    2190   503   493  66.9%   +0.0075     +0.262     -0.43  -0.21   1.00    1.00
+  liquidity_engine    2190    75    74  62.2%   +0.0260     -0.051     -2.38  -0.98   1.00    1.00
+  risk_engine         2190     0     0    n/a       n/a     +0.000     -4.96  -2.21   1.00    1.00
+      note: insufficient matured directional samples (0 < 30)
+  (standalone = non-compounded unit-position return sum after costs; incr = signal-level ablation)
+
+== Execution-level ablation (full minus without-agent; in-sample, descriptive) ==
+  removed agent       return w/o  sharpe w/o   d_return  d_sharpe
+  market_intel            +2.94%        0.26     +3.23%     +0.17
+  risk_engine             +8.44%        0.53     -2.27%     -0.10
+  liquidity_engine        +8.05%        0.51     -1.88%     -0.08
+  sentiment_engine        +8.46%        0.52     -2.29%     -0.09
+  regime_detector         -1.43%       -0.29     +7.59%     +0.72
+
+== Adversarial shadow agent (never votes; same timing/costs; ignores risk controls) ==
+  disagreement observations 243, matured outcomes 243, counter hit rate 27.6%
+  consensus book: final 15,818 maxDD 99.2% | counter book: final 65,553 maxDD 62.5%
+  counter-consensus OUTPERFORMED consensus in this sample
+
+== Forced-HOLD rule counts (a bar can trigger several) ==
+  directional_score_floor=1677, kill_switch=300, min_confidence=1927, risk_veto=308
+
+== Kill-switch events ==
+  trigger@2023-01-21 00:00 (rolling Sharpe -2.66 < -1.00); recovery@2023-01-31 00:00 (cooldown elapsed; history reset); trigger@2023-03-28 04:00 (rolling Sharpe -1.23 < -1.00); recovery@2023-04-07 04:00 (cooldown elapsed; history reset); trigger@2023-06-16 00:00 (rolling Sharpe -1.29 < -1.00); recovery@2023-06-26 00:00 (cooldown elapsed; history reset); trigger@2023-09-25 08:00 (rolling Sharpe -1.84 < -1.00); recovery@2023-10-05 08:00 (cooldown elapsed; history reset); trigger@2023-11-08 08:00 (rolling Sharpe -1.11 < -1.00); recovery@2023-11-18 08:00 (cooldown elapsed; history reset)
+
+== Benchmark comparison (same window, same fees/slippage, mark-to-market) ==
+  name              return   sharpe    maxDD  trades       fees
+  strategy          +6.17%     0.43   19.21%       5        383
+  no_trade          +0.00%      n/a    0.00%       0          0
+  buy_and_hold     -24.72%     0.28   68.91%       0        100
+  ema_trend        -28.83%    -0.01   61.29%      14      2,081
+
+== Strategy performance (net of fees and slippage) ==
+  initial equity      100,000.00
+  final equity        106,167.63
+  total net return    +6.17%
+  CAGR                +6.17%
+  Sharpe (annualized) 0.43
+  max drawdown        19.21%
+  closed trades       5
+  win rate            40.0%
+  profit factor       1.70
+  turnover            3.97x mean equity
+  total fees          383.08
+  est. slippage       191.54
+  avg holding period  97.6 bars (16.3 days)
+  avg |exposure|      10.05%  (long 10.05%, short 0.00%)
+  bars                2190
+
+$ python main.py --mode backtest --symbol BTCUSDT --start 2023-01-01 --end 2024-01-01 --synthetic --walk-forward --log-level WARNING   # stderr kill-switch warnings omitted
+Data source: synthetic(seed=42) | 2190 tradable bars (UTC, end exclusive)
+
+NOTE: synthetic data - out-of-sample here means unseen *synthetic* bars, not evidence of real alpha.
+
+== Walk-forward folds (IS = train with feedback, VAL = threshold selection, OOS = frozen test) ==
+  fold        train         val        test    IS ret  VAL ret  OOS ret  B&H OOS min_conf w_upd  Brier cal/base
+     0    250-750     770-870     890-990      -6.42%   +0.00%   +0.00%   +7.17%     0.25     4             n/a
+     1    350-850     870-970     990-1090     +1.82%   +0.00%   +0.00%  +37.03%     0.25    22             n/a
+     2    450-950     970-1070   1090-1190     +1.78%   +0.00%   +0.00%   -6.43%     0.25    22             n/a
+     3    550-1050   1070-1170   1190-1290     +1.75%   +0.00%   -5.62%  -10.10%     0.25    18     0.250/0.257
+     4    650-1150   1170-1270   1290-1390     -0.91%   -2.04%   +0.00%   -1.61%     0.25    15             n/a
+     5    750-1250   1270-1370   1390-1490     -0.48%   +0.00%   +0.00%  -15.56%     0.25     4             n/a
+     6    850-1350   1370-1470   1490-1590     -0.61%   +0.00%   +0.00%   +4.65%     0.25     0             n/a
+     7    950-1450   1470-1570   1590-1690     -0.61%   +0.00%   +0.00%  -16.69%     0.25     7             n/a
+     8   1050-1550   1570-1670   1690-1790     -0.61%   +0.00%   +0.00%   -7.04%     0.25     0             n/a
+     9   1150-1650   1670-1770   1790-1890     -3.35%   +0.00%   -0.30%   +4.22%     0.25     0             n/a
+    10   1250-1750   1770-1870   1890-1990     -7.16%   -1.79%  +21.80%  +63.77%     0.35     0             n/a
+    11   1350-1850   1870-1970   1990-2090     +0.00%  +16.61%   -2.30%   -5.64%     0.25     3             n/a
+    12   1450-1950   1970-2070   2090-2190     +2.08%   +5.73%   +0.00%   +7.93%     0.25     7             n/a
+    13   1550-2050   2070-2170   2190-2290    +22.11%   +0.00%   +0.00%  -13.02%     0.25     7     0.596/0.631
+    14   1650-2150   2170-2270   2290-2390    +13.98%   +0.00%   +0.00%   -6.05%     0.25    10     0.209/0.231
+  mean in-sample (train) return +1.56%; mean validation return +1.23%
+  learned weights after last training window: market_intel=1.11, risk_engine=1.00, liquidity_engine=1.00, sentiment_engine=0.94, regime_detector=1.09
+== Aggregated OUT-OF-SAMPLE (chained test windows) ==
+  initial equity      100,000.00
+  final equity        111,977.25
+  total net return    +11.98%
+  CAGR                +18.16%
+  Sharpe (annualized) 1.13
+  max drawdown        14.11%
+  closed trades       0
+  win rate            n/a
+  profit factor       n/a
+  turnover            1.55x mean equity
+  total fees          160.55
+  est. slippage       80.24
+  avg holding period  n/a
+  avg |exposure|      8.27%  (long 8.27%, short 0.00%)
+  bars                1486
+  note[win_rate]: unavailable: no closed trades
+  note[profit_factor]: unavailable: no closed trades
+  note[avg_holding]: unavailable: no closed trades
+  buy-and-hold over the same chained test windows: return +18.14%, Sharpe 0.78, maxDD 54.97%
+
+$ python main.py --mode paper --symbol BTCUSDT --synthetic
+2026-10-12 06:29:33,084 INFO data.feed: synthetic feed: symbol=BTCUSDT seed=42 bars=2440 (warm-up 250, tradable 2190) 2022-11-20 08:00:00+00:00..2023-12-31 20:00:00+00:00
+2026-10-12 06:29:33,152 INFO execution.executor: PAPER ORDER (simulated, no broker) decided 2023-01-01 00:00:00+00:00 -> target exposure 0.350 | BUY: raise exposure 0.00 -> 0.35 | Regime trend_up (ADX 42, EMA gap +24.0%) (regime_detector BUY, contribution +0.154); OFI +0.14 and positive institutional-sty
+2026-10-12 06:29:33,153 INFO execution.executor: PAPER FILL (simulated) 2023-01-01 04:00:00+00:00 BUY 0.763364 @ 45937.12 (ref 45914.16) fee 35.07
+2026-10-12 06:29:33,189 WARNING core.portfolio_risk: kill switch TRIGGERED at 2023-01-21 00:00:00+00:00: rolling Sharpe -2.66 < -1.00
+2026-10-12 06:29:33,190 INFO execution.executor: PAPER ORDER (simulated, no broker) decided 2023-01-21 00:00:00+00:00 -> target exposure 0.000 | kill switch active: flatten existing position | OFI -0.41 and negative institutional-style momentum (-0.31) indicate selling pressure (market_intel SELL, contri
+2026-10-12 06:29:33,190 INFO execution.executor: PAPER FILL (simulated) 2023-01-21 04:00:00+00:00 SELL 0.763364 @ 35673.35 (ref 35691.20) fee 27.23
+2026-10-12 06:29:33,230 WARNING core.portfolio_risk: kill switch RECOVERED at 2023-01-31 00:00:00+00:00 (cooldown elapsed)
+PAPER MODE (simulated fills, NO broker connection, no real orders) | source synthetic(seed=42) | bars 300
+
+  simulated fills: 2; closed trades: 1; unfilled at end: 0
+
+  SIM FILL 2023-01-01 04:00:00+00:00 BUY 0.7634 @ 45,937.12 fee 35.07
+
+  SIM FILL 2023-01-21 04:00:00+00:00 SELL 0.7634 @ 35,673.35 fee 27.23
+
+== Paper session performance ==
+  initial equity      100,000.00
+  final equity        92,102.71
+  total net return    -7.90%
+  CAGR                n/a
+  Sharpe (annualized) -1.70
+  max drawdown        19.21%
+  closed trades       1
+  win rate            0.0%
+  profit factor       0.00
+  turnover            0.66x mean equity
+  total fees          62.30
+  est. slippage       31.15
+  avg holding period  120.0 bars (20.0 days)
+  avg |exposure|      13.17%  (long 13.17%, short 0.00%)
+  bars                300
+  note[cagr]: unavailable: window 0.14y < 0.25y
+
+$ python main.py --mode backtest --symbol BTCUSDT --live-feed
+LIVE FEED UNAVAILABLE: live feed for BTCUSDT is a stub: no market-data provider is connected. Implement data.feed.LiveFeedStub.get_bars (or a new MarketDataProvider) or run with --synthetic. The framework never falls back to synthetic data silently.
+(exit code 2)
+
+$ python -m unittest discover -s tests -v
+test_costs_applied_equally (test_adversarial_agent.TestAdversarial.test_costs_applied_equally) ... ok
+test_hold_is_not_an_observation (test_adversarial_agent.TestAdversarial.test_hold_is_not_an_observation) ... ok
+test_no_same_bar_execution (test_adversarial_agent.TestAdversarial.test_no_same_bar_execution) ... ok
+test_takes_opposite_side_and_pnl (test_adversarial_agent.TestAdversarial.test_takes_opposite_side_and_pnl) ... ok
+test_benchmarks_same_window (test_backtester.TestBacktestRun.test_benchmarks_same_window) ... ok
+test_equity_consistency (test_backtester.TestBacktestRun.test_equity_consistency) ... ok
+test_fills_at_next_bar_open_with_costs (test_backtester.TestBacktestRun.test_fills_at_next_bar_open_with_costs) ... ok
+test_long_only_never_short (test_backtester.TestBacktestRun.test_long_only_never_short) ... ok
+test_orders_reference_previous_decision (test_backtester.TestBacktestRun.test_orders_reference_previous_decision) ... ok
+test_fill_only_after_decision_bar (test_backtester.TestExecutor.test_fill_only_after_decision_bar) ... ok
+test_paper_never_routes_live (test_backtester.TestExecutor.test_paper_never_routes_live) ... ok
+test_unfilled_at_end (test_backtester.TestExecutor.test_unfilled_at_end) ... ok
+test_cooldown_recovery (test_backtester.TestKillSwitch.test_cooldown_recovery) ... ok
+test_manual_stays_active (test_backtester.TestKillSwitch.test_manual_stays_active) ... ok
+test_min_history_then_drawdown_trigger (test_backtester.TestKillSwitch.test_min_history_then_drawdown_trigger) ... ok
+test_sharpe_trigger (test_backtester.TestKillSwitch.test_sharpe_trigger) ... ok
+test_buy_then_sell_hand_calculated (test_backtester.TestPortfolioAccounting.test_buy_then_sell_hand_calculated) ... ok
+test_equity_identity (test_backtester.TestPortfolioAccounting.test_equity_identity) ... ok
+test_no_unintended_leverage (test_backtester.TestPortfolioAccounting.test_no_unintended_leverage) ... ok
+test_partial_exit_realizes_proportionally (test_backtester.TestPortfolioAccounting.test_partial_exit_realizes_proportionally) ... ok
+test_reversal_two_legs_both_charged (test_backtester.TestPortfolioAccounting.test_reversal_two_legs_both_charged) ... ok
+test_short_rejected_when_long_only (test_backtester.TestPortfolioAccounting.test_short_rejected_when_long_only) ... ok
+test_buy_sizing_bounded (test_backtester.TestPositionManagement.test_buy_sizing_bounded) ... ok
+test_hold_keeps_position (test_backtester.TestPositionManagement.test_hold_keeps_position) ... ok
+test_kill_switch_flatten_and_hold_policies (test_backtester.TestPositionManagement.test_kill_switch_flatten_and_hold_policies) ... ok
+test_long_only_sell_closes_without_short (test_backtester.TestPositionManagement.test_long_only_sell_closes_without_short) ... ok
+test_risk_veto_reduces_existing (test_backtester.TestPositionManagement.test_risk_veto_reduces_existing) ... ok
+test_sell_reduce_policy (test_backtester.TestPositionManagement.test_sell_reduce_policy) ... ok
+test_volatility_aware_sizing (test_backtester.TestPositionManagement.test_volatility_aware_sizing) ... ok
+test_data_coverage_rule (test_boss_orchestrator.TestBoss.test_data_coverage_rule) ... ok
+test_disabled_agent_rejected (test_boss_orchestrator.TestBoss.test_disabled_agent_rejected) ... ok
+test_disagreement_reduces_agreement (test_boss_orchestrator.TestBoss.test_disagreement_reduces_agreement) ... ok
+test_family_normalization (test_boss_orchestrator.TestBoss.test_family_normalization) ... ok
+test_floors (test_boss_orchestrator.TestBoss.test_floors) ... ok
+test_kalman_smoothing_responds_to_reversal (test_boss_orchestrator.TestBoss.test_kalman_smoothing_responds_to_reversal) ... ok
+test_kill_switch_forces_hold (test_boss_orchestrator.TestBoss.test_kill_switch_forces_hold) ... ok
+test_learned_weights_clipped (test_boss_orchestrator.TestBoss.test_learned_weights_clipped) ... ok
+test_reasoner_mentions_actual_values (test_boss_orchestrator.TestBoss.test_reasoner_mentions_actual_values) ... ok
+test_regime_weights_applied (test_boss_orchestrator.TestBoss.test_regime_weights_applied) ... ok
+test_risk_unavailable_fails_safe (test_boss_orchestrator.TestBoss.test_risk_unavailable_fails_safe) ... ok
+test_risk_veto_overrides_buy (test_boss_orchestrator.TestBoss.test_risk_veto_overrides_buy) ... ok
+test_unavailable_agent_excluded_not_confirming (test_boss_orchestrator.TestBoss.test_unavailable_agent_excluded_not_confirming) ... ok
+test_weighted_score_hand_calculated (test_boss_orchestrator.TestBoss.test_weighted_score_hand_calculated) ... ok
+test_fit_monotone (test_evaluator.TestCalibrator.test_fit_monotone) ... ok
+test_insufficient (test_evaluator.TestCalibrator.test_insufficient) ... ok
+test_drawdown (test_evaluator.TestMetrics.test_drawdown) ... ok
+test_no_losses_profit_factor_unavailable (test_evaluator.TestMetrics.test_no_losses_profit_factor_unavailable) ... ok
+test_zero_variance_and_no_trades (test_evaluator.TestMetrics.test_zero_variance_and_no_trades) ... ok
+test_future_prices_do_not_matter (test_evaluator.TestScoreAgents.test_future_prices_do_not_matter) ... ok
+test_hold_excluded_from_hit_rate (test_evaluator.TestScoreAgents.test_hold_excluded_from_hit_rate) ... ok
+test_only_matured_outcomes (test_evaluator.TestScoreAgents.test_only_matured_outcomes) ... ok
+test_standalone_pnl_with_costs (test_evaluator.TestScoreAgents.test_standalone_pnl_with_costs) ... ok
+test_unavailable_excluded (test_evaluator.TestScoreAgents.test_unavailable_excluded) ... ok
+test_wrong_direction_misses (test_evaluator.TestScoreAgents.test_wrong_direction_misses) ... ok
+test_insufficient_samples_keep_weight (test_evaluator.TestSuggestWeights.test_insufficient_samples_keep_weight) ... ok
+test_negative_evidence_decreases_bounded (test_evaluator.TestSuggestWeights.test_negative_evidence_decreases_bounded) ... ok
+test_neutral_evidence_shrinks_to_base (test_evaluator.TestSuggestWeights.test_neutral_evidence_shrinks_to_base) ... ok
+test_positive_evidence_increases_bounded (test_evaluator.TestSuggestWeights.test_positive_evidence_increases_bounded) ... ok
+test_frozen_never_updates (test_feedback.TestFeedback.test_frozen_never_updates) ... ok
+test_ignores_records_before_window (test_feedback.TestFeedback.test_ignores_records_before_window) ... ok
+test_only_on_interval (test_feedback.TestFeedback.test_only_on_interval) ... ok
+test_uses_only_matured_data (test_feedback.TestFeedback.test_uses_only_matured_data) ... ok
+test_weights_bounded_and_logged (test_feedback.TestFeedback.test_weights_bounded_and_logged) ... ok
+test_stable_reversal_missing_bounds (test_integration.TestKalman.test_stable_reversal_missing_bounds) ... ok
+test_all_agents_analyze_same_state (test_integration.TestPipeline.test_all_agents_analyze_same_state) ... ok
+test_features_are_causal (test_integration.TestPipeline.test_features_are_causal) ... ok
+test_frozen_run_has_no_weight_updates (test_integration.TestPipeline.test_frozen_run_has_no_weight_updates) ... ok
+test_missing_order_flow_disables_ofi (test_integration.TestPipeline.test_missing_order_flow_disables_ofi) ... ok
+test_missing_sentiment_feed_is_unavailable_not_neutral (test_integration.TestPipeline.test_missing_sentiment_feed_is_unavailable_not_neutral) ... ok
+test_optional_agent_flag (test_integration.TestPipeline.test_optional_agent_flag) ... ok
+test_optional_agent_unavailable_without_data (test_integration.TestPipeline.test_optional_agent_unavailable_without_data) ... ok
+test_reproducible_with_seed (test_integration.TestPipeline.test_reproducible_with_seed) ... ok
+test_synthetic_labelled (test_integration.TestPipeline.test_synthetic_labelled) ... ok
+test_config_errors (test_integration.TestValidation.test_config_errors) ... ok
+test_duplicates (test_integration.TestValidation.test_duplicates) ... ok
+test_insufficient_history (test_integration.TestValidation.test_insufficient_history) ... ok
+test_invalid_date_range (test_integration.TestValidation.test_invalid_date_range) ... ok
+test_live_feed_stub_never_falls_back (test_integration.TestValidation.test_live_feed_stub_never_falls_back) ... ok
+test_missing_and_invalid_prices (test_integration.TestValidation.test_missing_and_invalid_prices) ... ok
+test_naive_timestamps (test_integration.TestValidation.test_naive_timestamps) ... ok
+test_valid (test_integration.TestValidation.test_valid) ... ok
+test_folds_chronological_with_embargo (test_integration.TestWalkForward.test_folds_chronological_with_embargo) ... ok
+test_too_short_raises (test_integration.TestWalkForward.test_too_short_raises) ... ok
+test_walk_forward_runs_and_separates_results (test_integration.TestWalkForward.test_walk_forward_runs_and_separates_results) ... ok
+test_hand_calculated (test_liquidity.TestAbsorption.test_hand_calculated) ... ok
+test_zero_baseline_volume_nan (test_liquidity.TestAbsorption.test_zero_baseline_volume_nan) ... ok
+test_zero_range_capped (test_liquidity.TestAbsorption.test_zero_range_capped) ... ok
+test_negative_raises (test_liquidity.TestDepth.test_negative_raises) ... ok
+test_scalar (test_liquidity.TestDepth.test_scalar) ... ok
+test_series (test_liquidity.TestDepth.test_series) ... ok
+test_bearish_confirmed (test_liquidity.TestSweeps.test_bearish_confirmed) ... ok
+test_bullish_confirmed (test_liquidity.TestSweeps.test_bullish_confirmed) ... ok
+test_no_reversal_no_sweep (test_liquidity.TestSweeps.test_no_reversal_no_sweep) ... ok
+test_prior_level_excludes_current_and_is_causal (test_liquidity.TestSweeps.test_prior_level_excludes_current_and_is_causal) ... ok
+test_warmup_false (test_liquidity.TestSweeps.test_warmup_false) ... ok
+test_absorption_adds_confidence (test_liquidity_engine.TestLiquidityEngine.test_absorption_adds_confidence) ... ok
+test_bearish_confirmed (test_liquidity_engine.TestLiquidityEngine.test_bearish_confirmed) ... ok
+test_bullish_confirmed_by_cvd_and_depth (test_liquidity_engine.TestLiquidityEngine.test_bullish_confirmed_by_cvd_and_depth) ... ok
+test_bullish_cvd_divergence_hold (test_liquidity_engine.TestLiquidityEngine.test_bullish_cvd_divergence_hold) ... ok
+test_bullish_without_flow_data_unconfirmed (test_liquidity_engine.TestLiquidityEngine.test_bullish_without_flow_data_unconfirmed) ... ok
+test_no_sweep (test_liquidity_engine.TestLiquidityEngine.test_no_sweep) ... ok
+test_two_sided_ambiguous (test_liquidity_engine.TestLiquidityEngine.test_two_sided_ambiguous) ... ok
+test_warmup_unavailable (test_liquidity_engine.TestLiquidityEngine.test_warmup_unavailable) ... ok
+test_deterministic (test_market_intel.TestMarketIntel.test_deterministic) ... ok
+test_feed_not_supplied (test_market_intel.TestMarketIntel.test_feed_not_supplied) ... ok
+test_missing_input_unavailable (test_market_intel.TestMarketIntel.test_missing_input_unavailable) ... ok
+test_negative_flow_sell (test_market_intel.TestMarketIntel.test_negative_flow_sell) ... ok
+test_neutral_hold_explained (test_market_intel.TestMarketIntel.test_neutral_hold_explained) ... ok
+test_positive_flow_buy (test_market_intel.TestMarketIntel.test_positive_flow_buy) ... ok
+test_invalid_side (test_order_flow.TestCVD.test_invalid_side) ... ok
+test_normalized_change (test_order_flow.TestCVD.test_normalized_change) ... ok
+test_tick_rule_proxy (test_order_flow.TestCVD.test_tick_rule_proxy) ... ok
+test_with_side (test_order_flow.TestCVD.test_with_side) ... ok
+test_constant_price_is_zero (test_order_flow.TestInstitutionalMomentum.test_constant_price_is_zero) ... ok
+test_insufficient_history (test_order_flow.TestInstitutionalMomentum.test_insufficient_history) ... ok
+test_matches_formula (test_order_flow.TestInstitutionalMomentum.test_matches_formula) ... ok
+test_reproducible (test_order_flow.TestInstitutionalMomentum.test_reproducible) ... ok
+test_zero_prior_volume_nan (test_order_flow.TestInstitutionalMomentum.test_zero_prior_volume_nan) ... ok
+test_zero_variance_trend (test_order_flow.TestInstitutionalMomentum.test_zero_variance_trend) ... ok
+test_causal (test_order_flow.TestOFI.test_causal) ... ok
+test_hand_calculated (test_order_flow.TestOFI.test_hand_calculated) ... ok
+test_invalid_inputs (test_order_flow.TestOFI.test_invalid_inputs) ... ok
+test_missing_value_propagates_nan (test_order_flow.TestOFI.test_missing_value_propagates_nan) ... ok
+test_sign_convention_and_bounds (test_order_flow.TestOFI.test_sign_convention_and_bounds) ... ok
+test_zero_volume_is_nan (test_order_flow.TestOFI.test_zero_volume_is_nan) ... ok
+test_constant_is_nan (test_order_flow.TestPVCorr.test_constant_is_nan) ... ok
+test_perfect_positive (test_order_flow.TestPVCorr.test_perfect_positive) ... ok
+test_range (test_regime_detector.TestRegimeDetector.test_range) ... ok
+test_trend_down (test_regime_detector.TestRegimeDetector.test_trend_down) ... ok
+test_trend_up (test_regime_detector.TestRegimeDetector.test_trend_up) ... ok
+test_volatile_overrides_trend (test_regime_detector.TestRegimeDetector.test_volatile_overrides_trend) ... ok
+test_warmup_unknown (test_regime_detector.TestRegimeDetector.test_warmup_unknown) ... ok
+test_extreme_risk_veto (test_risk_engine.TestRiskEngine.test_extreme_risk_veto) ... ok
+test_hand_calculated_components (test_risk_engine.TestRiskEngine.test_hand_calculated_components) ... ok
+test_low_risk (test_risk_engine.TestRiskEngine.test_low_risk) ... ok
+test_missing_fails_safe (test_risk_engine.TestRiskEngine.test_missing_fails_safe) ... ok
+test_all_missing_nan (test_sentiment.TestComposite.test_all_missing_nan) ... ok
+test_component_directions (test_sentiment.TestComposite.test_component_directions) ... ok
+test_hand_calculated_with_missing (test_sentiment.TestComposite.test_hand_calculated_with_missing) ... ok
+test_invalid_weights (test_sentiment.TestComposite.test_invalid_weights) ... ok
+test_inside_threshold_zero (test_sentiment.TestFunding.test_inside_threshold_zero) ... ok
+test_invalid (test_sentiment.TestFunding.test_invalid) ... ok
+test_missing (test_sentiment.TestFunding.test_missing) ... ok
+test_negative_extreme_is_bullish_and_saturates (test_sentiment.TestFunding.test_negative_extreme_is_bullish_and_saturates) ... ok
+test_positive_is_bearish (test_sentiment.TestFunding.test_positive_is_bearish) ... ok
+test_missing_and_invalid (test_sentiment.TestNormalize.test_missing_and_invalid) ... ok
+test_values (test_sentiment.TestNormalize.test_values) ... ok
+test_extreme_negative_funding_contrarian_buy (test_sentiment_engine.TestSentimentEngine.test_extreme_negative_funding_contrarian_buy) ... ok
+test_extreme_positive_funding_contrarian_sell (test_sentiment_engine.TestSentimentEngine.test_extreme_positive_funding_contrarian_sell) ... ok
+test_missing_feed_not_neutral (test_sentiment_engine.TestSentimentEngine.test_missing_feed_not_neutral) ... ok
+test_negative_news_social_sell (test_sentiment_engine.TestSentimentEngine.test_negative_news_social_sell) ... ok
+test_positive_news_social_buy (test_sentiment_engine.TestSentimentEngine.test_positive_news_social_buy) ... ok
+test_too_few_components_unavailable (test_sentiment_engine.TestSentimentEngine.test_too_few_components_unavailable) ... ok
+test_true_range (test_volatility.TestATR.test_true_range) ... ok
+test_wilder_hand_calculated (test_volatility.TestATR.test_wilder_hand_calculated) ... ok
+test_wilder_insufficient (test_volatility.TestATR.test_wilder_insufficient) ... ok
+test_drawdown (test_volatility.TestDrawdownAndValidation.test_drawdown) ... ok
+test_validate_ohlc (test_volatility.TestDrawdownAndValidation.test_validate_ohlc) ... ok
+test_garman_klass (test_volatility.TestRangeEstimators.test_garman_klass) ... ok
+test_parkinson (test_volatility.TestRangeEstimators.test_parkinson) ... ok
+test_zero_range_is_zero (test_volatility.TestRangeEstimators.test_zero_range_is_zero) ... ok
+test_annualization (test_volatility.TestRealizedVol.test_annualization) ... ok
+test_constant_zero_variance (test_volatility.TestRealizedVol.test_constant_zero_variance) ... ok
+test_hand_calculated (test_volatility.TestRealizedVol.test_hand_calculated) ... ok
+test_invalid (test_volatility.TestRealizedVol.test_invalid) ... ok
+test_adx_flat_zero (test_volatility.TestTrend.test_adx_flat_zero) ... ok
+test_adx_strong_uptrend (test_volatility.TestTrend.test_adx_strong_uptrend) ... ok
+test_ema_warmup_and_constant (test_volatility.TestTrend.test_ema_warmup_and_constant) ... ok
+
+----------------------------------------------------------------------
+Ran 168 tests in 5.238s
+
+OK

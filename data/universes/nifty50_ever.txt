@@ -1,0 +1,89 @@
+# Everything that has been in the NIFTY 50 since ~2008 and still trades: current members
+# (nifty50.txt) plus former members (nifty50_former.txt). Use this for the fairest comparison.
+ADANIENT
+ADANIPORTS
+APOLLOHOSP
+ASIANPAINT
+AXISBANK
+BAJAJ-AUTO
+BAJFINANCE
+BAJAJFINSV
+BEL
+BHARTIARTL
+BSE
+CIPLA
+COALINDIA
+DRREDDY
+EICHERMOT
+ETERNAL
+GRASIM
+HCLTECH
+HDFCBANK
+HDFCLIFE
+HINDALCO
+HINDUNILVR
+ICICIBANK
+INDIGO
+INFY
+ITC
+JIOFIN
+JSWSTEEL
+KOTAKBANK
+LT
+M&M
+MARUTI
+MAXHEALTH
+NESTLEIND
+NTPC
+ONGC
+POWERGRID
+RELIANCE
+SBILIFE
+SBIN
+SHRIRAMFIN
+SUNPHARMA
+TATACONSUM
+TATASTEEL
+TCS
+TECHM
+TITAN
+TMPV
+TRENT
+ULTRACEMCO
+UNITECH        # real estate, out ~2011
+SUZLON         # wind, out ~2012
+RCOM           # telecom, out ~2013
+RPOWER         # out ~2012
+RELINFRA       # out ~2013
+JPASSOCIAT     # out ~2013
+SIEMENS
+ABB
+HINDPETRO
+NMDC
+SAIL
+TATAPOWER
+DLF
+IDEA           # Vodafone Idea
+BANKBARODA
+PNB
+BHEL
+ACC
+AMBUJACEM
+LUPIN
+AUROPHARMA
+ZEEL           # out 2020
+YESBANK        # out 2020
+SAMMAANCAP     # ex-Indiabulls Housing Finance, out 2020
+INDUSTOWER     # ex-Bharti Infratel, out 2020
+VEDL           # out 2020
+GAIL
+IOC
+SHREECEM
+UPL
+DIVISLAB
+LTIM           # LTIMindtree
+BPCL
+BRITANNIA
+HEROMOTOCO     # out Sep-2025
+INDUSINDBK     # out Sep-2025
+WIPRO          # out Sep-2026

@@ -1,0 +1,171 @@
+# Multi-agent trading framework configuration.
+# All values are starting defaults for a synthetic research baseline. None of
+# them has been empirically optimized; do not treat them as validated settings.
+
+app:
+  seed: 42                 # synthetic data seed (CLI --seed overrides)
+  timezone: UTC            # all timestamps are UTC; CLI dates are UTC midnight
+  log_level: INFO
+
+data:
+  timeframe: 4h            # 1h | 4h | 1d ; sets bars_per_year (24/7 crypto: 4h -> 2190)
+  warmup_bars: 250         # history generated/loaded before --start; never traded
+  min_history_bars: 120    # reject datasets shorter than this
+
+strategy:
+  min_confidence: 0.35           # min ensemble strength (uncalibrated) to act
+  directional_score_floor: 0.15  # min |S| to act
+  min_data_coverage: 0.5         # min share of enabled agent weight with valid data
+  prediction_horizon: 20         # bars; directional evaluation only (not holding period)
+  long_only: true
+  allow_short: false             # must be false when long_only is true
+  sell_policy: close             # close | reduce  (what SELL does to an existing long)
+  sell_reduce_fraction: 0.5      # used when sell_policy = reduce
+  min_rebalance_exposure: 0.05   # ignore target changes smaller than this
+  on_risk_veto: reduce           # hold_position | reduce  (existing position on veto)
+  veto_exposure_cap: 0.5         # max |exposure| kept while risk veto is active
+
+execution:
+  initial_capital: 100000
+  fee_bps: 10                    # charged on every fill's notional
+  slippage_bps: 5                # adverse price adjustment on every fill
+  execution_price: next_bar_open # only supported model: decide at close t, fill at open t+1
+  max_position_size: 1.0         # max target exposure from one BUY (fraction of equity)
+  max_exposure: 1.0              # hard cap on |exposure|
+  exposure_cap: 1.0              # target = min(max_position_size, strength * exposure_cap)
+  max_leverage: 1.0              # 1.0 = no leverage
+  volatility_aware_sizing: false
+  target_volatility: 0.5         # annualized; size *= min(1, target_vol / realized_vol)
+
+risk:
+  risk_veto_threshold: 0.80      # market risk score above this forces HOLD
+  max_drawdown: 0.20             # portfolio kill switch: drawdown cap
+  rolling_sharpe_threshold: -1.0 # portfolio kill switch: annualized rolling Sharpe floor
+  rolling_sharpe_window: 120     # bars
+  kill_switch_min_history: 60    # bars of returns before the switch can trigger
+  kill_switch_recovery: cooldown # cooldown | manual
+  kill_switch_cooldown_bars: 60
+  kill_switch_position_policy: flatten  # flatten | hold existing positions when triggered
+
+evaluation:
+  lookahead: 20                  # must equal strategy.prediction_horizon
+  feedback_interval: 60          # bars between weight updates (training only)
+  min_agent_samples: 30          # matured directional predictions required to update
+  min_weight: 0.3
+  max_weight: 2.0
+  weight_smoothing: 0.25         # new = (1-s)*old + s*target
+  shrinkage_to_base: 0.5         # target pulled toward the base weight
+  tstat_neutral_band: 1.0        # |t| below this is treated as no evidence
+  weight_sensitivity: 0.15       # target multiplier exp(sensitivity * t)
+  calibration: true              # fit strength->hit calibration on train, score on test
+
+walk_forward:
+  enabled: false                 # CLI --walk-forward enables
+  train_bars: 500
+  validation_bars: 100
+  test_bars: 100
+  embargo_bars: 20               # must be >= prediction_horizon
+  step_bars: null                # null = test_bars
+  threshold_grid: [0.25, 0.35, 0.45]  # min_confidence candidates chosen on validation
+
+features:
+  enable_optional_agent: false
+  optional_agent_type: on_chain
+  enable_kalman: true
+  enable_regime_weights: true
+  enable_adversarial: true
+  enable_family_normalization: false
+
+indicators:
+  ofi_window: 20
+  cvd_window: 50
+  momentum_lookback: 20
+  pv_corr_window: 50
+  rv_window: 30
+  atr_window: 14
+  drawdown_window: 120
+  ema_fast: 20
+  ema_slow: 100
+  adx_period: 14
+  sweep_lookback: 20
+  absorption_window: 20
+  netflow_window: 50
+
+agents:
+  base_weights:
+    market_intel: 1.0
+    risk_engine: 1.0
+    liquidity_engine: 1.0
+    sentiment_engine: 1.0
+    regime_detector: 1.0
+    on_chain: 0.8
+  families:                      # signal families (for optional family normalization)
+    market_intel: price_flow
+    regime_detector: price_flow
+    liquidity_engine: microstructure
+    sentiment_engine: sentiment
+    risk_engine: risk
+    on_chain: on_chain
+  market_intel:
+    w_ofi: 0.4
+    w_cvd: 0.2
+    w_momentum: 0.4
+    signal_threshold: 0.15
+  risk_engine:
+    rv_low: 0.30                 # annualized vol mapped to score 0
+    rv_high: 1.50                # ... mapped to score 1
+    atr_pct_low: 0.005
+    atr_pct_high: 0.04
+    drawdown_full: 0.35          # market drawdown mapped to score 1
+    w_vol: 0.4
+    w_atr: 0.3
+    w_drawdown: 0.3
+  liquidity_engine:
+    min_confirmations: 1
+    absorption_threshold: 1.5
+    depth_threshold: 0.05
+    cvd_threshold: 0.0
+  sentiment_engine:
+    social_min: 0
+    social_max: 100
+    news_min: -1
+    news_max: 1
+    funding_threshold: 0.0003    # per 8h; |funding| below this is ignored
+    funding_saturation: 0.0010   # contrarian term reaches +-1 here
+    w_social: 0.35
+    w_news: 0.35
+    w_funding: 0.30
+    min_components: 2
+    signal_threshold: 0.20
+    treat_missing_as_neutral: false
+  regime_detector:
+    adx_trend: 20
+    adx_strong: 40
+    volatile_rv: 1.2
+    directional_vote: true
+  on_chain:
+    netflow_z_threshold: 0.5
+    w_netflow: 0.6
+    w_stablecoin: 0.4
+
+# Multiplicative factors applied to learned weights in each regime.
+# Illustrative initial values, NOT empirically validated.
+regime_weights:
+  trend_up:   {market_intel: 1.4, risk_engine: 1.0, liquidity_engine: 0.9, sentiment_engine: 1.1, regime_detector: 0.8, on_chain: 1.0}
+  trend_down: {market_intel: 1.3, risk_engine: 1.2, liquidity_engine: 1.0, sentiment_engine: 1.0, regime_detector: 0.8, on_chain: 1.0}
+  range:      {market_intel: 0.8, risk_engine: 1.0, liquidity_engine: 1.3, sentiment_engine: 0.9, regime_detector: 1.0, on_chain: 1.0}
+  volatile:   {market_intel: 0.7, risk_engine: 1.5, liquidity_engine: 1.0, sentiment_engine: 0.7, regime_detector: 1.2, on_chain: 1.0}
+
+kalman:
+  process_noise: 0.02            # higher = faster reaction, less smoothing
+  observation_noise: 0.10
+  initial_variance: 1.0
+
+synthetic:
+  start_price: 20000
+  base_volume: 1000
+  base_vol_annual: 0.55
+  min_segment_bars: 60
+  max_segment_bars: 240
+  flow_signal_strength: 0.25     # weak regime dependence of flow/sentiment (0 = pure noise)
+  generate_optional: true        # synthetic on-chain columns

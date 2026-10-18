@@ -1,0 +1,43 @@
+# Former NIFTY 50 members (left the index between roughly 2008 and Sep-2026) that are still
+# listed under an NSE symbol Yahoo may serve. Purpose: Step 3b survivorship check, i.e. how
+# each design copes with stocks that fell out of the index (many after large declines).
+# Compiled from NSE index-change history; exit years are approximate. Edit freely.
+# Not included (no longer trade / no usable history): Satyam, Ranbaxy, Cairn India, HDFC Ltd,
+# Reliance Capital, Tata Motors DVR, IDFC Ltd, Sterlite Industries, Sesa Goa (merged into VEDL).
+UNITECH        # real estate, out ~2011
+SUZLON         # wind, out ~2012
+RCOM           # telecom, out ~2013
+RPOWER         # out ~2012
+RELINFRA       # out ~2013
+JPASSOCIAT     # out ~2013
+SIEMENS
+ABB
+HINDPETRO
+NMDC
+SAIL
+TATAPOWER
+DLF
+IDEA           # Vodafone Idea
+BANKBARODA
+PNB
+BHEL
+ACC
+AMBUJACEM
+LUPIN
+AUROPHARMA
+ZEEL           # out 2020
+YESBANK        # out 2020
+SAMMAANCAP     # ex-Indiabulls Housing Finance, out 2020
+INDUSTOWER     # ex-Bharti Infratel, out 2020
+VEDL           # out 2020
+GAIL
+IOC
+SHREECEM
+UPL
+DIVISLAB
+LTIM           # LTIMindtree
+BPCL
+BRITANNIA
+HEROMOTOCO     # out Sep-2025
+INDUSINDBK     # out Sep-2025
+WIPRO          # out Sep-2026

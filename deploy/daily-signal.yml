@@ -1,0 +1,54 @@
+# Runs the paper-trading signal every weekday after the NSE close on GitHub's servers,
+# saves the paper book back to this repository and publishes the dashboard website.
+# Paper only: no broker, no money, no secrets needed.
+name: Daily paper signal
+
+on:
+  schedule:
+    - cron: "0 11 * * 1-5"   # 11:00 UTC = 16:30 IST, Monday-Friday (GitHub may start it a little late)
+  workflow_dispatch:          # "Run workflow" button for a manual run
+
+permissions:
+  contents: write   # commit paper/ and site/ back
+  pages: write      # publish the website
+  id-token: write
+
+concurrency:
+  group: daily-signal
+  cancel-in-progress: false
+
+jobs:
+  signal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Run the daily signal
+        run: python main.py --market nse --real --universe nifty50 --daily-signal --log-level WARNING
+
+      - name: Save the paper book to the repository
+        run: |
+          git config user.name "daily-signal-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add paper site
+          git diff --cached --quiet || git commit -m "Daily signal $(TZ=Asia/Kolkata date +%F)"
+          git push
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
