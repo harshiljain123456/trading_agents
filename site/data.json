@@ -1,6 +1,6 @@
 {
  "universe": "nifty50",
- "updated": "19-Oct-2026 16:56 IST",
+ "updated": "20-Oct-2026 16:55 IST",
  "as_of": "Mon 19-Oct-2026",
  "next_session": "Tue 20-Oct",
  "filter": "IN CASH",
@@ -1882,9 +1882,9 @@
    "close": 22888.94921875,
    "agent": "market_intel",
    "signal": "SELL",
-   "confidence": 0.115,
+   "confidence": 0.12,
    "available": true,
-   "summary": "proxy flow -0.26 and momentum -0.21 (no real order-flow data)"
+   "summary": "proxy flow -0.28 and momentum -0.22 (no real order-flow data)"
   },
   {
    "as_of": "2026-10-19",
@@ -1932,7 +1932,7 @@
    "close": 22888.94921875,
    "agent": "boss",
    "signal": "HOLD",
-   "confidence": 0.27,
+   "confidence": 0.272,
    "available": true,
    "summary": "min_confidence"
   }
