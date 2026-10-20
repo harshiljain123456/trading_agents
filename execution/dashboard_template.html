@@ -5,13 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nifty Filter Dashboard</title>
 <meta name="robots" content="noindex">
+<!-- Interactive charts (zoom, pan, crosshair). If this CDN is unreachable the page falls back to built-in SVG charts. -->
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
 <style>
 :root {
   color-scheme: light;
   --bg: #f4f3ef; --surface: #fcfcfb; --border: #e3e1da; --grid: #ecebe5;
   --text: #0b0b0b; --text-2: #52514e; --muted: #8a8882;
   --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
-  --good: #0ca30c; --critical: #d03b3b; --cash-band: rgba(120,118,110,.13);
+  --good: #0ca30c; --critical: #d03b3b; --warning: #b77800; --cash-band: rgba(120,118,110,.14);
   --chip-buy: rgba(12,163,12,.12); --chip-sell: rgba(208,59,59,.12); --chip-hold: rgba(120,118,110,.12);
 }
 @media (prefers-color-scheme: dark) {
@@ -19,7 +21,7 @@
     color-scheme: dark;
     --bg: #121211; --surface: #1a1a19; --border: #2e2d2b; --grid: #262624;
     --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8d86;
-    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --cash-band: rgba(200,198,190,.10);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --warning: #fab219; --cash-band: rgba(200,198,190,.10);
     --chip-buy: rgba(12,163,12,.22); --chip-sell: rgba(208,59,59,.25); --chip-hold: rgba(200,198,190,.12);
   }
 }
@@ -27,69 +29,90 @@
   color-scheme: dark;
   --bg: #121211; --surface: #1a1a19; --border: #2e2d2b; --grid: #262624;
   --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8d86;
-  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --cash-band: rgba(200,198,190,.10);
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --warning: #fab219; --cash-band: rgba(200,198,190,.10);
   --chip-buy: rgba(12,163,12,.22); --chip-sell: rgba(208,59,59,.25); --chip-hold: rgba(200,198,190,.12);
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text);
-  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-.wrap { max-width: 1120px; margin: 0 auto; padding: 20px 16px 48px; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 20px 16px 48px; }
 header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
 h1 { font-size: 22px; margin: 0; letter-spacing: -.01em; }
 h2 { font-size: 17px; margin: 0 0 4px; }
 .sub { color: var(--text-2); font-size: 13px; }
 .muted { color: var(--muted); }
-button.theme { background: var(--surface); color: var(--text-2); border: 1px solid var(--border);
-  border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 13px; cursor: pointer; }
+button, .btn { font: inherit; font-size: 13px; cursor: pointer; background: var(--surface); color: var(--text-2);
+  border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; }
+button:hover { color: var(--text); border-color: var(--muted); }
+button[aria-pressed="true"] { background: var(--text); color: var(--surface); border-color: var(--text); }
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 16px; }
+.card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
 .hero { display: grid; grid-template-columns: auto 1fr; gap: 16px 24px; align-items: center; }
-.state { font-size: 28px; font-weight: 700; letter-spacing: .01em; display: flex; align-items: center; gap: 10px; }
+.state { font-size: 28px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
 .state .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
-.changed { display: inline-block; margin-left: 8px; font-size: 12px; font-weight: 600; padding: 2px 8px;
-  border-radius: 999px; background: var(--chip-sell); color: var(--text); vertical-align: middle; }
+.changed { display: inline-block; margin-left: 8px; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--chip-sell); }
 .action { font-size: 16px; font-weight: 600; }
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 16px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 12px; }
 .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+.card .kpi { background: var(--bg); }
 .kpi .l { font-size: 12px; color: var(--text-2); }
 .kpi .v { font-size: 20px; font-weight: 650; font-variant-numeric: tabular-nums; margin-top: 2px; }
 .kpi .n { font-size: 12px; color: var(--muted); }
-.chart { position: relative; width: 100%; }
-.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
-.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-2); margin: 6px 0 4px; }
+.pos { color: var(--good); } .neg { color: var(--critical); }
+.chartbox { position: relative; width: 100%; height: 340px; margin-top: 8px; }
+.chartbox.small { height: 230px; }
+.svgchart svg { display: block; width: 100%; height: auto; }
+.ranges { display: flex; gap: 6px; flex-wrap: wrap; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-2); margin: 8px 0 0; }
 .legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
 .legend i.band { height: 10px; background: var(--cash-band); border: 1px solid var(--border); }
-.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12);
-  white-space: nowrap; display: none; z-index: 5; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.14); white-space: nowrap; display: none; z-index: 20; }
 .tip b { font-variant-numeric: tabular-nums; }
-.tip .sw { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.sw { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.pop { position: absolute; z-index: 30; max-width: 340px; background: var(--surface); color: var(--text); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 12px; font-size: 12.5px; line-height: 1.45; box-shadow: 0 8px 28px rgba(0,0,0,.18); display: none; white-space: normal; }
+.pop table { font-size: 12px; margin-top: 6px; }
+.pop td, .pop th { padding: 2px 6px 2px 0; border: 0; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
 th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
-th { color: var(--text-2); font-weight: 600; font-size: 12px; position: sticky; top: 0; background: var(--surface); }
+th { color: var(--text-2); font-weight: 600; font-size: 12px; position: sticky; top: 0; background: var(--surface); z-index: 1; white-space: nowrap; }
 th.sort { cursor: pointer; user-select: none; }
 td.num, th.num { text-align: right; }
-.scroll { overflow-x: auto; max-height: 560px; overflow-y: auto; margin-top: 8px; }
-.chip { display: inline-block; min-width: 54px; text-align: center; padding: 1px 8px; border-radius: 999px;
-  font-size: 12px; font-weight: 600; }
+.scroll { overflow-x: auto; max-height: 600px; overflow-y: auto; margin-top: 8px; -webkit-overflow-scrolling: touch; }
+.chip { display: inline-flex; align-items: center; gap: 4px; min-width: 64px; justify-content: center; padding: 1px 8px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; border: 0; cursor: help; font-family: inherit; }
 .chip.BUY { background: var(--chip-buy); color: var(--good); }
 .chip.SELL { background: var(--chip-sell); color: var(--critical); }
 .chip.HOLD, .chip.na { background: var(--chip-hold); color: var(--text-2); font-weight: 500; }
-.controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
-.controls input, .controls select { font: inherit; font-size: 13px; padding: 6px 8px; border-radius: 8px;
+.alert { cursor: help; color: var(--warning); font-weight: 700; background: none; border: 0; padding: 0 2px; font-size: 14px; }
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+.toolbar input[type=search], .toolbar select { font: inherit; font-size: 13px; padding: 6px 8px; border-radius: 8px;
   border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+.live { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-2); padding: 4px 8px; border: 1px solid var(--border); border-radius: 999px; }
+.live i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
 .counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin-top: 10px; }
 .count { border: 1px solid var(--grid); border-radius: 10px; padding: 8px 10px; font-size: 12px; }
 .count b { display: block; font-size: 13px; margin-bottom: 4px; }
-.bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; gap: 2px; margin-top: 4px; background: var(--surface); }
+.bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; gap: 2px; margin-top: 4px; }
 .bar span { display: block; height: 100%; }
 .warn { border-left: 3px solid var(--critical); padding: 6px 10px; margin-top: 8px; font-size: 13px; background: var(--chip-sell); border-radius: 6px; }
 .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
-details summary { cursor: pointer; color: var(--text-2); font-size: 13px; margin-top: 8px; }
+.explain { margin-top: 10px; padding: 12px; border: 1px dashed var(--border); border-radius: 10px; font-size: 13px; }
+.explain code { font-size: 12px; }
+.cards { display: none; }
+.scard { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-top: 8px; }
+.scard .top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.scard .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; margin-top: 8px; font-size: 12px; color: var(--text-2); }
+.scard .grid div { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
 footer { margin-top: 28px; font-size: 12px; color: var(--muted); }
-@media (max-width: 640px) {
+@media (max-width: 700px) {
   .hero { grid-template-columns: 1fr; }
   .state { font-size: 24px; }
   .hide-sm { display: none; }
+  .stock-table { display: none; }
+  .cards { display: block; }
+  .chartbox { height: 280px; }
 }
 </style>
 </head>
@@ -100,35 +123,43 @@ footer { margin-top: 28px; font-size: 12px; color: var(--muted); }
       <h1>Nifty crash-filter · paper trading</h1>
       <div class="sub" id="updated"></div>
     </div>
-    <button class="theme" id="themeBtn" type="button" aria-label="Toggle light or dark theme">Theme</button>
+    <button id="themeBtn" type="button" aria-label="Toggle light or dark theme">◐ Theme</button>
   </header>
 
   <section class="card hero" aria-label="Today's signal">
-    <div>
-      <div class="sub">Nifty filter</div>
-      <div class="state" id="state"></div>
-    </div>
-    <div>
-      <div class="sub" id="nextLabel"></div>
-      <div class="action" id="action"></div>
-      <div class="sub" id="regime"></div>
-    </div>
+    <div><div class="sub">Nifty filter</div><div class="state" id="state"></div></div>
+    <div><div class="sub" id="nextLabel"></div><div class="action" id="action"></div><div class="sub" id="regime"></div></div>
   </section>
   <div id="warnings"></div>
-
   <section class="kpis" id="kpis" aria-label="Key numbers"></section>
 
+  <!-- Nifty chart -->
   <section class="card">
-    <h2>Nifty 50 and the filter</h2>
-    <div class="sub">The filter goes to cash when the 20-day average is below the 100-day average with a strong trend (ADX ≥ 20), and back in when the trend turns up.</div>
+    <div class="card-head">
+      <div>
+        <h2>Nifty 50 and the filter</h2>
+        <div class="sub">Scroll or pinch to zoom, drag to pan, hover for exact values. Grey bands = filter in cash; arrows mark each switch.</div>
+      </div>
+      <div class="ranges" id="ranges" role="group" aria-label="Chart range">
+        <button type="button" data-r="21">1M</button><button type="button" data-r="63">3M</button>
+        <button type="button" data-r="126">6M</button><button type="button" data-r="252" aria-pressed="true">1Y</button>
+        <button type="button" data-r="0">All</button>
+      </div>
+    </div>
     <div class="legend" id="niftyLegend"></div>
-    <div class="chart" id="niftyChart"></div>
+    <div class="chartbox" id="niftyChart"></div>
   </section>
 
-  <section class="card">
-    <h2>Paper book value</h2>
-    <div class="sub" id="paperSub"></div>
-    <div class="chart" id="paperChart"></div>
+  <!-- Portfolio -->
+  <section class="card" aria-label="Paper portfolio">
+    <div class="card-head">
+      <div><h2>Paper portfolio</h2><div class="sub" id="paperSub"></div></div>
+      <div class="ranges"><button type="button" id="dlPaper">⬇ Paper value CSV</button></div>
+    </div>
+    <div class="kpis" id="pfKpis"></div>
+    <div class="chartbox small" id="paperChart"></div>
+    <h2 style="margin-top:16px">Open positions</h2>
+    <div class="scroll" id="posWrap"><table id="posTable"></table></div>
   </section>
 
   <section class="card" id="ordersCard" hidden>
@@ -137,24 +168,43 @@ footer { margin-top: 28px; font-size: 12px; color: var(--muted); }
     <div class="scroll"><table id="ordersTable"></table></div>
   </section>
 
+  <!-- Agent panel -->
   <section class="card">
     <h2>Agent panel <span class="muted" style="font-weight:400;font-size:13px">· advisory only, does not change the paper trades</span></h2>
-    <div class="sub">Each agent's view at today's close. Their calls are scored after 20 sessions (see the scorecard below).</div>
+    <div class="sub">Each agent's view on the Nifty at today's close. Hover or tap a view to see the numbers behind it.</div>
     <div class="scroll" style="max-height:none"><table id="niftyPanel"></table></div>
+    <div id="bossExplain" class="explain" hidden></div>
+  </section>
+
+  <!-- Stocks -->
+  <section class="card">
+    <div class="card-head">
+      <div><h2>The 50 stocks</h2><div class="sub">Every agent's view per stock. ⚠ = agents disagree (at least one BUY and one SELL).</div></div>
+      <div class="ranges"><button type="button" id="dlStocks">⬇ Stock list CSV</button></div>
+    </div>
     <div class="counts" id="counts"></div>
-    <div class="controls">
+    <div class="toolbar">
       <input id="search" type="search" placeholder="Search stock…" aria-label="Search stock">
+      <span class="live" id="live" title=""><i></i><span></span></span>
       <label class="sub">Show where
-        <select id="fAgent" aria-label="Agent"></select>
-        says
-        <select id="fSignal" aria-label="Signal">
-          <option value="">anything</option><option>BUY</option><option>SELL</option><option>HOLD</option>
+        <select id="fAgent" aria-label="Agent"></select> says
+        <select id="fSignal" aria-label="Action">
+          <option value="">any action</option><option value="BUY">▲ BUY</option><option value="SELL">▼ SELL</option><option value="HOLD">⏸ HOLD</option>
+        </select>
+      </label>
+      <label class="sub"><input type="checkbox" id="fDis"> only ⚠ disagreements</label>
+      <label class="sub">Sort
+        <select id="sortBy" aria-label="Sort">
+          <option value="sym">Name A–Z</option>
+          <option value="boss_conf">Boss confidence ↓</option>
+          <option value="trend_conf">Trend confidence ↓</option>
+          <option value="dis">Most disagreement ↓</option>
         </select>
       </label>
       <span class="sub" id="shown"></span>
     </div>
-    <div class="scroll"><table id="stockTable"></table></div>
-    <div class="note">Hover (or tap) a chip to read the agent's reason.</div>
+    <div class="scroll stock-table"><table id="stockTable"></table></div>
+    <div class="cards" id="stockCards"></div>
   </section>
 
   <section class="card">
@@ -164,28 +214,69 @@ footer { margin-top: 28px; font-size: 12px; color: var(--muted); }
   </section>
 
   <section class="card">
-    <h2>Journal</h2>
-    <div class="sub">One line per trading day, written on the day and never changed.</div>
+    <div class="card-head">
+      <div><h2>Journal</h2><div class="sub">One line per trading day, written on the day and never changed.</div></div>
+      <div class="ranges"><button type="button" id="dlJournal">⬇ Journal CSV</button></div>
+    </div>
     <div class="scroll"><table id="journalTable"></table></div>
   </section>
 
   <footer>
     Paper trading only - no orders are sent anywhere. Backtest and paper results are not a promise of future returns.
-    Data: Yahoo Finance daily prices (free, unofficial). Universe: <span id="universe"></span>.
+    Data: Yahoo Finance end-of-day prices (free, unofficial). Universe: <span id="universe"></span>.
   </footer>
 </div>
 <div class="tip" id="tip" role="status"></div>
+<div class="pop" id="pop" role="tooltip"></div>
 
 <script>
 const D = /*__DATA__*/null;
 const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const inr = (v, d = 0) => v == null ? "–" : Number(v).toLocaleString("en-IN", {maximumFractionDigits: d, minimumFractionDigits: d});
-const pct = (v, d = 2) => v == null ? "–" : (v >= 0 ? "+" : "") + (v * 100).toFixed(d) + "%";
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const inr = (v, d = 0) => v == null || isNaN(v) ? "–" : Number(v).toLocaleString("en-IN", {maximumFractionDigits: d, minimumFractionDigits: d});
+const pct = (v, d = 2) => v == null || isNaN(v) ? "–" : (v >= 0 ? "+" : "") + (v * 100).toFixed(d) + "%";
 const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const tip = $("tip");
+const tip = $("tip"), pop = $("pop");
+const L = D.agent_labels;
+const ORDER = ["regime_detector", "market_intel", "market_mood", "risk_engine", "liquidity_engine", "boss"];
+const ICON = {BUY: "▲", SELL: "▼", HOLD: "⏸\uFE0E", "n/a": "–"};
 
-/* theme toggle (remembered per browser) */
+/* ---------- popover (hover on desktop, tap on phones, Esc to close) ---------- */
+let popOwner = null;
+function showPop(el) {
+  const html = el.dataset.pop ? decodeURIComponent(el.dataset.pop) : esc(el.dataset.tip || "");
+  if (!html) return;
+  pop.innerHTML = html; pop.style.display = "block"; popOwner = el;
+  const r = el.getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
+  let x = r.left + window.scrollX, y = r.bottom + window.scrollY + 6;
+  const maxX = window.scrollX + document.documentElement.clientWidth - pw - 8;
+  if (x > maxX) x = Math.max(window.scrollX + 8, maxX);
+  if (r.bottom + ph + 12 > window.innerHeight && r.top > ph + 12) y = r.top + window.scrollY - ph - 6;
+  pop.style.left = x + "px"; pop.style.top = y + "px";
+}
+function hidePop() { pop.style.display = "none"; popOwner = null; }
+document.addEventListener("mouseover", e => { const t = e.target.closest("[data-pop],[data-tip]"); if (t && matchMedia("(hover: hover)").matches) showPop(t); });
+document.addEventListener("mouseout", e => { if (!matchMedia("(hover: hover)").matches) return; const t = e.target.closest("[data-pop],[data-tip]"); if (t && t === popOwner && !t.contains(e.relatedTarget)) hidePop(); });
+document.addEventListener("focusin", e => { const t = e.target.closest("[data-pop],[data-tip]"); if (t && matchMedia("(hover: hover)").matches) showPop(t); });
+document.addEventListener("focusout", () => { if (matchMedia("(hover: hover)").matches) hidePop(); });
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-pop],[data-tip]");
+  if (t && !matchMedia("(hover: hover)").matches) { popOwner === t ? hidePop() : showPop(t); return; }
+  if (!e.target.closest("#pop")) hidePop();
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") hidePop(); });
+const popAttr = (html) => `data-pop="${encodeURIComponent(html)}"`;
+
+/* ---------- CSV export ---------- */
+function downloadCSV(name, rows, cols) {
+  const q = v => { const s = v == null ? "" : String(v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const text = [cols.map(c => q(c[0])).join(",")].concat(rows.map(r => cols.map(c => q(c[1](r))).join(","))).join("\n");
+  const url = URL.createObjectURL(new Blob(["﻿" + text], {type: "text/csv;charset=utf-8"}));
+  const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 500);
+}
+
+/* ---------- theme ---------- */
 (function () {
   const root = document.documentElement;
   try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch (e) {}
@@ -197,213 +288,319 @@ const tip = $("tip");
   };
 })();
 
-/* header + hero */
+/* ---------- header, hero, KPIs ---------- */
 $("updated").textContent = `As of close ${D.as_of} · updated ${D.updated}`;
 $("universe").textContent = D.universe;
 const on = D.filter === "INVESTED";
-$("state").innerHTML = `<span class="dot" style="background:${on ? "var(--good)" : "var(--muted)"}"></span>${on ? "▲ INVESTED" : "■ IN CASH"}` +
+$("state").innerHTML = `<span class="dot" style="background:${on ? "var(--good)" : "var(--muted)"}"></span>${on ? "▲ INVESTED" : "⏸ IN CASH"}` +
   (D.filter_changed ? `<span class="changed">changed today</span>` : "");
 $("nextLabel").textContent = `Action for the next session (~${D.next_session}, at the open)`;
 $("action").textContent = D.action;
 $("regime").textContent = D.nifty.regime;
 $("warnings").innerHTML = (D.warnings || []).map(w => `<div class="warn">⚠ ${esc(w)}</div>`).join("");
-
 const P = D.paper;
-const kpis = [
+$("kpis").innerHTML = [
   ["Nifty 50 close", inr(D.nifty.close, 2), ""],
   ["20-day average", inr(D.nifty.ema_fast, 2), D.nifty.close >= D.nifty.ema_fast ? "Nifty above it" : "Nifty below it"],
   ["100-day average", inr(D.nifty.ema_slow, 2), D.nifty.close >= D.nifty.ema_slow ? "Nifty above it" : "Nifty below it"],
-  ["Trend strength (ADX)", Number(D.nifty.adx).toFixed(1), D.nifty.adx >= 20 ? "trend is strong (≥ 20)" : "no clear trend (< 20)"],
+  ["Trend strength (ADX)", Number(D.nifty.adx).toFixed(1), D.nifty.adx >= 20 ? "strong trend (≥ 20)" : "no clear trend (< 20)"],
   ["Paper book value", "₹" + inr(P.value), pct(P.ret) + " since " + P.start],
-  ["Invested", (P.invested * 100).toFixed(0) + "%", "cash ₹" + inr(P.cash)],
-];
-$("kpis").innerHTML = kpis.map(([l, v, n]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="n">${n}</div></div>`).join("");
+].map(([l, v, n]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="n">${n}</div></div>`).join("");
 
-/* ---------- line chart (inline SVG, crosshair tooltip) ---------- */
-function lineChart(el, rows, series, opts = {}) {
-  el.innerHTML = "";
-  if (!rows.length) { el.innerHTML = `<div class="note">${opts.empty || "No data yet."}</div>`; return; }
-  const W = Math.max(320, el.clientWidth || 800), H = opts.height || 300;
-  const m = {t: 10, r: opts.rightPad ?? 84, b: 26, l: 58};
-  const iw = W - m.l - m.r, ih = H - m.t - m.b, n = rows.length;
-  const vals = [];
-  rows.forEach(r => series.forEach(s => { const v = r[s.key]; if (v != null) vals.push(v); }));
-  let lo = Math.min(...vals), hi = Math.max(...vals);
-  if (opts.baseline != null) { lo = Math.min(lo, opts.baseline); hi = Math.max(hi, opts.baseline); }
-  const pad = (hi - lo) * 0.06 || Math.abs(hi) * 0.01 || 1; lo -= pad; hi += pad;
-  const x = i => m.l + (n === 1 ? iw / 2 : i * iw / (n - 1));
-  const y = v => m.t + ih - (v - lo) / (hi - lo) * ih;
-  const ns = "http://www.w3.org/2000/svg";
-  const svg = document.createElementNS(ns, "svg");
-  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("role", "img");
-  svg.setAttribute("aria-label", opts.label || "chart");
-  let g = "";
-  // cash bands
-  if (opts.band) {
-    let s = null;
-    rows.forEach((r, i) => {
-      const inBand = opts.band(r);
-      if (inBand && s == null) s = i;
-      if ((!inBand || i === n - 1) && s != null) {
-        const e = inBand ? i : i - 1;
-        const x0 = x(s) - (s > 0 ? iw / (n - 1) / 2 : 0), x1 = x(e) + (e < n - 1 ? iw / (n - 1) / 2 : 0);
-        g += `<rect x="${x0}" y="${m.t}" width="${Math.max(1, x1 - x0)}" height="${ih}" fill="var(--cash-band)"/>`;
-        s = null;
-      }
-    });
-  }
-  // grid + y labels
-  const ticks = 5;
-  for (let k = 0; k <= ticks; k++) {
-    const v = lo + (hi - lo) * k / ticks, yy = y(v);
-    g += `<line x1="${m.l}" x2="${m.l + iw}" y1="${yy}" y2="${yy}" stroke="var(--grid)" stroke-width="1"/>`;
-    g += `<text x="${m.l - 8}" y="${yy + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${opts.yfmt ? opts.yfmt(v) : inr(v)}</text>`;
-  }
-  if (opts.baseline != null) g += `<line x1="${m.l}" x2="${m.l + iw}" y1="${y(opts.baseline)}" y2="${y(opts.baseline)}" stroke="var(--muted)" stroke-dasharray="3 4" stroke-width="1"/>`;
-  // x labels (month starts)
-  let lastMonth = "", lastX = -99;
-  rows.forEach((r, i) => {
-    const mo = r.d.slice(0, 7);
-    if (mo !== lastMonth) {
-      lastMonth = mo;
-      const xx = x(i);
-      if (xx - lastX > 56 && xx < m.l + iw - 20) {
-        const dt = new Date(r.d + "T00:00:00");
-        g += `<text x="${xx}" y="${H - 6}" text-anchor="middle" font-size="11" fill="var(--muted)">${dt.toLocaleString("en-IN", {month: "short"})}${dt.getMonth() === 0 ? " " + dt.getFullYear() : ""}</text>`;
-        lastX = xx;
-      }
-    }
-  });
-  // lines
-  series.forEach(s => {
-    let d = "", pen = false;
-    rows.forEach((r, i) => { const v = r[s.key]; if (v == null) { pen = false; return; } d += (pen ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1); pen = true; });
-    g += `<path d="${d}" fill="none" stroke="var(${s.color})" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
-    if (n === 1) g += `<circle cx="${x(0)}" cy="${y(rows[0][s.key])}" r="4" fill="var(${s.color})"/>`;
-  });
-  // direct labels at line ends (nudged apart)
-  if (opts.endLabels) {
-    const ends = series.map(s => ({s, v: rows[n - 1][s.key]})).filter(e => e.v != null).map(e => ({...e, yy: y(e.v)})).sort((a, b) => a.yy - b.yy);
-    for (let k = 1; k < ends.length; k++) if (ends[k].yy - ends[k - 1].yy < 14) ends[k].yy = ends[k - 1].yy + 14;
-    ends.forEach(e => g += `<text x="${m.l + iw + 8}" y="${e.yy + 4}" font-size="11" fill="var(--text-2)">${e.s.short || e.s.name}</text>`);
-  }
-  g += `<line id="xh" x1="0" x2="0" y1="${m.t}" y2="${m.t + ih}" stroke="var(--muted)" stroke-width="1" visibility="hidden"/>`;
-  series.forEach((s, k) => g += `<circle class="hd" data-k="${k}" r="4.5" fill="var(${s.color})" stroke="var(--surface)" stroke-width="2" visibility="hidden"/>`);
-  g += `<rect x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent" class="hit"/>`;
-  svg.innerHTML = g;
-  el.appendChild(svg);
-  const hit = svg.querySelector(".hit"), xh = svg.querySelector("#xh"), dots = svg.querySelectorAll(".hd");
-  const move = (ev) => {
-    const pt = svg.getBoundingClientRect(), sx = W / pt.width;
-    const px = ((ev.touches ? ev.touches[0].clientX : ev.clientX) - pt.left) * sx;
-    const i = Math.max(0, Math.min(n - 1, Math.round((px - m.l) / (n === 1 ? 1 : iw / (n - 1)))));
-    const r = rows[i];
-    xh.setAttribute("x1", x(i)); xh.setAttribute("x2", x(i)); xh.setAttribute("visibility", "visible");
-    dots.forEach(c => { const s = series[c.dataset.k], v = r[s.key]; if (v == null) { c.setAttribute("visibility", "hidden"); return; }
-      c.setAttribute("cx", x(i)); c.setAttribute("cy", y(v)); c.setAttribute("visibility", "visible"); });
-    tip.innerHTML = `<div class="muted">${new Date(r.d + "T00:00:00").toLocaleDateString("en-IN", {day: "2-digit", month: "short", year: "numeric"})}</div>` +
-      series.map(s => `<div><span class="sw" style="background:var(${s.color})"></span>${s.name}: <b>${r[s.key] == null ? "–" : (s.fmt ? s.fmt(r[s.key]) : inr(r[s.key], 2))}</b></div>`).join("") +
-      (opts.tipExtra ? opts.tipExtra(r) : "");
-    tip.style.display = "block";
-    const tx = (x(i) / sx) + pt.left + window.scrollX, ty = pt.top + window.scrollY + 10;
-    const tw = tip.offsetWidth;
-    tip.style.left = (tx + 14 + tw > window.scrollX + document.documentElement.clientWidth ? tx - tw - 14 : tx + 14) + "px";
-    tip.style.top = ty + "px";
-  };
-  const leave = () => { tip.style.display = "none"; xh.setAttribute("visibility", "hidden"); dots.forEach(c => c.setAttribute("visibility", "hidden")); };
-  hit.addEventListener("mousemove", move); hit.addEventListener("touchstart", move, {passive: true});
-  hit.addEventListener("touchmove", move, {passive: true}); hit.addEventListener("mouseleave", leave); hit.addEventListener("touchend", leave);
+/* ---------- live status (NSE cash market hours, IST; exchange holidays not included) ---------- */
+function liveStatus() {
+  const now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+  const mins = now.getHours() * 60 + now.getMinutes(), wd = now.getDay();
+  const open = wd >= 1 && wd <= 5 && mins >= 555 && mins < 930;
+  const el = $("live");
+  el.querySelector("i").style.background = open ? "var(--good)" : "var(--critical)";
+  el.querySelector("span").textContent = open ? "Market open" : "Market closed";
+  el.dataset.tip = (open ? "NSE is trading now (9:15–15:30 IST). " : "NSE is closed (opens 9:15 IST on weekdays). ") +
+    "Exchange holidays are not checked. This page uses end-of-day prices and updates after the close.";
 }
+liveStatus(); setInterval(liveStatus, 60000);
 
+/* ---------- charts ---------- */
+const hasLW = typeof window.LightweightCharts !== "undefined";
+let charts = [], niftyChart = null;
+const niftyRows = D.nifty_hist || [];
+const ph = D.paper_hist || [];
 const niftySeries = [
-  {key: "c", name: "Nifty 50", short: "Nifty", color: "--s1"},
-  {key: "f", name: "20-day average", short: "20-day", color: "--s2"},
-  {key: "s", name: "100-day average", short: "100-day", color: "--s3"},
+  {key: "c", name: "Nifty 50", color: "--s1"},
+  {key: "f", name: "20-day average", color: "--s2"},
+  {key: "s", name: "100-day average", color: "--s3"},
 ];
 $("niftyLegend").innerHTML = niftySeries.map(s => `<span><i style="background:var(${s.color})"></i>${s.name}</span>`).join("") +
-  `<span><i class="band"></i>filter in cash</span>`;
-function drawCharts() {
-  lineChart($("niftyChart"), D.nifty_hist || [], niftySeries, {label: "Nifty 50 with 20 and 100 day averages", endLabels: true,
-    band: r => r.m === 0, tipExtra: r => `<div class="muted">filter: ${r.m ? "invested" : "in cash"}</div>`});
-  const ph = D.paper_hist || [];
-  lineChart($("paperChart"), ph, [{key: "v", name: "Paper value", color: "--s1", fmt: v => "₹" + inr(v)}],
-    {label: "Paper book value", rightPad: 16, baseline: P.capital, height: 220, yfmt: v => "₹" + inr(v / 1e5, 2) + "L",
-     empty: `The paper book starts trading on ${P.start}; the line appears after the first sessions.`,
-     tipExtra: r => `<div class="muted">invested ${(r.i * 100).toFixed(0)}%</div>`});
-}
-$("paperSub").textContent = `Started ${P.start} with ₹${inr(P.capital)} · ${P.sessions} sessions · tax provisioned ₹${inr(P.tax)} · dashed line = starting capital`;
-drawCharts();
-let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(drawCharts, 150); });
+  `<span><i class="band"></i>filter in cash</span><span>▲▼ filter switch</span>`;
 
-/* orders */
+function chartTip(el, html, x, y) {
+  if (!html) { tip.style.display = "none"; return; }
+  tip.innerHTML = html; tip.style.display = "block";
+  const r = el.getBoundingClientRect(), tw = tip.offsetWidth;
+  const left = r.left + window.scrollX + (x + 16 + tw > r.width ? x - tw - 16 : x + 16);
+  tip.style.left = left + "px"; tip.style.top = (r.top + window.scrollY + Math.max(4, Math.min(y, r.height - 90))) + "px";
+}
+const tkey = t => typeof t === "string" ? t : typeof t === "number" ? new Date(t * 1000).toISOString().slice(0, 10)
+  : `${t.year}-${String(t.month).padStart(2, "0")}-${String(t.day).padStart(2, "0")}`;
+const fmtDate = d => new Date(d + "T00:00:00").toLocaleDateString("en-IN", {day: "2-digit", month: "short", year: "numeric"});
+
+function lwBase(el) {
+  return LightweightCharts.createChart(el, {
+    autoSize: true,
+    layout: {background: {type: "solid", color: css("--surface")}, textColor: css("--text-2"), fontSize: 11,
+             fontFamily: getComputedStyle(document.body).fontFamily},
+    grid: {vertLines: {visible: false}, horzLines: {color: css("--grid")}},
+    rightPriceScale: {borderColor: css("--border")},
+    timeScale: {borderColor: css("--border"), timeVisible: false},
+    crosshair: {mode: LightweightCharts.CrosshairMode.Normal},
+    localization: {priceFormatter: p => inr(p, 0)},
+  });
+}
+
+function drawNiftyLW(el) {
+  const ch = lwBase(el);
+  const band = ch.addHistogramSeries({priceScaleId: "band", color: css("--cash-band"), priceLineVisible: false, lastValueVisible: false});
+  ch.priceScale("band").applyOptions({scaleMargins: {top: 0, bottom: 0}, visible: false});
+  band.setData(niftyRows.map(r => ({time: r.d, value: r.m === 0 ? 1 : 0})));
+  const ser = niftySeries.map(s => {
+    const line = ch.addLineSeries({color: css(s.color), lineWidth: 2, priceLineVisible: false, lastValueVisible: s.key === "c",
+      crosshairMarkerRadius: 4});
+    line.setData(niftyRows.filter(r => r[s.key] != null).map(r => ({time: r.d, value: r[s.key]})));
+    return line;
+  });
+  const marks = [];
+  for (let i = 1; i < niftyRows.length; i++) if (niftyRows[i].m !== niftyRows[i - 1].m) {
+    const inv = niftyRows[i].m === 1;
+    marks.push({time: niftyRows[i].d, position: inv ? "belowBar" : "aboveBar", color: inv ? css("--good") : css("--critical"),
+      shape: inv ? "arrowUp" : "arrowDown", text: inv ? "invest" : "to cash"});
+  }
+  ser[0].setMarkers(marks);
+  const byDate = Object.fromEntries(niftyRows.map(r => [r.d, r]));
+  ch.subscribeCrosshairMove(p => {
+    if (!p.time || !p.point || p.point.x < 0) { tip.style.display = "none"; return; }
+    const r = byDate[tkey(p.time)];
+    if (!r) { tip.style.display = "none"; return; }
+    chartTip(el, `<div class="muted">${fmtDate(r.d)}</div>` +
+      niftySeries.map(s => `<div><span class="sw" style="background:var(${s.color})"></span>${s.name}: <b>${inr(r[s.key], 2)}</b></div>`).join("") +
+      `<div class="muted">filter: ${r.m ? "▲ invested" : "⏸ in cash"}</div>`, p.point.x, p.point.y);
+  });
+  el.addEventListener("mouseleave", () => tip.style.display = "none");
+  return ch;
+}
+
+function drawPaperLW(el) {
+  const ch = lwBase(el);
+  const line = ch.addLineSeries({color: css("--s1"), lineWidth: 2, priceLineVisible: false});
+  line.setData(ph.map(r => ({time: r.d, value: r.v})));
+  line.createPriceLine({price: P.capital, color: css("--muted"), lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: "start"});
+  ch.timeScale().fitContent();
+  const byDate = Object.fromEntries(ph.map(r => [r.d, r]));
+  ch.subscribeCrosshairMove(p => {
+    if (!p.time || !p.point) { tip.style.display = "none"; return; }
+    const r = byDate[tkey(p.time)]; if (!r) { tip.style.display = "none"; return; }
+    chartTip(el, `<div class="muted">${fmtDate(r.d)}</div><div>Paper value: <b>₹${inr(r.v)}</b></div><div class="muted">${pct(r.v / P.capital - 1)} · invested ${(r.i * 100).toFixed(0)}%</div>`, p.point.x, p.point.y);
+  });
+  el.addEventListener("mouseleave", () => tip.style.display = "none");
+  return ch;
+}
+
+/* SVG fallback (no CDN): static line chart with crosshair */
+function svgChart(el, rows, series, opts = {}) {
+  el.innerHTML = ""; el.classList.add("svgchart"); el.style.height = "auto";
+  if (!rows.length) { el.innerHTML = `<div class="note">${opts.empty || "No data yet."}</div>`; return; }
+  const W = Math.max(320, el.clientWidth || 800), H = opts.height || 300, m = {t: 10, r: 16, b: 26, l: 58};
+  const iw = W - m.l - m.r, ih = H - m.t - m.b, n = rows.length, vals = [];
+  rows.forEach(r => series.forEach(s => { if (r[s.key] != null) vals.push(r[s.key]); }));
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo) * .06 || 1; lo -= pad; hi += pad;
+  const x = i => m.l + (n === 1 ? iw / 2 : i * iw / (n - 1)), y = v => m.t + ih - (v - lo) / (hi - lo) * ih;
+  let g = "";
+  if (opts.band) rows.forEach((r, i) => { if (opts.band(r)) g += `<rect x="${x(i) - iw / n / 2}" y="${m.t}" width="${Math.max(1, iw / n)}" height="${ih}" fill="var(--cash-band)"/>`; });
+  for (let k = 0; k <= 4; k++) { const v = lo + (hi - lo) * k / 4; g += `<line x1="${m.l}" x2="${m.l + iw}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${inr(v)}</text>`; }
+  series.forEach(s => { let d = "", pen = false; rows.forEach((r, i) => { if (r[s.key] == null) { pen = false; return; } d += (pen ? "L" : "M") + x(i).toFixed(1) + "," + y(r[s.key]).toFixed(1); pen = true; });
+    g += `<path d="${d}" fill="none" stroke="var(${s.color})" stroke-width="2"/>`; });
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opts.label || "chart"}">${g}<rect x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent" class="hit"/></svg>`;
+  const svg = el.querySelector("svg");
+  svg.querySelector(".hit").addEventListener("mousemove", ev => {
+    const b = svg.getBoundingClientRect(), sx = W / b.width, i = Math.max(0, Math.min(n - 1, Math.round(((ev.clientX - b.left) * sx - m.l) / (iw / Math.max(1, n - 1))))), r = rows[i];
+    chartTip(el, `<div class="muted">${fmtDate(r.d)}</div>` + series.map(s => `<div><span class="sw" style="background:var(${s.color})"></span>${s.name}: <b>${inr(r[s.key], 2)}</b></div>`).join(""), x(i) / sx, 20);
+  });
+  svg.addEventListener("mouseleave", () => tip.style.display = "none");
+}
+
+let currentRange = 252;
+function applyRange() {
+  document.querySelectorAll("#ranges button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.r === currentRange)));
+  if (!niftyChart) return;
+  const ts = niftyChart.timeScale();
+  if (!currentRange || niftyRows.length <= currentRange) { ts.fitContent(); return; }
+  ts.setVisibleRange({from: niftyRows[niftyRows.length - currentRange].d, to: niftyRows[niftyRows.length - 1].d});
+}
+document.querySelectorAll("#ranges button").forEach(b => b.onclick = () => { currentRange = +b.dataset.r; applyRange(); });
+
+function drawCharts() {
+  charts.forEach(c => c.remove()); charts = []; niftyChart = null;
+  const nEl = $("niftyChart"), pEl = $("paperChart");
+  nEl.innerHTML = ""; pEl.innerHTML = "";
+  let lwOK = hasLW;
+  if (lwOK && niftyRows.length) {
+    try { niftyChart = drawNiftyLW(nEl); charts.push(niftyChart); applyRange(); }
+    catch (e) { console.error("interactive chart failed, using static chart", e); lwOK = false; nEl.innerHTML = ""; niftyChart = null; }
+  }
+  if (!lwOK) svgChart(nEl, niftyRows, niftySeries, {band: r => r.m === 0, label: "Nifty 50 with averages"});
+  if (!ph.length) { pEl.style.height = "auto"; pEl.innerHTML = `<div class="note">The paper book starts trading on ${P.start}; the value line appears after the first sessions.</div>`; }
+  else {
+    let ok = lwOK;
+    if (ok) { try { charts.push(drawPaperLW(pEl)); } catch (e) { console.error(e); ok = false; pEl.innerHTML = ""; } }
+    if (!ok) svgChart(pEl, ph, [{key: "v", name: "Paper value", color: "--s1"}], {height: 220, label: "Paper value"});
+  }
+  $("ranges").hidden = !lwOK;
+}
+drawCharts();
+
+/* ---------- portfolio ---------- */
+const POS = D.positions || [], REC = D.record || {wins: 0, losses: 0, realized: 0};
+const unreal = POS.reduce((a, p) => a + p.pnl, 0), invested = POS.reduce((a, p) => a + p.value, 0);
+const closed = REC.wins + REC.losses;
+$("paperSub").textContent = `Started ${P.start} with ₹${inr(P.capital)} · ${P.sessions} sessions · tax set aside ₹${inr(P.tax)}`;
+$("pfKpis").innerHTML = [
+  ["Open positions", POS.length, POS.length ? `₹${inr(invested)} invested` : "all in cash"],
+  ["Unrealised P&L", `<span class="${unreal >= 0 ? "pos" : "neg"}">${unreal >= 0 ? "▲" : "▼"} ₹${inr(Math.abs(unreal))}</span>`, invested ? pct(unreal / (invested - unreal)) + " on cost" : "–"],
+  ["Realised P&L", `<span class="${REC.realized >= 0 ? "pos" : "neg"}">₹${inr(REC.realized)}</span>`, "before tax and charges"],
+  ["Win / loss", closed ? `${REC.wins} / ${REC.losses}` : "–", closed ? `${(REC.wins / closed * 100).toFixed(0)}% of sells were gains` : "no sells yet"],
+  ["Cash", "₹" + inr(P.cash), `${Math.max(0, 100 - P.invested * 100).toFixed(0)}% of the book`],
+].map(([l, v, n]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="n">${n}</div></div>`).join("");
+if (!POS.length) {
+  $("posTable").innerHTML = `<tbody><tr><td class="sub">No open positions${on ? "" : " - the Nifty filter is in cash"}.</td></tr></tbody>`;
+} else {
+  $("posTable").innerHTML = `<thead><tr><th>Stock</th><th class="num">Shares</th><th class="num">Avg cost</th><th class="num">Last</th><th class="num">Value</th><th class="num">P&amp;L</th><th class="num">P&amp;L %</th><th class="hide-sm">Since</th></tr></thead><tbody>` +
+    POS.sort((a, b) => b.pnl - a.pnl).map(p => `<tr><td><b>${esc(p.symbol)}</b></td><td class="num">${inr(p.units, 2)}</td><td class="num">${inr(p.avg_cost, 2)}</td><td class="num">${inr(p.last, 2)}</td><td class="num">₹${inr(p.value)}</td><td class="num ${p.pnl >= 0 ? "pos" : "neg"}">${p.pnl >= 0 ? "▲" : "▼"} ₹${inr(Math.abs(p.pnl))}</td><td class="num ${p.pnl >= 0 ? "pos" : "neg"}">${pct(p.pnl_pct)}</td><td class="hide-sm">${esc(p.since)}</td></tr>`).join("") + "</tbody>";
+}
+$("dlPaper").onclick = () => downloadCSV("paper_book_value.csv", ph, [["date", r => r.d], ["value_rs", r => r.v], ["invested_share", r => r.i]]);
+
+/* ---------- orders ---------- */
 if ((D.orders || []).length) {
   $("ordersCard").hidden = false;
   $("ordersTable").innerHTML = `<thead><tr><th>Stock</th><th>Side</th><th class="num">Amount (₹)</th><th class="num">~Shares</th><th class="num">At close</th></tr></thead><tbody>` +
-    D.orders.map(o => `<tr><td>${esc(o.symbol)}</td><td><span class="chip ${o.side === "BUY" ? "BUY" : "SELL"}">${o.side === "BUY" ? "▲" : "▼"} ${o.side}</span></td><td class="num">${inr(o.rupees)}</td><td class="num">${o.approx_shares}</td><td class="num">${inr(o.ref_price, 2)}</td></tr>`).join("") + "</tbody>";
+    D.orders.map(o => `<tr><td>${esc(o.symbol)}</td><td><span class="chip ${o.side}">${ICON[o.side]} ${o.side}</span></td><td class="num">${inr(o.rupees)}</td><td class="num">${o.approx_shares}</td><td class="num">${inr(o.ref_price, 2)}</td></tr>`).join("") + "</tbody>";
 }
 
-/* agent panel */
-const L = D.agent_labels;
-const order = ["regime_detector", "market_intel", "market_mood", "risk_engine", "liquidity_engine", "boss"];
-const chip = (sig, conf, why) => {
-  const cls = sig === "n/a" ? "na" : sig;
-  const icon = sig === "BUY" ? "▲ " : sig === "SELL" ? "▼ " : "";
-  return `<span class="chip ${cls}" title="${esc(why)}${conf != null ? " (confidence " + Number(conf).toFixed(2) + ")" : ""}">${icon}${sig}</span>`;
-};
-$("niftyPanel").innerHTML = `<thead><tr><th>Agent (on the Nifty 50)</th><th>View</th><th class="num hide-sm">Confidence</th><th>Reason</th></tr></thead><tbody>` +
-  (D.panel_nifty || []).sort((a, b) => order.indexOf(a.agent) - order.indexOf(b.agent)).map(r => {
-    const sig = r.available ? r.signal : "n/a";
-    return `<tr><td>${esc(L[r.agent] || r.agent)}</td><td>${chip(sig, null, r.summary)}</td><td class="num hide-sm">${Number(r.confidence).toFixed(2)}</td><td class="sub">${esc(r.summary)}</td></tr>`;
-  }).join("") + "</tbody>";
+/* ---------- agent views ---------- */
+const INPUT_NAMES = {ema_fast: "20-day average", ema_slow: "100-day average", adx: "ADX (trend strength)", realized_vol: "realised volatility",
+  inst_momentum: "momentum", cvd_norm: "buy/sell pressure (est.)", score: "score", index_trend: "Nifty vs 100-day avg",
+  rel_strength: "3-month strength vs Nifty", vix_term: "VIX reading", india_vix: "India VIX", vix_pct: "VIX percentile (1y)",
+  risk_score: "risk score", atr_pct: "average daily range", market_drawdown: "fall from recent high", vol_score: "volatility part",
+  atr_score: "range part", drawdown_score: "drawdown part", plus_di: "+DI", minus_di: "−DI", coverage: "inputs available"};
+const fmtIn = (k, v) => typeof v === "boolean" ? (v ? "yes" : "no") : typeof v === "string" ? esc(v) :
+  (/vol|pct|drawdown|atr_pct/.test(k) && Math.abs(v) < 5 ? (v * 100).toFixed(1) + "%" : Math.abs(v) >= 100 ? inr(v, 2) : (+v).toFixed(3));
+function viewPop(agent, v) {
+  const ins = Object.entries(v.in || {}).filter(([k]) => INPUT_NAMES[k] && k !== "regime");
+  return `<b>${esc(L[agent] || agent)}: ${ICON[v.s] || ""} ${esc(v.s)}</b> <span class="muted">confidence ${(+v.c).toFixed(2)}</span><div style="margin-top:4px">${esc(v.why)}</div>` +
+    (ins.length ? `<table>${ins.map(([k, x]) => `<tr><td class="muted">${INPUT_NAMES[k]}</td><td class="num"><b>${fmtIn(k, x)}</b></td></tr>`).join("")}</table>` : "");
+}
+const chip = (agent, v) => `<button type="button" class="chip ${v.s === "n/a" ? "na" : v.s}" ${popAttr(viewPop(agent, v))} aria-label="${esc((L[agent] || agent) + ": " + v.s)}">${ICON[v.s] || ""} ${v.s}</button>`;
 
-const stocks = Object.entries(D.panel_stocks || {}).map(([sym, s]) => ({sym, ...s}));
-const agentsPresent = order.filter(a => stocks.some(s => s.views[a]));
+function bossMathHTML(m, sym) {
+  if (!m) return "";
+  const rows = m.rows.filter(r => r.eligible);
+  return `<b>How the BOSS reached ${ICON[m.action]} ${m.action}${sym ? " on " + esc(sym) : ""}</b>
+  <table style="margin-top:6px"><thead><tr><th>Agent</th><th>View</th><th class="num">Input (−1…+1)</th><th class="num">Weight</th><th class="num">Contribution</th></tr></thead><tbody>` +
+  rows.map(r => `<tr><td>${esc(L[r.agent] || r.agent)}</td><td>${ICON[r.signal]} ${r.signal}</td><td class="num">${(+r.input).toFixed(3)}</td><td class="num">${(+r.weight).toFixed(2)}</td><td class="num">${(+r.contribution).toFixed(3)}</td></tr>`).join("") +
+  `</tbody></table>
+  <div style="margin-top:8px"><b>1. Vote</b> S = Σ(weight × input) ÷ Σ weight = <b>${(+m.S).toFixed(3)}</b> (needs |S| ≥ ${m.score_floor}).</div>
+  <div><b>2. Agreement</b> = weight of agents on the winning side ÷ weight of all agents with a view = <b>${(m.agreement * 100).toFixed(0)}%</b>; coverage = ${(m.coverage * 100).toFixed(0)}%.</div>
+  <div><b>3. Strength</b> = agreement × average confidence × √coverage = <b>${(+m.strength).toFixed(3)}</b> (needs ≥ ${m.min_confidence}).</div>
+  <div><b>4. Risk</b> score ${m.risk_score == null ? "n/a" : (+m.risk_score).toFixed(2)}${m.risk_veto ? " → <b>veto</b>, no new trades" : ""}. Regime: ${esc(m.regime)}.</div>
+  <div><b>Result:</b> raw vote ${ICON[m.raw]} ${m.raw} → final <b>${ICON[m.action]} ${m.action}</b>${m.forced ? ` (held by: ${esc(m.forced.replace(/;/g, ", "))})` : ""}.</div>
+  <div class="muted" style="margin-top:4px">Inputs are each agent's signed confidence, smoothed over recent days (Kalman filter), so they can differ slightly from today's raw confidence.</div>`;
+}
+
+const niftyRowsP = (D.panel_nifty || []).slice().sort((a, b) => ORDER.indexOf(a.agent) - ORDER.indexOf(b.agent));
+$("niftyPanel").innerHTML = `<thead><tr><th>Agent (on the Nifty 50)</th><th>View</th><th class="num hide-sm">Confidence</th><th>Why</th></tr></thead><tbody>` +
+  niftyRowsP.map(r => {
+    const v = {s: r.available ? r.signal : "n/a", c: r.confidence, why: r.why || r.summary, in: r.inputs || {}};
+    const btn = r.agent === "boss" && r.math ? ` <button type="button" id="explainBtn" aria-expanded="false">Explain the math</button>` : "";
+    return `<tr><td>${esc(L[r.agent] || r.agent)}</td><td>${chip(r.agent, v)}</td><td class="num hide-sm">${Number(r.confidence).toFixed(2)}</td><td class="sub">${esc(v.why)}${btn}</td></tr>`;
+  }).join("") + "</tbody>";
+const bossN = niftyRowsP.find(r => r.agent === "boss");
+if ($("explainBtn")) $("explainBtn").onclick = () => {
+  const box = $("bossExplain"), open = box.hidden;
+  box.hidden = !open; $("explainBtn").setAttribute("aria-expanded", String(open));
+  $("explainBtn").textContent = open ? "Hide the math" : "Explain the math";
+  if (open) box.innerHTML = bossMathHTML(bossN.math, "the Nifty 50");
+};
+
+/* ---------- stocks ---------- */
+const stocks = Object.entries(D.panel_stocks || {}).map(([sym, s]) => {
+  const views = s.views, buy = [], sell = [];
+  Object.entries(views).forEach(([a, v]) => { if (a === "boss") return; if (v.s === "BUY") buy.push(a); if (v.s === "SELL") sell.push(a); });
+  return {sym, close: s.close, views, buy, sell, dis: buy.length && sell.length ? Math.min(buy.length, sell.length) + (buy.length + sell.length) / 10 : 0};
+});
+const agentsPresent = ORDER.filter(a => stocks.some(s => s.views[a]));
 $("counts").innerHTML = agentsPresent.map(a => {
   const c = {BUY: 0, SELL: 0, HOLD: 0, "n/a": 0};
-  stocks.forEach(s => { const v = s.views[a]; if (v) c[v[0]] = (c[v[0]] || 0) + 1; });
+  stocks.forEach(s => { const v = s.views[a]; if (v) c[v.s] = (c[v.s] || 0) + 1; });
   const tot = stocks.length || 1;
-  return `<div class="count"><b>${esc(L[a] || a)}</b>▲ ${c.BUY} buy · ▼ ${c.SELL} sell · ${c.HOLD} hold${c["n/a"] ? " · " + c["n/a"] + " n/a" : ""}
+  return `<div class="count"><b>${esc(L[a] || a)}</b>▲ ${c.BUY} · ▼ ${c.SELL} · ⏸ ${c.HOLD}${c["n/a"] ? " · – " + c["n/a"] : ""}
     <div class="bar" aria-hidden="true"><span style="width:${c.BUY / tot * 100}%;background:var(--good)"></span><span style="width:${c.SELL / tot * 100}%;background:var(--critical)"></span><span style="width:${(c.HOLD + c["n/a"]) / tot * 100}%;background:var(--grid)"></span></div></div>`;
 }).join("");
 $("fAgent").innerHTML = agentsPresent.map(a => `<option value="${a}" ${a === "boss" ? "selected" : ""}>${esc(L[a] || a)}</option>`).join("");
-let sortKey = "sym", sortDir = 1;
-function renderStocks() {
-  const q = $("search").value.trim().toUpperCase(), fa = $("fAgent").value, fs = $("fSignal").value;
-  const rank = {BUY: 0, SELL: 1, HOLD: 2, "n/a": 3};
-  let rows = stocks.filter(s => (!q || s.sym.includes(q)) && (!fs || (s.views[fa] && s.views[fa][0] === fs)));
+const alertBtn = s => s.dis ? `<button type="button" class="alert" ${popAttr(`<b>⚠ Agents disagree on ${esc(s.sym)}</b><div>▲ BUY: ${s.buy.map(a => esc(L[a])).join(", ")}</div><div>▼ SELL: ${s.sell.map(a => esc(L[a])).join(", ")}</div><div class="muted" style="margin-top:4px">Mixed signals usually mean low conviction; the boss tends to hold.</div>`)} aria-label="Agents disagree">⚠</button>` : "";
+const bossBtn = s => s.views.boss && s.views.boss.math ? `<button type="button" class="alert" style="color:var(--text-2)" ${popAttr(bossMathHTML(s.views.boss.math, s.sym))} aria-label="Explain boss for ${esc(s.sym)}">ⓘ</button>` : "";
+let sortKey = "sym", sortDir = 1, lastRows = [];
+function filtered() {
+  const q = $("search").value.trim().toUpperCase(), fa = $("fAgent").value, fs = $("fSignal").value, fd = $("fDis").checked;
+  const conf = (s, a) => s.views[a] ? +s.views[a].c : -1, rank = {BUY: 0, SELL: 1, HOLD: 2, "n/a": 3};
+  let rows = stocks.filter(s => (!q || s.sym.includes(q)) && (!fs || (s.views[fa] && s.views[fa].s === fs)) && (!fd || s.dis));
+  const k = sortKey;
   rows.sort((a, b) => {
-    if (sortKey === "sym") return a.sym.localeCompare(b.sym) * sortDir;
-    if (sortKey === "close") return (a.close - b.close) * sortDir;
-    const va = a.views[sortKey], vb = b.views[sortKey];
-    const ra = va ? rank[va[0]] : 9, rb = vb ? rank[vb[0]] : 9;
-    return ra !== rb ? (ra - rb) * sortDir : ((vb ? vb[1] : 0) - (va ? va[1] : 0));
+    let d;
+    if (k === "sym") d = a.sym.localeCompare(b.sym);
+    else if (k === "close") d = a.close - b.close;
+    else if (k === "boss_conf") d = conf(b, "boss") - conf(a, "boss");
+    else if (k === "trend_conf") d = conf(b, "regime_detector") - conf(a, "regime_detector");
+    else if (k === "dis") d = b.dis - a.dis || a.sym.localeCompare(b.sym);
+    else { const va = a.views[k], vb = b.views[k]; d = (va ? rank[va.s] : 9) - (vb ? rank[vb.s] : 9) || conf(b, k) - conf(a, k); }
+    return d * sortDir;
   });
-  $("shown").textContent = `${rows.length} of ${stocks.length} stocks`;
-  const head = `<thead><tr><th class="sort" data-k="sym">Stock</th><th class="sort num hide-sm" data-k="close">Close</th>` +
-    agentsPresent.map(a => `<th class="sort" data-k="${a}">${esc(L[a] || a)}</th>`).join("") + "</tr></thead>";
-  $("stockTable").innerHTML = head + "<tbody>" + rows.map(s => `<tr><td><b>${esc(s.sym)}</b></td><td class="num hide-sm">${inr(s.close, 2)}</td>` +
-    agentsPresent.map(a => { const v = s.views[a]; return `<td>${v ? chip(v[0], v[1], v[2]) : "–"}</td>`; }).join("") + "</tr>").join("") + "</tbody>";
-  $("stockTable").querySelectorAll("th.sort").forEach(th => th.onclick = () => {
-    sortDir = sortKey === th.dataset.k ? -sortDir : 1; sortKey = th.dataset.k; renderStocks(); });
+  return rows;
 }
-["search", "fAgent", "fSignal"].forEach(id => $(id).addEventListener("input", renderStocks));
+function renderStocks() {
+  const rows = lastRows = filtered();
+  $("shown").textContent = `${rows.length} of ${stocks.length} stocks`;
+  $("stockTable").innerHTML = `<thead><tr><th class="sort" data-k="sym">Stock</th><th class="sort num hide-sm" data-k="close">Close</th>` +
+    agentsPresent.map(a => `<th class="sort" data-k="${a}">${esc(L[a] || a)}</th>`).join("") + "</tr></thead><tbody>" +
+    rows.map(s => `<tr><td><b>${esc(s.sym)}</b> ${alertBtn(s)}</td><td class="num hide-sm">${inr(s.close, 2)}</td>` +
+      agentsPresent.map(a => `<td>${s.views[a] ? chip(a, s.views[a]) : "–"}${a === "boss" ? " " + bossBtn(s) : ""}</td>`).join("") + "</tr>").join("") + "</tbody>";
+  $("stockTable").querySelectorAll("th.sort").forEach(th => th.onclick = () => {
+    if (sortKey === th.dataset.k) sortDir = -sortDir; else { sortKey = th.dataset.k; sortDir = 1; }
+    $("sortBy").value = ["sym", "boss_conf", "trend_conf", "dis"].includes(sortKey) ? sortKey : "sym"; renderStocks(); });
+  $("stockCards").innerHTML = rows.map(s => `<div class="scard"><div class="top"><div><b>${esc(s.sym)}</b> ${alertBtn(s)} <span class="muted">₹${inr(s.close, 2)}</span></div>
+      <div>${s.views.boss ? chip("boss", s.views.boss) : ""} ${bossBtn(s)}</div></div>
+      <div class="grid">${agentsPresent.filter(a => a !== "boss").map(a => `<div><span>${esc(L[a] || a)}</span>${s.views[a] ? chip(a, s.views[a]) : "–"}</div>`).join("")}</div></div>`).join("") ||
+    `<div class="note">No stocks match these filters.</div>`;
+}
+["search", "fAgent", "fSignal", "fDis"].forEach(id => $(id).addEventListener("input", renderStocks));
+$("sortBy").addEventListener("input", () => { sortKey = $("sortBy").value; sortDir = 1; renderStocks(); });
 renderStocks();
-// tap-to-read reasons on phones
-document.addEventListener("click", e => { const c = e.target.closest(".chip[title]"); if (c && matchMedia("(hover: none)").matches) alert(c.title); });
+$("dlStocks").onclick = () => downloadCSV(`agent_views_${(D.as_of || "").replace(/[^0-9A-Za-z-]/g, "_")}.csv`, lastRows,
+  [["stock", r => r.sym], ["close", r => r.close], ["disagreement", r => r.dis ? "yes" : "no"]].concat(
+    agentsPresent.flatMap(a => [[a, r => r.views[a] ? r.views[a].s : ""], [a + "_confidence", r => r.views[a] ? r.views[a].c : ""], [a + "_why", r => r.views[a] ? r.views[a].why : ""]])));
 
-/* scorecard */
+/* ---------- scorecard ---------- */
 const SC = D.scorecard;
 if (!SC || !SC.scores.some(s => s.calls)) {
   $("scoreSub").textContent = `No calls have matured yet. The first scores appear ${SC ? SC.horizon : 20} trading sessions after the first panel day.`;
 } else {
   $("scoreSub").textContent = `${SC.horizon}-session outcome · ${SC.matured_days} matured days · baseline (share of stock-days that went up): ${SC.baseline == null ? "–" : (SC.baseline * 100).toFixed(0) + "%"}. An agent is useful only if it clearly beats the baseline over many calls.`;
-  $("scoreTable").innerHTML = `<thead><tr><th>Agent</th><th class="num">Calls</th><th class="num">Buy</th><th class="num">Sell</th><th class="num">Right</th><th class="num">Avg result</th></tr></thead><tbody>` +
+  $("scoreTable").innerHTML = `<thead><tr><th>Agent</th><th class="num">Calls</th><th class="num">▲ Buy</th><th class="num">▼ Sell</th><th class="num">Right</th><th class="num">Avg result</th></tr></thead><tbody>` +
     SC.scores.map(s => `<tr><td>${esc(L[s.agent] || s.agent)}</td><td class="num">${s.calls}</td><td class="num">${s.buys}</td><td class="num">${s.sells}</td><td class="num">${s.hit_rate == null ? "–" : (s.hit_rate * 100).toFixed(0) + "%"}</td><td class="num">${pct(s.avg_signed_return)}</td></tr>`).join("") + "</tbody>";
 }
 
-/* journal */
+/* ---------- journal ---------- */
+const J = D.journal || [];
 $("journalTable").innerHTML = `<thead><tr><th>Close</th><th class="num">Nifty</th><th class="num hide-sm">20-day</th><th class="num hide-sm">100-day</th><th class="num hide-sm">ADX</th><th>Filter</th><th>Action</th><th class="num">Paper value</th></tr></thead><tbody>` +
-  (D.journal || []).map(j => `<tr><td>${esc(j.as_of_close)}</td><td class="num">${inr(+j.nifty_close, 2)}</td><td class="num hide-sm">${inr(+j.ema_fast, 2)}</td><td class="num hide-sm">${inr(+j.ema_slow, 2)}</td><td class="num hide-sm">${(+j.adx).toFixed(1)}</td><td>${esc(j.filter)}</td><td class="sub">${esc(j.action_next_session)}</td><td class="num">₹${inr(+j.paper_value)}</td></tr>`).join("") + "</tbody>";
+  J.map(j => `<tr><td>${esc(j.as_of_close)}</td><td class="num">${inr(+j.nifty_close, 2)}</td><td class="num hide-sm">${inr(+j.ema_fast, 2)}</td><td class="num hide-sm">${inr(+j.ema_slow, 2)}</td><td class="num hide-sm">${(+j.adx).toFixed(1)}</td><td>${j.filter === "INVESTED" ? "▲" : "⏸"} ${esc(j.filter)}</td><td class="sub">${esc(j.action_next_session)}</td><td class="num">₹${inr(+j.paper_value)}</td></tr>`).join("") + "</tbody>";
+$("dlJournal").onclick = () => downloadCSV("journal.csv", J, Object.keys(J[0] || {}).map(k => [k, r => r[k]]));
 </script>
 </body>
 </html>

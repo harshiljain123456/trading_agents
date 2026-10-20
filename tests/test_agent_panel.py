@@ -30,7 +30,11 @@ class TestPanel(unittest.TestCase):
         rows = panel_for(cfg, md)
         agents = {r["agent"] for r in rows}
         self.assertEqual(agents, {"market_intel", "risk_engine", "liquidity_engine", "market_mood", "regime_detector", "boss"})
-        self.assertTrue(all(set(r) == set(PANEL_FIELDS) for r in rows))
+        self.assertTrue(all(set(PANEL_FIELDS) <= set(r) for r in rows))
+        self.assertTrue(all(r["why"] for r in rows))
+        boss = [r for r in rows if r["agent"] == "boss"][0]
+        self.assertEqual({x["agent"] for x in boss["math"]["rows"]}, agents - {"boss"})
+        self.assertIn("min_confidence", boss["math"])
         self.assertTrue(all(r["signal"] in ("BUY", "SELL", "HOLD") for r in rows))
         self.assertIn("AGENT PANEL", format_panel(rows, score_panel(Path("/nonexistent"), {})))
 

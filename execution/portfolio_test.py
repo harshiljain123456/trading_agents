@@ -117,6 +117,8 @@ class _TaxBook:
         self.st = self.lt = 0.0
         self.cf_st = self.cf_lt = 0.0
         self.paid = 0.0
+        self.wins = self.losses = 0
+        self.realized = 0.0
 
     def buy(self, j: int, day: int, rupees: float, price: float) -> None:
         if rupees > 0 and price > 0:
@@ -144,6 +146,11 @@ class _TaxBook:
             st, lt = self._gain(j, day, rupees / price, price)
             self.st += st
             self.lt += lt
+            self.realized += st + lt
+            if st + lt > 0:
+                self.wins += 1
+            elif st + lt < 0:
+                self.losses += 1
 
     def _tax(self, st: float, lt: float, cf_st: float, cf_lt: float) -> tuple[float, float, float]:
         r = self.rules
@@ -204,6 +211,10 @@ class OptionResult:
     after_tax_exit_value: float | None = None  # equity minus exit costs and tax if all sold on the last day
     final_holdings: np.ndarray | None = None   # rupee value per stock at the last close
     final_cash: float = 0.0
+    positions: list[dict] = field(default_factory=list)  # open lots at the last close (needs the tax book)
+    wins: int = 0            # sells that realised a gain (before tax and costs)
+    losses: int = 0
+    realized_pnl: float = 0.0
 
 
 @dataclass
@@ -215,6 +226,27 @@ class PortfolioReport:
     symbols_skipped: dict[str, str]
     winner: str
     beats_hold: list[str]
+
+
+def trade_cost(cfg: FrameworkConfig, delta: np.ndarray, model: str | None = None) -> float:
+    """Rupee cost of one session's trades (``delta`` > 0 buys, < 0 sells), slippage included."""
+    model = model or cfg.costs.model
+    gross = float(np.abs(delta).sum())
+    slip = cfg.execution.slippage_bps / 1e4
+    if model == "flat":
+        return gross * (cfg.execution.fee_bps / 1e4 + slip)
+    c = cfg.costs
+    buys = float(delta[delta > 0].sum())
+    sells = float(-delta[delta < 0].sum())
+    n_sells = int((delta < -1e-9).sum())
+    orders = np.abs(delta[np.abs(delta) > 1e-9])
+    brokerage = orders * c.brokerage_bps / 1e4
+    if c.brokerage_cap > 0:
+        brokerage = np.minimum(brokerage, c.brokerage_cap)
+    brokerage = float(brokerage.sum())
+    regulatory = gross * (c.exchange_txn + c.sebi_fee)
+    return (gross * c.stt + buys * c.stamp_duty_buy + regulatory + brokerage
+            + (brokerage + regulatory) * c.gst + n_sells * c.dp_charge_per_sell + gross * slip)
 
 
 def _fin_year(ts: pd.Timestamp) -> int:
@@ -231,6 +263,7 @@ def simulate(
     cash_yield: float = 0.0,
     tax: TaxRules | None = None,
     capital: float | None = None,
+    cost_model: str | None = None,
 ) -> OptionResult:
     """Run one option over the union calendar from ``start`` (to ``end``, exclusive, if given).
 
@@ -257,7 +290,6 @@ def simulate(
     M = np.ones(len(cal))
     if market is not None:
         M = market.reindex(cal, method="ffill").fillna(1.0).to_numpy()
-    cost_rate = (cfg.execution.fee_bps + cfg.execution.slippage_bps) / 1e4
     daily_yield = (1.0 + cash_yield) ** (1.0 / cfg.bars_per_year) - 1.0
     t0 = int(np.searchsorted(cal, start))
     if t0 < 1:
@@ -315,7 +347,7 @@ def simulate(
                         book.buy(j, ordinal[t], delta[j], o[j])
                     else:
                         book.sell(j, ordinal[t], -delta[j], o[j])
-            c = np.abs(delta).sum() * cost_rate
+            c = trade_cost(cfg, delta, cost_model)
             h = h + delta
             cash -= delta.sum() + c
             costs += c
@@ -332,10 +364,20 @@ def simulate(
     inv = pd.Series(inv_vals, index=cal[t0:t_end])
     res = OptionResult(option, eq, inv, costs, traded, float(np.mean(nst)) if nst else 0.0, interest=interest,
                        final_holdings=h.copy(), final_cash=cash)
-    exit_cost = h.sum() * cost_rate
+    exit_cost = trade_cost(cfg, -h, cost_model)
     if book is not None:
         res.taxes_paid = book.paid
         last = np.where(np.isnan(C[t_end - 1]), last_close, C[t_end - 1])
+        res.wins, res.losses, res.realized_pnl = book.wins, book.losses, book.realized
+        for j, lots in enumerate(book.lots):
+            units = sum(u for _, u, _ in lots)
+            if units <= 1e-9 or h[j] <= 1.0:
+                continue
+            cost = sum(u * c for _, u, c in lots)
+            res.positions.append({"symbol": stocks[j].symbol, "units": round(units, 4), "avg_cost": round(cost / units, 2),
+                                  "last": round(float(last[j]), 2), "cost": round(cost, 2), "value": round(float(h[j]), 2),
+                                  "pnl": round(float(h[j]) - cost, 2), "pnl_pct": round(float(h[j]) / cost - 1, 4) if cost else None,
+                                  "since": str(pd.Timestamp.fromordinal(int(min(d for d, _, _ in lots))).date())})
         res.after_tax_exit_value = float(eq.iloc[-1] - exit_cost - book.liquidation_tax(ordinal[t_end - 1], last))
     else:
         res.after_tax_exit_value = float(eq.iloc[-1] - exit_cost)

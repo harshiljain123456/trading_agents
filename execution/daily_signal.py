@@ -76,6 +76,10 @@ class SignalReport:
     scorecard: object = None
     nifty_hist: list[dict] = field(default_factory=list)  # for the dashboard chart
     paper_hist: list[dict] = field(default_factory=list)
+    positions: list[dict] = field(default_factory=list)
+    wins: int = 0
+    losses: int = 0
+    realized_pnl: float = 0.0
 
 
 def completed_bars(md: MarketData, now: pd.Timestamp) -> MarketData:
@@ -199,6 +203,7 @@ def run_daily_signal(
                        "s": None if np.isnan(es[i]) else round(float(es[i]), 2), "m": int(mk[i])}
                       for i in range(n0, len(ff))]
     if started:
+        rep.positions, rep.wins, rep.losses, rep.realized_pnl = r.positions, r.wins, r.losses, r.realized_pnl
         rep.paper_hist = [{"d": str(d.date()), "v": round(float(v), 2), "i": round(float(x), 4)}
                           for d, v, x in zip(r.equity.index, r.equity.to_numpy(), r.invested.to_numpy())]
     _write_journal(rep, paper_dir, now)

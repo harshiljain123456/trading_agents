@@ -32,7 +32,11 @@ def dashboard_data(rep, paper_dir: Path, universe: str, index_symbol: str = "NIF
         if r["symbol"] == index_symbol:
             continue
         s = stocks.setdefault(r["symbol"], {"close": r["close"], "views": {}})
-        s["views"][r["agent"]] = [r["signal"] if r["available"] else "n/a", r["confidence"], r["summary"]]
+        v = {"s": r["signal"] if r["available"] else "n/a", "c": r["confidence"], "why": r.get("why") or r["summary"],
+             "in": r.get("inputs", {})}
+        if "math" in r:
+            v["math"] = r["math"]
+        s["views"][r["agent"]] = v
     card = rep.scorecard
     pnl = rep.paper_value / rep.capital - 1.0 if rep.capital else 0.0
     return {
@@ -49,6 +53,8 @@ def dashboard_data(rep, paper_dir: Path, universe: str, index_symbol: str = "NIF
                   "ret": pnl, "invested": rep.paper_invested, "cash": rep.paper_cash, "tax": rep.taxes_paid,
                   "sessions": rep.sessions_traded},
         "orders": [asdict(o) for o in rep.orders],
+        "positions": rep.positions,
+        "record": {"wins": rep.wins, "losses": rep.losses, "realized": rep.realized_pnl},
         "warnings": list(rep.warnings),
         "skipped": list(rep.symbols_skipped),
         "nifty_hist": rep.nifty_hist,

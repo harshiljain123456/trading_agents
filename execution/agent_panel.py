@@ -41,6 +41,102 @@ AGENT_LABELS = {
 }
 
 
+def _num(v):
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return None
+    return None if f != f else f
+
+
+def _inputs(features: dict) -> dict:
+    """Compact numeric inputs for the dashboard tooltip."""
+    out = {}
+    for k, v in (features or {}).items():
+        if isinstance(v, bool):
+            out[k] = v
+        elif isinstance(v, str):
+            out[k] = v
+        else:
+            n = _num(v)
+            if n is not None:
+                out[k] = round(n, 4)
+    return out
+
+
+def explain(agent: str, signal: str, available: bool, f: dict, cfg: FrameworkConfig) -> str:
+    """Plain-English reason built from the agent's real inputs (no new judgement is added)."""
+    if not available:
+        return "No view: the data this agent needs is not available for this symbol."
+    g = lambda k: _num(f.get(k))  # noqa: E731
+    if agent == "regime_detector":
+        ef, es, adx, rv = g("ema_fast"), g("ema_slow"), g("adx"), g("realized_vol")
+        reg = f.get("regime", "")
+        p = cfg.agents.regime_detector
+        if None in (ef, es, adx):
+            return "Trend inputs incomplete."
+        gap = ef / es - 1 if es else 0.0
+        side = "below" if ef < es else "above"
+        if reg == "trend_down":
+            return (f"Bearish: the 20-day average ({ef:,.2f}) is {abs(gap):.1%} {side} the 100-day average ({es:,.2f}) "
+                    f"and the trend is strong (ADX {adx:.0f} >= {p.adx_trend:.0f}).")
+        if reg == "trend_up":
+            return (f"Bullish: the 20-day average ({ef:,.2f}) is {abs(gap):.1%} {side} the 100-day average ({es:,.2f}) "
+                    f"and the trend is strong (ADX {adx:.0f} >= {p.adx_trend:.0f}).")
+        if reg == "volatile":
+            return (f"Neutral: prices are too jumpy to trust the trend (realised volatility "
+                    f"{(rv or 0):.0%} >= {p.volatile_rv:.0%}).")
+        return (f"Neutral: no clear trend - ADX {adx:.0f} is below {p.adx_trend:.0f} "
+                f"(20-day average {abs(gap):.1%} {side} the 100-day).")
+    if agent == "market_intel":
+        mom, cvd, sc = g("inst_momentum"), g("cvd_norm"), g("score")
+        th = cfg.agents.market_intel.signal_threshold
+        bits = []
+        if mom is not None:
+            bits.append(f"recent momentum is {'positive' if mom > 0 else 'negative'} ({mom:+.2f})")
+        if cvd is not None:
+            bits.append(f"buying-vs-selling pressure (estimated from price ticks) is {cvd:+.2f}")
+        lead = {"BUY": "Bullish", "SELL": "Bearish"}.get(signal, "Neutral")
+        tail = (f"combined score {sc:+.2f} is beyond +/-{th:.2f}" if signal != "HOLD"
+                else f"combined score {(sc or 0):+.2f} is inside +/-{th:.2f}")
+        return f"{lead}: " + " and ".join(bits) + f"; {tail}. (NSE has no real order-flow data, so this is an estimate.)"
+    if agent == "market_mood":
+        bits = []
+        t, r, vx, vp = g("index_trend"), g("rel_strength"), g("india_vix"), g("vix_pct")
+        if t is not None:
+            bits.append(f"the Nifty is {'above' if t > 0 else 'below'} its 100-day average")
+        if r is not None:
+            bits.append(f"the stock is {'beating' if r > 0 else 'lagging'} the Nifty over 3 months")
+        if vx is not None and vp is not None:
+            bits.append(f"India VIX is {vx:.1f} ({vp:.0%} of the past year's readings were lower)")
+        lead = {"BUY": "Positive mood", "SELL": "Negative mood"}.get(signal, "Mixed mood")
+        return f"{lead}: " + "; ".join(bits) + f" (score {(g('score') or 0):+.2f})."
+    if agent == "risk_engine":
+        rs, rv, dd = g("risk_score"), g("realized_vol"), g("market_drawdown")
+        veto = cfg.risk.risk_veto_threshold
+        level = "extreme" if (rs or 0) > veto else "elevated" if (rs or 0) > 0.5 else "moderate" if (rs or 0) > 0.25 else "low"
+        return (f"Risk is {level} (score {(rs or 0):.2f}; volatility {(rv or 0):.0%}, fall from recent high "
+                f"{abs(dd or 0):.1%}). This agent never votes buy/sell; above {veto:.2f} it blocks new trades.")
+    if agent == "liquidity_engine":
+        if signal == "HOLD":
+            return "Neutral: no stop-run (a quick break of a recent high/low that reverses) was detected."
+        return f"{'Bullish' if signal == 'BUY' else 'Bearish'}: price swept a recent {'low' if signal == 'BUY' else 'high'} and reversed."
+    return ""
+
+
+def boss_math(dec, cfg: FrameworkConfig) -> dict:
+    """The numbers behind the boss decision, for the dashboard's Explain panel."""
+    rows = [{"agent": c.agent_name, "signal": c.signal.value, "confidence": round(c.confidence, 3),
+             "input": round(c.signed_input, 3), "weight": round(c.effective_weight, 3),
+             "contribution": round(c.contribution, 3), "eligible": c.eligible} for c in dec.breakdown]
+    return {"rows": rows, "S": round(dec.directional_score, 3), "agreement": round(dec.agreement, 3),
+            "coverage": round(dec.coverage, 3), "strength": round(dec.confidence, 3),
+            "min_confidence": cfg.strategy.min_confidence, "score_floor": cfg.strategy.directional_score_floor,
+            "raw": dec.raw_action.value, "action": dec.action.value, "forced": dec.forced_hold_rule,
+            "risk_score": None if dec.risk_score is None else round(dec.risk_score, 3), "risk_veto": dec.risk_veto,
+            "regime": dec.regime.value}
+
+
 def panel_for(cfg: FrameworkConfig, md: MarketData, warm_bars: int = 60) -> list[dict]:
     """Every agent's view at the last bar, plus the boss decision (boss smoothing warmed on recent bars)."""
     ff = compute_features(md, cfg)
@@ -54,11 +150,28 @@ def panel_for(cfg: FrameworkConfig, md: MarketData, warm_bars: int = 60) -> list
     as_of, close = str(ff.index[last].date()), float(ff.column("close")[last])
     rows = [{"as_of": as_of, "symbol": md.symbol, "close": close, "agent": s.agent_name, "signal": s.signal.value,
              "confidence": round(float(s.confidence), 3), "available": bool(s.available),
-             "summary": (s.summary or s.reason)[:140]} for s in sigs]
+             "summary": (s.summary or s.reason)[:140],
+             "why": explain(s.agent_name, s.signal.value, bool(s.available), s.features, cfg),
+             "inputs": _inputs(s.features)} for s in sigs]
     if dec is not None:
+        m = boss_math(dec, cfg)
+        if dec.action.value != "HOLD":
+            why = (f"{dec.action.value}: the weighted vote is {dec.directional_score:+.2f} and strength "
+                   f"{dec.confidence:.2f} clears the {m['min_confidence']:.2f} bar.")
+        elif dec.forced_hold_rule:
+            why = (f"HOLD: the vote leans {dec.raw_action.value if dec.raw_action.value != 'HOLD' else ('up' if dec.directional_score > 0 else 'down')}"
+                   f" ({dec.directional_score:+.2f}) but it is held back by: "
+                   + ", ".join({"min_confidence": f"strength {dec.confidence:.2f} below {m['min_confidence']:.2f}",
+                                "directional_score_floor": f"vote smaller than {m['score_floor']:.2f}",
+                                "risk_veto": "risk veto", "risk_unavailable": "risk not measurable",
+                                "data_coverage": "too little data", "kill_switch": "kill switch"}.get(r, r)
+                               for r in dec.forced_hold_rule.split(";")) + ".")
+        else:
+            why = "HOLD: the agents do not lean either way."
         rows.append({"as_of": as_of, "symbol": md.symbol, "close": close, "agent": "boss", "signal": dec.action.value,
                      "confidence": round(float(dec.confidence), 3), "available": True,
-                     "summary": (dec.forced_hold_rule or f"score {dec.directional_score:+.2f}, agreement {dec.agreement:.0%}")[:140]})
+                     "summary": (dec.forced_hold_rule or f"score {dec.directional_score:+.2f}, agreement {dec.agreement:.0%}")[:140],
+                     "why": why, "math": m})
     return rows
 
 
@@ -73,7 +186,7 @@ def append_panel(rows: list[dict], path: Path) -> bool:
                 return False
     new = not path.exists()
     with path.open("a", newline="", encoding="utf-8") as f:
-        wr = csv.DictWriter(f, fieldnames=PANEL_FIELDS)
+        wr = csv.DictWriter(f, fieldnames=PANEL_FIELDS, extrasaction="ignore")
         if new:
             wr.writeheader()
         wr.writerows(rows)
