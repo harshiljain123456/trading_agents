@@ -338,6 +338,9 @@ def format_robustness(rep, title: str) -> str:
            f"  stocks used {len(rep.symbols_used)}; skipped {len(rep.symbols_skipped)}"
            + (f" ({', '.join(rep.symbols_skipped)})" if rep.symbols_skipped else ""),
            f"  starting capital {rep.capital:,.0f} rupees; 'after-tax exit' = value if everything were sold on the last day",
+           ("  costs in tests 1 and 2: exact Indian delivery charges (STT 0.1% both sides, stamp 0.015% on buys, NSE + SEBI"
+            " fees + GST, DP Rs 15.34 per stock sold) + slippage" if getattr(rep, "cost_model", "flat") != "flat"
+            else "  costs: flat fee + slippage per rupee traded"),
            "", "== 3. Real money (base setting, full period) ==", head]
     for r in rep.realism:
         out += line(r.label, r)

@@ -9,8 +9,8 @@ Three questions, each with a pass rule fixed BEFORE running on real data:
 2. Periods    - does it work in each half separately (start .. split_date, split_date .. end),
                 each half started fresh with new capital, base setting?
                 PASS if C beats A on BOTH Sharpe and worst fall in EVERY half.
-3. Real money - idle cash earns a liquid-fund rate and capital-gains tax is paid each
-                financial year. All of 1 and 2 are judged with this realism switched ON.
+3. Real money - idle cash earns a liquid-fund rate, capital-gains tax is paid each
+                financial year, and (Step 6) exact Indian delivery charges apply. All of 1 and 2 are judged with this realism switched ON.
                 The "plain" and "cash interest only" rows are shown for comparison only.
 
 Overall: C passes only if 1 and 2 both pass. This is still in-sample on survivorship-affected
@@ -64,6 +64,7 @@ class RobustnessReport:
     periods_pass: bool = False
     settings_wins: int = 0
     pass_share: float = 0.75
+    cost_model: str = "flat"
 
     @property
     def passed(self) -> bool:
@@ -119,8 +120,8 @@ def run_robustness(
     tz = cfg.app.timezone
     split = pd.Timestamp(d.split_date, tz=tz) if pd.Timestamp(d.split_date).tzinfo is None else pd.Timestamp(d.split_date)
 
-    def run(option: str, mkt, s, e, yld, tx) -> OptionResult:
-        r = simulate(cfg, stocks, mkt, s, option, end=e, cash_yield=yld, tax=tx, capital=cap)
+    def run(option: str, mkt, s, e, yld, tx, costs: str | None = None) -> OptionResult:
+        r = simulate(cfg, stocks, mkt, s, option, end=e, cash_yield=yld, tax=tx, capital=cap, cost_model=costs)
         r.metrics = compute_metrics(r.equity, [], r.invested, r.costs, 0.0, r.traded, cfg.bars_per_year, 1.0)
         return r
 
@@ -134,15 +135,18 @@ def run_robustness(
             markets[key] = market_state(filter_config(cfg, f, s, a), nifty)
         return markets[key]
 
-    rep = RobustnessReport([s.symbol for s in stocks], skipped, cap, pass_share=d.param_pass_share)
+    rep = RobustnessReport([s.symbol for s in stocks], skipped, cap, pass_share=d.param_pass_share, cost_model=cfg.costs.model)
     base_m = mkt_for(base_f, base_s, base_adx)
 
     # 3. realism ladder on the base setting, full period
-    for label, yld, tx in (("plain (as Step 3c)", 0.0, None),
-                           (f"+ cash earns {d.cash_yield:.1%}", d.cash_yield, None),
-                           ("+ cash interest + tax", d.cash_yield, tax)):
-        a = run("A_hold", None, start, end, yld, tx)
-        c = run("C_market", base_m, start, end, yld, tx)
+    ladder = [("plain (as Step 3c)", 0.0, None, "flat"),
+              (f"+ cash earns {d.cash_yield:.1%}", d.cash_yield, None, "flat"),
+              ("+ cash interest + tax", d.cash_yield, tax, "flat")]
+    if cfg.costs.model != "flat":
+        ladder.append(("+ exact Indian costs", d.cash_yield, tax, cfg.costs.model))
+    for label, yld, tx, cm in ladder:
+        a = run("A_hold", None, start, end, yld, tx, cm)
+        c = run("C_market", base_m, start, end, yld, tx, cm)
         rep.realism.append(Row(label, a, c, float(c.invested.mean())))
 
     # 1. settings grid, full realism (A does not depend on the filter)

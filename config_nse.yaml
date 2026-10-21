@@ -194,6 +194,18 @@ synthetic:
   generate_optional: true        # synthetic on-chain columns
 
 # Step 3 role-based designs (python main.py ... --compare-designs). Fixed before testing.
+costs:
+  # Step 6: NSE equity-delivery charges (Zerodha schedule, checked Oct 2026). slippage_bps from execution still applies.
+  model: india_delivery
+  stt: 0.001                 # 0.1% on buy and sell
+  exchange_txn: 0.0000307    # NSE transaction charge 0.00307%
+  sebi_fee: 0.000001         # Rs 10 per crore
+  stamp_duty_buy: 0.00015    # 0.015% on buys
+  gst: 0.18                  # on brokerage + transaction + SEBI
+  brokerage_bps: 0.0         # delivery brokerage is zero at discount brokers
+  brokerage_cap: 0.0
+  dp_charge_per_sell: 15.34  # per stock sold per day, incl. GST
+
 designs:
   target_volatility: 0.30      # risk agent as sizer: exposure = min(1, 0.30 / realized vol)
   rebalance_band: 0.10         # skip exposure changes smaller than 10%

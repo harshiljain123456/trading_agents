@@ -355,6 +355,27 @@ class DesignsSection(_Strict):
     param_pass_share: float = Field(0.75, gt=0, le=1)     # share of settings C must win on
 
 
+class CostsSection(_Strict):
+    """Trading-cost model for the portfolio simulator (Steps 3c/5/7).
+
+    ``flat``: fee_bps + slippage_bps on every rupee traded (earlier steps).
+    ``india_delivery``: NSE equity-delivery charges as published by Zerodha (checked Oct 2026):
+    STT 0.1% buy+sell, NSE transaction 0.00307%, SEBI Rs 10/crore, GST 18% on
+    brokerage+transaction+SEBI, stamp duty 0.015% on buys, DP charge Rs 15.34 (incl. GST)
+    per stock sold per day, brokerage 0 for delivery; plus slippage_bps.
+    """
+
+    model: Literal["flat", "india_delivery"] = "flat"
+    stt: float = Field(0.001, ge=0)
+    exchange_txn: float = Field(0.0000307, ge=0)
+    sebi_fee: float = Field(0.000001, ge=0)
+    stamp_duty_buy: float = Field(0.00015, ge=0)
+    gst: float = Field(0.18, ge=0)
+    brokerage_bps: float = Field(0.0, ge=0)
+    brokerage_cap: float = Field(0.0, ge=0)        # rupees per order; 0 = no cap
+    dp_charge_per_sell: float = Field(15.34, ge=0)  # rupees per stock sold per day, GST included
+
+
 class FrameworkConfig(_Strict):
     """Root configuration object."""
 
@@ -362,6 +383,7 @@ class FrameworkConfig(_Strict):
     data: DataSection = Field(default_factory=DataSection)
     strategy: StrategySection = Field(default_factory=StrategySection)
     execution: ExecutionSection = Field(default_factory=ExecutionSection)
+    costs: CostsSection = Field(default_factory=CostsSection)
     risk: RiskSection = Field(default_factory=RiskSection)
     evaluation: EvaluationSection = Field(default_factory=EvaluationSection)
     walk_forward: WalkForwardSection = Field(default_factory=WalkForwardSection)
