@@ -5,3 +5,4 @@ run_time,as_of_close,nifty_close,ema_fast,ema_slow,adx,regime,filter,action_next
 2026-10-21 16:55,2026-10-21,22811.35,22884.14,23624.29,37.0,"regime trend_down (ADX 37, EMA gap -3.1%)",CASH,NO TRADE (stay in cash),0,1001008.1,0.0,2026-10-15
 2026-10-22 16:56,2026-10-22,22687.65,22865.42,23605.74,36.4,"regime trend_down (ADX 36, EMA gap -3.1%)",CASH,NO TRADE (stay in cash),0,1001260.29,0.0,2026-10-15
 2026-10-23 16:56,2026-10-23,22600.0,22840.14,23585.83,36.3,"regime trend_down (ADX 36, EMA gap -3.2%)",CASH,NO TRADE (stay in cash),0,1001512.54,0.0,2026-10-15
+2026-10-26 17:03,2026-10-26,22753.2,22831.86,23569.34,36.3,"regime trend_down (ADX 36, EMA gap -3.1%)",CASH,NO TRADE (stay in cash),0,1001764.85,0.0,2026-10-15
