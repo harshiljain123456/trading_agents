@@ -1,6 +1,6 @@
 {
  "universe": "nifty50",
- "updated": "13-Nov-2026 23:56 IST",
+ "updated": "17-Nov-2026 02:19 IST",
  "as_of": "Fri 13-Nov-2026",
  "next_session": "Mon 16-Nov",
  "filter": "INVESTED",
@@ -10,7 +10,7 @@
   "close": 25144.30078125,
   "ema_fast": 23985.394723141155,
   "ema_slow": 23701.192464666758,
-  "adx": 39.93954614421554,
+  "adx": 39.93867867879729,
   "regime": "regime trend_up (ADX 40, EMA gap +1.2%)"
  },
  "paper": {
@@ -2524,14 +2524,14 @@
    "close": 25144.30078125,
    "agent": "market_intel",
    "signal": "BUY",
-   "confidence": 0.19,
+   "confidence": 0.194,
    "available": true,
-   "summary": "proxy flow +0.04 and momentum +0.55 (no real order-flow data)",
-   "why": "Bullish: recent momentum is positive (+0.55) and buying-vs-selling pressure (estimated from price ticks) is +0.04; combined score +0.38 is beyond +/-0.15. (NSE has no real order-flow data, so this is an estimate.)",
+   "summary": "proxy flow +0.03 and momentum +0.57 (no real order-flow data)",
+   "why": "Bullish: recent momentum is positive (+0.57) and buying-vs-selling pressure (estimated from price ticks) is +0.03; combined score +0.39 is beyond +/-0.15. (NSE has no real order-flow data, so this is an estimate.)",
    "inputs": {
-    "cvd_norm": 0.0432,
-    "inst_momentum": 0.5492,
-    "score": 0.3805,
+    "cvd_norm": 0.0283,
+    "inst_momentum": 0.5674,
+    "score": 0.3877,
     "cvd_is_proxy": true,
     "proxy_mode": true
    }
@@ -2551,7 +2551,7 @@
     "atr_pct": 0.013,
     "market_drawdown": -0.0061,
     "vol_score": 0.0858,
-    "atr_score": 0.1554,
+    "atr_score": 0.1555,
     "drawdown_score": 0.0175,
     "risk_score": 0.0862,
     "risk_veto": false,
@@ -2574,8 +2574,8 @@
     "bearish_sweep": false,
     "prior_low": 22372.0,
     "prior_high": 25424.3496,
-    "cvd_norm_short": 1.0,
-    "absorption_ratio": 0.0,
+    "cvd_norm_short": 0.5422,
+    "absorption_ratio": 1.0973,
     "cvd_is_proxy": true
    }
   },
@@ -2593,8 +2593,8 @@
     "index_trend": 0.839,
     "rel_strength": 0.0,
     "vix_term": 0.0,
-    "india_vix": 15.495,
-    "vix_pct": 0.688,
+    "india_vix": 15.5,
+    "vix_pct": 0.692,
     "score": 0.3356,
     "coverage": 1.0
    }
@@ -2613,10 +2613,10 @@
     "regime": "trend_up",
     "ema_fast": 23985.3947,
     "ema_slow": 23701.1925,
-    "adx": 39.9395,
+    "adx": 39.9387,
     "realized_vol": 0.1612,
-    "plus_di": 43.5662,
-    "minus_di": 12.3741
+    "plus_di": 43.5643,
+    "minus_di": 12.3779
    }
   },
   {
@@ -2625,19 +2625,19 @@
    "close": 25144.30078125,
    "agent": "boss",
    "signal": "HOLD",
-   "confidence": 0.346,
+   "confidence": 0.347,
    "available": true,
    "summary": "min_confidence",
-   "why": "HOLD: the vote leans up (+0.19) but it is held back by: strength 0.35 below 0.35.",
+   "why": "HOLD: the vote leans up (+0.20) but it is held back by: strength 0.35 below 0.35.",
    "math": {
     "rows": [
      {
       "agent": "market_intel",
       "signal": "BUY",
-      "confidence": 0.19,
-      "input": 0.179,
+      "confidence": 0.194,
+      "input": 0.18,
       "weight": 1.4,
-      "contribution": 0.048,
+      "contribution": 0.049,
       "eligible": true
      },
      {
@@ -2680,7 +2680,7 @@
     "S": 0.195,
     "agreement": 1.0,
     "coverage": 0.635,
-    "strength": 0.346,
+    "strength": 0.347,
     "min_confidence": 0.35,
     "score_floor": 0.15,
     "raw": "HOLD",
@@ -2734,8 +2734,8 @@
       "bearish_sweep": false,
       "prior_low": 2430.7,
       "prior_high": 2785.8,
-      "cvd_norm_short": 0.4448,
-      "absorption_ratio": 0.7061,
+      "cvd_norm_short": 0.4447,
+      "absorption_ratio": 0.7062,
       "cvd_is_proxy": true
      }
     },
@@ -2747,8 +2747,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.8583,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": -0.0077,
       "coverage": 1.0
      }
@@ -2878,7 +2878,7 @@
       "prior_low": 1687.9,
       "prior_high": 1979.0,
       "cvd_norm_short": -0.5309,
-      "absorption_ratio": 0.9071,
+      "absorption_ratio": 0.9072,
       "cvd_is_proxy": true
      }
     },
@@ -2890,8 +2890,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.8149,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.6615,
       "coverage": 1.0
      }
@@ -3021,7 +3021,7 @@
       "prior_low": 7465.0,
       "prior_high": 8696.0,
       "cvd_norm_short": 0.4777,
-      "absorption_ratio": 1.5159,
+      "absorption_ratio": 1.516,
       "cvd_is_proxy": true
      }
     },
@@ -3033,8 +3033,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.346,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.1972,
       "coverage": 1.0
      }
@@ -3182,8 +3182,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.7449,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.0377,
       "coverage": 1.0
      }
@@ -3325,8 +3325,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.4863,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.5301,
       "coverage": 1.0
      }
@@ -3468,8 +3468,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.7684,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.0282,
       "coverage": 1.0
      }
@@ -3599,7 +3599,7 @@
       "prior_low": 899.15,
       "prior_high": 1118.0,
       "cvd_norm_short": 1.0,
-      "absorption_ratio": 1.3392,
+      "absorption_ratio": 1.3393,
       "cvd_is_proxy": true
      }
     },
@@ -3611,8 +3611,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.0813,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.3031,
       "coverage": 1.0
      }
@@ -3754,8 +3754,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.7855,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.0214,
       "coverage": 1.0
      }
@@ -3884,8 +3884,8 @@
       "bearish_sweep": false,
       "prior_low": 354.55,
       "prior_high": 406.7,
-      "cvd_norm_short": 0.5467,
-      "absorption_ratio": 0.7357,
+      "cvd_norm_short": 0.5466,
+      "absorption_ratio": 0.7359,
       "cvd_is_proxy": true
      }
     },
@@ -3897,8 +3897,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.3765,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.185,
       "coverage": 1.0
      }
@@ -4028,7 +4028,7 @@
       "prior_low": 1794.0,
       "prior_high": 2120.0,
       "cvd_norm_short": 0.3269,
-      "absorption_ratio": 0.7079,
+      "absorption_ratio": 0.7082,
       "cvd_is_proxy": true,
       "cvd_confirms": false,
       "cvd_divergence": true,
@@ -4046,8 +4046,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.4914,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.5321,
       "coverage": 1.0
      }
@@ -4177,7 +4177,7 @@
       "prior_low": 3190.0,
       "prior_high": 3954.2,
       "cvd_norm_short": 1.0,
-      "absorption_ratio": 1.1693,
+      "absorption_ratio": 1.1695,
       "cvd_is_proxy": true,
       "cvd_confirms": false,
       "cvd_divergence": true,
@@ -4195,8 +4195,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.7037,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.6171,
       "coverage": 1.0
      }
@@ -4326,7 +4326,7 @@
       "prior_low": 1296.4,
       "prior_high": 1421.4,
       "cvd_norm_short": -0.222,
-      "absorption_ratio": 0.7062,
+      "absorption_ratio": 0.7063,
       "cvd_is_proxy": true
      }
     },
@@ -4338,8 +4338,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.6507,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.0753,
       "coverage": 1.0
      }
@@ -4469,7 +4469,7 @@
       "prior_low": 370.8434,
       "prior_high": 409.741,
       "cvd_norm_short": 0.0252,
-      "absorption_ratio": 1.2958,
+      "absorption_ratio": 1.2962,
       "cvd_is_proxy": true
      }
     },
@@ -4481,8 +4481,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.0495,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.3158,
       "coverage": 1.0
      }
@@ -4630,8 +4630,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.8367,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.6703,
       "coverage": 1.0
      }
@@ -4727,7 +4727,7 @@
      "c": 0.139,
      "why": "Bullish: recent momentum is positive (+0.51) and buying-vs-selling pressure (estimated from price ticks) is -0.19; combined score +0.28 is beyond +/-0.15. (NSE has no real order-flow data, so this is an estimate.)",
      "in": {
-      "cvd_norm": -0.1861,
+      "cvd_norm": -0.186,
       "inst_momentum": 0.5105,
       "score": 0.2783,
       "cvd_is_proxy": true,
@@ -4760,8 +4760,8 @@
       "bearish_sweep": false,
       "prior_low": 6911.0,
       "prior_high": 7837.0,
-      "cvd_norm_short": -0.4606,
-      "absorption_ratio": 1.0383,
+      "cvd_norm_short": -0.4602,
+      "absorption_ratio": 1.0395,
       "cvd_is_proxy": true
      }
     },
@@ -4773,8 +4773,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.6559,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.0732,
       "coverage": 1.0
      }
@@ -4904,7 +4904,7 @@
       "prior_low": 301.75,
       "prior_high": 372.1,
       "cvd_norm_short": -0.4594,
-      "absorption_ratio": 1.0233,
+      "absorption_ratio": 1.0234,
       "cvd_is_proxy": true
      }
     },
@@ -4916,8 +4916,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.859,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.6792,
       "coverage": 1.0
      }
@@ -5014,7 +5014,7 @@
      "why": "Bullish: recent momentum is positive (+0.40) and buying-vs-selling pressure (estimated from price ticks) is -0.16; combined score +0.21 is beyond +/-0.15. (NSE has no real order-flow data, so this is an estimate.)",
      "in": {
       "cvd_norm": -0.1636,
-      "inst_momentum": 0.3963,
+      "inst_momentum": 0.3964,
       "score": 0.2097,
       "cvd_is_proxy": true,
       "proxy_mode": true
@@ -5047,7 +5047,7 @@
       "prior_low": 2828.2,
       "prior_high": 3239.0,
       "cvd_norm_short": -1.0,
-      "absorption_ratio": 1.5119,
+      "absorption_ratio": 1.5124,
       "cvd_is_proxy": true
      }
     },
@@ -5059,8 +5059,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.8067,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.0129,
       "coverage": 1.0
      }
@@ -5202,8 +5202,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.1073,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.2927,
       "coverage": 1.0
      }
@@ -5332,8 +5332,8 @@
       "bearish_sweep": false,
       "prior_low": 669.2,
       "prior_high": 817.85,
-      "cvd_norm_short": 0.6032,
-      "absorption_ratio": 0.9693,
+      "cvd_norm_short": 0.6031,
+      "absorption_ratio": 0.9695,
       "cvd_is_proxy": true
      }
     },
@@ -5345,8 +5345,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.6285,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.587,
       "coverage": 1.0
      }
@@ -5494,8 +5494,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.6285,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.587,
       "coverage": 1.0
      }
@@ -5592,7 +5592,7 @@
      "why": "Bullish: recent momentum is positive (+0.58) and buying-vs-selling pressure (estimated from price ticks) is +0.18; combined score +0.44 is beyond +/-0.15. (NSE has no real order-flow data, so this is an estimate.)",
      "in": {
       "cvd_norm": 0.1754,
-      "inst_momentum": 0.5775,
+      "inst_momentum": 0.5776,
       "score": 0.4435,
       "cvd_is_proxy": true,
       "proxy_mode": true
@@ -5624,8 +5624,8 @@
       "bearish_sweep": false,
       "prior_low": 851.1,
       "prior_high": 971.0,
-      "cvd_norm_short": 0.4375,
-      "absorption_ratio": 1.8943,
+      "cvd_norm_short": 0.4374,
+      "absorption_ratio": 1.895,
       "cvd_is_proxy": true
      }
     },
@@ -5637,8 +5637,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.9122,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": -0.0293,
       "coverage": 1.0
      }
@@ -5768,7 +5768,7 @@
       "prior_low": 1741.682,
       "prior_high": 2011.1,
       "cvd_norm_short": 0.2441,
-      "absorption_ratio": 1.0384,
+      "absorption_ratio": 1.0386,
       "cvd_is_proxy": true
      }
     },
@@ -5780,8 +5780,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.4915,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.139,
       "coverage": 1.0
      }
@@ -5911,7 +5911,7 @@
       "prior_low": 1338.6,
       "prior_high": 1616.0,
       "cvd_norm_short": -0.4275,
-      "absorption_ratio": 1.0917,
+      "absorption_ratio": 1.0919,
       "cvd_is_proxy": true
      }
     },
@@ -5923,8 +5923,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.6476,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.5946,
       "coverage": 1.0
      }
@@ -6054,7 +6054,7 @@
       "prior_low": 4464.3999,
       "prior_high": 5713.0,
       "cvd_norm_short": 0.189,
-      "absorption_ratio": 1.7627,
+      "absorption_ratio": 1.7628,
       "cvd_is_proxy": true
      }
     },
@@ -6066,8 +6066,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.1848,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.4095,
       "coverage": 1.0
      }
@@ -6196,8 +6196,8 @@
       "bearish_sweep": false,
       "prior_low": 1014.8035,
       "prior_high": 1198.8,
-      "cvd_norm_short": -0.192,
-      "absorption_ratio": 0.734,
+      "cvd_norm_short": -0.1921,
+      "absorption_ratio": 0.7344,
       "cvd_is_proxy": true
      }
     },
@@ -6209,8 +6209,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.3467,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.1969,
       "coverage": 1.0
      }
@@ -6340,7 +6340,7 @@
       "prior_low": 252.8,
       "prior_high": 290.25,
       "cvd_norm_short": 0.2692,
-      "absorption_ratio": 0.8052,
+      "absorption_ratio": 0.8054,
       "cvd_is_proxy": true
      }
     },
@@ -6352,8 +6352,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.0306,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.3478,
       "coverage": 1.0
      }
@@ -6482,8 +6482,8 @@
       "bearish_sweep": false,
       "prior_low": 202.51,
       "prior_high": 233.87,
-      "cvd_norm_short": 0.5622,
-      "absorption_ratio": 1.1581,
+      "cvd_norm_short": 0.5611,
+      "absorption_ratio": 1.1619,
       "cvd_is_proxy": true
      }
     },
@@ -6495,8 +6495,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.8864,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": -0.019,
       "coverage": 1.0
      }
@@ -6638,8 +6638,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.3202,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.4637,
       "coverage": 1.0
      }
@@ -6735,9 +6735,9 @@
      "c": 0.187,
      "why": "Bullish: recent momentum is positive (+0.45) and buying-vs-selling pressure (estimated from price ticks) is +0.23; combined score +0.37 is beyond +/-0.15. (NSE has no real order-flow data, so this is an estimate.)",
      "in": {
-      "cvd_norm": 0.2292,
-      "inst_momentum": 0.4471,
-      "score": 0.3745,
+      "cvd_norm": 0.2289,
+      "inst_momentum": 0.4474,
+      "score": 0.3746,
       "cvd_is_proxy": true,
       "proxy_mode": true
      }
@@ -6768,8 +6768,8 @@
       "bearish_sweep": false,
       "prior_low": 427.7,
       "prior_high": 494.05,
-      "cvd_norm_short": 0.6427,
-      "absorption_ratio": 0.798,
+      "cvd_norm_short": 0.6361,
+      "absorption_ratio": 0.8161,
       "cvd_is_proxy": true
      }
     },
@@ -6781,8 +6781,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.9767,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.7263,
       "coverage": 1.0
      }
@@ -6911,8 +6911,8 @@
       "bearish_sweep": false,
       "prior_low": 3595.0,
       "prior_high": 4259.0,
-      "cvd_norm_short": -0.1747,
-      "absorption_ratio": 0.7921,
+      "cvd_norm_short": -0.1748,
+      "absorption_ratio": 0.7923,
       "cvd_is_proxy": true
      }
     },
@@ -6924,8 +6924,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.0181,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.3428,
       "coverage": 1.0
      }
@@ -7054,8 +7054,8 @@
       "bearish_sweep": false,
       "prior_low": 2793.7,
       "prior_high": 3465.0,
-      "cvd_norm_short": 0.0946,
-      "absorption_ratio": 1.0246,
+      "cvd_norm_short": 0.0945,
+      "absorption_ratio": 1.0248,
       "cvd_is_proxy": true
      }
     },
@@ -7067,8 +7067,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.46,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.1516,
       "coverage": 1.0
      }
@@ -7198,7 +7198,7 @@
       "prior_low": 10985.0,
       "prior_high": 13215.0,
       "cvd_norm_short": -0.1144,
-      "absorption_ratio": 1.3385,
+      "absorption_ratio": 1.3386,
       "cvd_is_proxy": true
      }
     },
@@ -7210,8 +7210,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.7722,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.0267,
       "coverage": 1.0
      }
@@ -7341,7 +7341,7 @@
       "prior_low": 797.0,
       "prior_high": 946.3,
       "cvd_norm_short": 1.0,
-      "absorption_ratio": 0.7028,
+      "absorption_ratio": 0.7029,
       "cvd_is_proxy": true
      }
     },
@@ -7353,8 +7353,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.7111,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.0512,
       "coverage": 1.0
      }
@@ -7483,8 +7483,8 @@
       "bearish_sweep": false,
       "prior_low": 1147.4,
       "prior_high": 1385.9,
-      "cvd_norm_short": -0.5494,
-      "absorption_ratio": 0.757,
+      "cvd_norm_short": -0.5493,
+      "absorption_ratio": 0.7571,
       "cvd_is_proxy": true
      }
     },
@@ -7496,8 +7496,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.9569,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": -0.0472,
       "coverage": 1.0
      }
@@ -7627,7 +7627,7 @@
       "prior_low": 289.2835,
       "prior_high": 333.85,
       "cvd_norm_short": -1.0,
-      "absorption_ratio": 0.6744,
+      "absorption_ratio": 0.6748,
       "cvd_is_proxy": true
      }
     },
@@ -7639,8 +7639,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.6024,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.0946,
       "coverage": 1.0
      }
@@ -7737,7 +7737,7 @@
      "why": "Bullish: recent momentum is positive (+0.29) and buying-vs-selling pressure (estimated from price ticks) is +0.08; combined score +0.22 is beyond +/-0.15. (NSE has no real order-flow data, so this is an estimate.)",
      "in": {
       "cvd_norm": 0.0834,
-      "inst_momentum": 0.2928,
+      "inst_momentum": 0.2929,
       "score": 0.223,
       "cvd_is_proxy": true,
       "proxy_mode": true
@@ -7769,8 +7769,8 @@
       "bearish_sweep": false,
       "prior_low": 214.4071,
       "prior_high": 228.7125,
-      "cvd_norm_short": 0.1799,
-      "absorption_ratio": 1.5533,
+      "cvd_norm_short": 0.1801,
+      "absorption_ratio": 1.5563,
       "cvd_is_proxy": true
      }
     },
@@ -7782,8 +7782,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.4654,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.1494,
       "coverage": 1.0
      }
@@ -7913,7 +7913,7 @@
       "prior_low": 239.5165,
       "prior_high": 267.096,
       "cvd_norm_short": 0.0334,
-      "absorption_ratio": 0.6716,
+      "absorption_ratio": 0.6717,
       "cvd_is_proxy": true
      }
     },
@@ -7925,8 +7925,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.522,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.1268,
       "coverage": 1.0
      }
@@ -8056,7 +8056,7 @@
       "prior_low": 1152.5,
       "prior_high": 1349.4,
       "cvd_norm_short": 1.0,
-      "absorption_ratio": 0.7665,
+      "absorption_ratio": 0.7668,
       "cvd_is_proxy": true,
       "cvd_confirms": false,
       "cvd_divergence": true,
@@ -8074,8 +8074,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.2064,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.253,
       "coverage": 1.0
      }
@@ -8171,9 +8171,9 @@
      "c": 0.139,
      "why": "Bullish: recent momentum is positive (+0.42) and buying-vs-selling pressure (estimated from price ticks) is -0.00; combined score +0.28 is beyond +/-0.15. (NSE has no real order-flow data, so this is an estimate.)",
      "in": {
-      "cvd_norm": -0.0009,
-      "inst_momentum": 0.4162,
-      "score": 0.2772,
+      "cvd_norm": -0.0027,
+      "inst_momentum": 0.4181,
+      "score": 0.2778,
       "cvd_is_proxy": true,
       "proxy_mode": true
      }
@@ -8204,8 +8204,8 @@
       "bearish_sweep": false,
       "prior_low": 1607.7,
       "prior_high": 1820.0,
-      "cvd_norm_short": 0.8303,
-      "absorption_ratio": 0.345,
+      "cvd_norm_short": 0.7875,
+      "absorption_ratio": 0.4422,
       "cvd_is_proxy": true
      }
     },
@@ -8217,8 +8217,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.4692,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.1479,
       "coverage": 1.0
      }
@@ -8248,7 +8248,7 @@
         "agent": "market_intel",
         "signal": "BUY",
         "confidence": 0.139,
-        "input": 0.107,
+        "input": 0.108,
         "weight": 1.3,
         "contribution": 0.026,
         "eligible": true
@@ -8314,8 +8314,8 @@
      "c": 0.277,
      "why": "Bullish: recent momentum is positive (+0.78) and buying-vs-selling pressure (estimated from price ticks) is +0.11; combined score +0.55 is beyond +/-0.15. (NSE has no real order-flow data, so this is an estimate.)",
      "in": {
-      "cvd_norm": 0.1095,
-      "inst_momentum": 0.7762,
+      "cvd_norm": 0.1094,
+      "inst_momentum": 0.7764,
       "score": 0.554,
       "cvd_is_proxy": true,
       "proxy_mode": true
@@ -8347,8 +8347,8 @@
       "bearish_sweep": true,
       "prior_low": 943.4,
       "prior_high": 1089.0,
-      "cvd_norm_short": 0.5319,
-      "absorption_ratio": 1.6092,
+      "cvd_norm_short": 0.5307,
+      "absorption_ratio": 1.6144,
       "cvd_is_proxy": true,
       "cvd_confirms": false,
       "cvd_divergence": true,
@@ -8366,8 +8366,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.2989,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.216,
       "coverage": 1.0
      }
@@ -8496,8 +8496,8 @@
       "bearish_sweep": false,
       "prior_low": 803.7753,
       "prior_high": 1006.6,
-      "cvd_norm_short": 0.347,
-      "absorption_ratio": 0.9767,
+      "cvd_norm_short": 0.3469,
+      "absorption_ratio": 0.977,
       "cvd_is_proxy": true
      }
     },
@@ -8509,8 +8509,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.912,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": -0.0292,
       "coverage": 1.0
      }
@@ -8640,7 +8640,7 @@
       "prior_low": 1719.1,
       "prior_high": 1943.9,
       "cvd_norm_short": -1.0,
-      "absorption_ratio": 0.8554,
+      "absorption_ratio": 0.8555,
       "cvd_is_proxy": true
      }
     },
@@ -8652,8 +8652,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.5505,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.1154,
       "coverage": 1.0
      }
@@ -8795,8 +8795,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.1281,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.2843,
       "coverage": 1.0
      }
@@ -8925,8 +8925,8 @@
       "bearish_sweep": false,
       "prior_low": 163.41,
       "prior_high": 194.0,
-      "cvd_norm_short": -0.005,
-      "absorption_ratio": 0.9742,
+      "cvd_norm_short": -0.0051,
+      "absorption_ratio": 0.9745,
       "cvd_is_proxy": true
      }
     },
@@ -8938,8 +8938,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.2581,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.2323,
       "coverage": 1.0
      }
@@ -9069,7 +9069,7 @@
       "prior_low": 2265.6001,
       "prior_high": 2625.0,
       "cvd_norm_short": -1.0,
-      "absorption_ratio": 0.7575,
+      "absorption_ratio": 0.7576,
       "cvd_is_proxy": true
      }
     },
@@ -9081,8 +9081,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.0106,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.3398,
       "coverage": 1.0
      }
@@ -9212,7 +9212,7 @@
       "prior_low": 1525.5855,
       "prior_high": 1860.0,
       "cvd_norm_short": -1.0,
-      "absorption_ratio": 0.5427,
+      "absorption_ratio": 0.5429,
       "cvd_is_proxy": true
      }
     },
@@ -9224,8 +9224,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.5752,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.5657,
       "coverage": 1.0
      }
@@ -9355,7 +9355,7 @@
       "prior_low": 4209.0,
       "prior_high": 5056.6001,
       "cvd_norm_short": -1.0,
-      "absorption_ratio": 0.7024,
+      "absorption_ratio": 0.7025,
       "cvd_is_proxy": true
      }
     },
@@ -9367,8 +9367,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.6574,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.0726,
       "coverage": 1.0
      }
@@ -9497,8 +9497,8 @@
       "bearish_sweep": false,
       "prior_low": 259.1,
       "prior_high": 301.85,
-      "cvd_norm_short": -0.3459,
-      "absorption_ratio": 0.8088,
+      "cvd_norm_short": -0.346,
+      "absorption_ratio": 0.8093,
       "cvd_is_proxy": true
      }
     },
@@ -9510,8 +9510,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.9572,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": -0.0473,
       "coverage": 1.0
      }
@@ -9653,8 +9653,8 @@
       "index_trend": 0.839,
       "rel_strength": 0.2974,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.4546,
       "coverage": 1.0
      }
@@ -9796,8 +9796,8 @@
       "index_trend": 0.839,
       "rel_strength": -0.1136,
       "vix_term": 0.0,
-      "india_vix": 15.495,
-      "vix_pct": 0.688,
+      "india_vix": 15.5,
+      "vix_pct": 0.692,
       "score": 0.2901,
       "coverage": 1.0
      }
