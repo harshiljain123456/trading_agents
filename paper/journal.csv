@@ -21,3 +21,4 @@ run_time,as_of_close,nifty_close,ema_fast,ema_slow,adx,regime,filter,action_next
 2026-11-19 00:45,2026-11-17,25387.4,24231.43,23765.44,42.5,"regime trend_up (ADX 43, EMA gap +2.0%)",INVESTED,NO TRADE (hold current positions),0,1003378.49,1.0017,2026-10-15
 2026-11-20 00:52,2026-11-18,25227.95,24326.34,23794.4,43.2,"regime trend_up (ADX 43, EMA gap +2.2%)",INVESTED,NO TRADE (hold current positions),0,995259.9,1.0017,2026-10-15
 2026-11-21 00:28,2026-11-19,25514.3,24439.48,23828.46,44.0,"regime trend_up (ADX 44, EMA gap +2.6%)",INVESTED,NO TRADE (hold current positions),0,1007098.63,1.0017,2026-10-15
+2026-11-24 03:58,2026-11-20,25800.6,24569.11,23867.51,45.1,"regime trend_up (ADX 45, EMA gap +2.9%)",INVESTED,NO TRADE (hold current positions),0,1015638.76,1.0017,2026-10-15
