@@ -7037,3 +7037,309 @@ as_of,symbol,close,agent,signal,confidence,available,summary
 2026-11-23,ULTRACEMCO,12650.0,market_mood,BUY,0.51,True,market mood +0.51 (3/3 inputs)
 2026-11-23,ULTRACEMCO,12650.0,regime_detector,BUY,1.0,True,"regime trend_up (ADX 47, EMA gap +5.1%)"
 2026-11-23,ULTRACEMCO,12650.0,boss,BUY,0.384,True,"score +0.30, agreement 100%"
+2026-11-25,NIFTY50,25819.25,market_intel,BUY,0.213,True,proxy flow +0.17 and momentum +0.55 (no real order-flow data)
+2026-11-25,NIFTY50,25819.25,risk_engine,HOLD,0.908,True,risk_score 0.09 (low)
+2026-11-25,NIFTY50,25819.25,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,NIFTY50,25819.25,market_mood,BUY,0.367,True,market mood +0.37 (3/3 inputs)
+2026-11-25,NIFTY50,25819.25,regime_detector,BUY,1.0,True,"regime trend_up (ADX 48, EMA gap +3.4%)"
+2026-11-25,NIFTY50,25819.25,boss,BUY,0.362,True,"score +0.28, agreement 100%"
+2026-11-25,ADANIENT,2668.5,market_intel,HOLD,0.056,True,proxy flow -0.19 and momentum +0.26 (no real order-flow data)
+2026-11-25,ADANIENT,2668.5,risk_engine,HOLD,0.516,True,risk_score 0.48 (moderate)
+2026-11-25,ADANIENT,2668.5,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,ADANIENT,2668.5,market_mood,HOLD,0.009,True,market mood -0.01 (3/3 inputs)
+2026-11-25,ADANIENT,2668.5,regime_detector,HOLD,0.0,True,"regime range (ADX 17, EMA gap -3.2%)"
+2026-11-25,ADANIENT,2668.5,boss,HOLD,0.0,True,directional_score_floor;min_confidence
+2026-11-25,ADANIPORTS,1926.300048828125,market_intel,BUY,0.156,True,proxy flow +0.14 and momentum +0.40 (no real order-flow data)
+2026-11-25,ADANIPORTS,1926.300048828125,risk_engine,HOLD,0.735,True,risk_score 0.26 (moderate)
+2026-11-25,ADANIPORTS,1926.300048828125,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,ADANIPORTS,1926.300048828125,market_mood,BUY,0.605,True,market mood +0.60 (3/3 inputs)
+2026-11-25,ADANIPORTS,1926.300048828125,regime_detector,BUY,0.167,True,"regime trend_up (ADX 23, EMA gap +5.8%)"
+2026-11-25,ADANIPORTS,1926.300048828125,boss,HOLD,0.246,True,min_confidence
+2026-11-25,APOLLOHOSP,9300.0,market_intel,BUY,0.135,True,proxy flow +0.01 and momentum +0.40 (no real order-flow data)
+2026-11-25,APOLLOHOSP,9300.0,risk_engine,HOLD,0.714,True,risk_score 0.29 (moderate)
+2026-11-25,APOLLOHOSP,9300.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,APOLLOHOSP,9300.0,market_mood,BUY,0.388,True,market mood +0.39 (3/3 inputs)
+2026-11-25,APOLLOHOSP,9300.0,regime_detector,BUY,0.721,True,"regime trend_up (ADX 34, EMA gap +2.6%)"
+2026-11-25,APOLLOHOSP,9300.0,boss,HOLD,0.288,True,min_confidence
+2026-11-25,ASIANPAINT,2621.199951171875,market_intel,BUY,0.296,True,proxy flow +0.20 and momentum +0.78 (no real order-flow data)
+2026-11-25,ASIANPAINT,2621.199951171875,risk_engine,HOLD,0.701,True,risk_score 0.30 (moderate)
+2026-11-25,ASIANPAINT,2621.199951171875,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,ASIANPAINT,2621.199951171875,market_mood,HOLD,0.127,True,market mood +0.13 (3/3 inputs)
+2026-11-25,ASIANPAINT,2621.199951171875,regime_detector,BUY,0.483,True,"regime trend_up (ADX 30, EMA gap +0.6%)"
+2026-11-25,ASIANPAINT,2621.199951171875,boss,HOLD,0.237,True,directional_score_floor;min_confidence
+2026-11-25,AXISBANK,1418.0999755859375,market_intel,BUY,0.196,True,proxy flow +0.27 and momentum +0.45 (no real order-flow data)
+2026-11-25,AXISBANK,1418.0999755859375,risk_engine,HOLD,0.663,True,risk_score 0.34 (moderate)
+2026-11-25,AXISBANK,1418.0999755859375,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,AXISBANK,1418.0999755859375,market_mood,BUY,0.618,True,market mood +0.62 (3/3 inputs)
+2026-11-25,AXISBANK,1418.0999755859375,regime_detector,BUY,1.0,True,"regime trend_up (ADX 41, EMA gap +4.3%)"
+2026-11-25,AXISBANK,1418.0999755859375,boss,BUY,0.424,True,"score +0.30, agreement 100%"
+2026-11-25,BAJAJ-AUTO,10868.0,market_intel,BUY,0.174,True,proxy flow -0.07 and momentum +0.56 (no real order-flow data)
+2026-11-25,BAJAJ-AUTO,10868.0,risk_engine,HOLD,0.675,True,risk_score 0.33 (moderate)
+2026-11-25,BAJAJ-AUTO,10868.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,BAJAJ-AUTO,10868.0,market_mood,HOLD,0.017,True,market mood +0.02 (3/3 inputs)
+2026-11-25,BAJAJ-AUTO,10868.0,regime_detector,HOLD,0.0,True,"regime range (ADX 18, EMA gap -0.1%)"
+2026-11-25,BAJAJ-AUTO,10868.0,boss,HOLD,0.07,True,directional_score_floor;min_confidence
+2026-11-25,BAJFINANCE,1131.3499755859375,market_intel,BUY,0.22,True,proxy flow +0.16 and momentum +0.58 (no real order-flow data)
+2026-11-25,BAJFINANCE,1131.3499755859375,risk_engine,HOLD,0.582,True,risk_score 0.42 (moderate)
+2026-11-25,BAJFINANCE,1131.3499755859375,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,BAJFINANCE,1131.3499755859375,market_mood,BUY,0.245,True,market mood +0.25 (3/3 inputs)
+2026-11-25,BAJFINANCE,1131.3499755859375,regime_detector,BUY,0.952,True,"regime trend_up (ADX 39, EMA gap +4.7%)"
+2026-11-25,BAJFINANCE,1131.3499755859375,boss,HOLD,0.323,True,min_confidence
+2026-11-25,BAJAJFINSV,1925.0,market_intel,BUY,0.227,True,proxy flow +0.16 and momentum +0.60 (no real order-flow data)
+2026-11-25,BAJAJFINSV,1925.0,risk_engine,HOLD,0.665,True,risk_score 0.33 (moderate)
+2026-11-25,BAJAJFINSV,1925.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,BAJAJFINSV,1925.0,market_mood,HOLD,0.037,True,market mood +0.04 (3/3 inputs)
+2026-11-25,BAJAJFINSV,1925.0,regime_detector,SELL,1.0,True,"regime trend_down (ADX 45, EMA gap -0.1%)"
+2026-11-25,BAJAJFINSV,1925.0,boss,HOLD,0.24,True,directional_score_floor;min_confidence
+2026-11-25,BEL,404.29998779296875,market_intel,BUY,0.172,True,proxy flow +0.07 and momentum +0.48 (no real order-flow data)
+2026-11-25,BEL,404.29998779296875,risk_engine,HOLD,0.745,True,risk_score 0.26 (moderate)
+2026-11-25,BEL,404.29998779296875,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,BEL,404.29998779296875,market_mood,HOLD,0.084,True,market mood +0.08 (3/3 inputs)
+2026-11-25,BEL,404.29998779296875,regime_detector,SELL,0.1,True,"regime trend_down (ADX 22, EMA gap -0.6%)"
+2026-11-25,BEL,404.29998779296875,boss,HOLD,0.067,True,directional_score_floor;min_confidence
+2026-11-25,BHARTIARTL,2117.5,market_intel,BUY,0.197,True,proxy flow +0.22 and momentum +0.48 (no real order-flow data)
+2026-11-25,BHARTIARTL,2117.5,risk_engine,HOLD,0.756,True,risk_score 0.24 (low)
+2026-11-25,BHARTIARTL,2117.5,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,BHARTIARTL,2117.5,market_mood,BUY,0.459,True,market mood +0.46 (3/3 inputs)
+2026-11-25,BHARTIARTL,2117.5,regime_detector,BUY,1.0,True,"regime trend_up (ADX 50, EMA gap +7.0%)"
+2026-11-25,BHARTIARTL,2117.5,boss,BUY,0.382,True,"score +0.32, agreement 100%"
+2026-11-25,BSE,3775.199951171875,market_intel,BUY,0.15,True,proxy flow +0.29 and momentum +0.30 (no real order-flow data)
+2026-11-25,BSE,3775.199951171875,risk_engine,HOLD,0.559,True,risk_score 0.44 (moderate)
+2026-11-25,BSE,3775.199951171875,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,BSE,3775.199951171875,market_mood,BUY,0.672,True,market mood +0.67 (3/3 inputs)
+2026-11-25,BSE,3775.199951171875,regime_detector,BUY,0.829,True,"regime trend_up (ADX 37, EMA gap +5.8%)"
+2026-11-25,BSE,3775.199951171875,boss,BUY,0.389,True,"score +0.30, agreement 100%"
+2026-11-25,CIPLA,1433.199951171875,market_intel,BUY,0.251,True,proxy flow +0.06 and momentum +0.73 (no real order-flow data)
+2026-11-25,CIPLA,1433.199951171875,risk_engine,HOLD,0.844,True,risk_score 0.16 (low)
+2026-11-25,CIPLA,1433.199951171875,liquidity_engine,HOLD,0.0,True,"sweep above 1,435.00 with CVD divergence"
+2026-11-25,CIPLA,1433.199951171875,market_mood,HOLD,0.141,True,market mood +0.14 (3/3 inputs)
+2026-11-25,CIPLA,1433.199951171875,regime_detector,BUY,0.116,True,"regime trend_up (ADX 22, EMA gap +0.8%)"
+2026-11-25,CIPLA,1433.199951171875,boss,HOLD,0.131,True,directional_score_floor;min_confidence
+2026-11-25,COALINDIA,385.0,market_intel,SELL,0.116,True,proxy flow -0.10 and momentum -0.30 (no real order-flow data)
+2026-11-25,COALINDIA,385.0,risk_engine,HOLD,0.649,True,risk_score 0.35 (moderate)
+2026-11-25,COALINDIA,385.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,COALINDIA,385.0,market_mood,HOLD,0.107,True,market mood +0.11 (3/3 inputs)
+2026-11-25,COALINDIA,385.0,regime_detector,SELL,0.172,True,"regime trend_down (ADX 23, EMA gap -2.1%)"
+2026-11-25,COALINDIA,385.0,boss,HOLD,0.087,True,directional_score_floor;min_confidence
+2026-11-25,DRREDDY,1398.0,market_intel,BUY,0.145,True,proxy flow +0.28 and momentum +0.29 (no real order-flow data)
+2026-11-25,DRREDDY,1398.0,risk_engine,HOLD,0.808,True,risk_score 0.19 (low)
+2026-11-25,DRREDDY,1398.0,liquidity_engine,HOLD,0.0,True,"sweep above 1,406.10 with CVD divergence"
+2026-11-25,DRREDDY,1398.0,market_mood,BUY,0.707,True,market mood +0.71 (3/3 inputs)
+2026-11-25,DRREDDY,1398.0,regime_detector,BUY,1.0,True,"regime trend_up (ADX 47, EMA gap +7.2%)"
+2026-11-25,DRREDDY,1398.0,boss,BUY,0.43,True,"score +0.34, agreement 100%"
+2026-11-25,EICHERMOT,8336.0,market_intel,BUY,0.226,True,proxy flow -0.08 and momentum +0.72 (no real order-flow data)
+2026-11-25,EICHERMOT,8336.0,risk_engine,HOLD,0.727,True,risk_score 0.27 (moderate)
+2026-11-25,EICHERMOT,8336.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,EICHERMOT,8336.0,market_mood,BUY,0.273,True,market mood +0.27 (3/3 inputs)
+2026-11-25,EICHERMOT,8336.0,regime_detector,BUY,0.976,True,"regime trend_up (ADX 40, EMA gap +3.1%)"
+2026-11-25,EICHERMOT,8336.0,boss,HOLD,0.337,True,min_confidence
+2026-11-25,ETERNAL,371.70001220703125,market_intel,BUY,0.158,True,proxy flow +0.14 and momentum +0.40 (no real order-flow data)
+2026-11-25,ETERNAL,371.70001220703125,risk_engine,HOLD,0.669,True,risk_score 0.33 (moderate)
+2026-11-25,ETERNAL,371.70001220703125,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,ETERNAL,371.70001220703125,market_mood,BUY,0.605,True,market mood +0.61 (3/3 inputs)
+2026-11-25,ETERNAL,371.70001220703125,regime_detector,BUY,0.411,True,"regime trend_up (ADX 28, EMA gap +10.4%)"
+2026-11-25,ETERNAL,371.70001220703125,boss,HOLD,0.293,True,min_confidence
+2026-11-25,GRASIM,3162.0,market_intel,BUY,0.189,True,proxy flow -0.17 and momentum +0.65 (no real order-flow data)
+2026-11-25,GRASIM,3162.0,risk_engine,HOLD,0.718,True,risk_score 0.28 (moderate)
+2026-11-25,GRASIM,3162.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,GRASIM,3162.0,market_mood,HOLD,0.049,True,market mood +0.05 (3/3 inputs)
+2026-11-25,GRASIM,3162.0,regime_detector,BUY,0.198,True,"regime trend_up (ADX 24, EMA gap +0.1%)"
+2026-11-25,GRASIM,3162.0,boss,HOLD,0.125,True,directional_score_floor;min_confidence
+2026-11-25,HCLTECH,1380.0,market_intel,HOLD,0.0,True,proxy flow +0.26 and momentum -0.13 (no real order-flow data)
+2026-11-25,HCLTECH,1380.0,risk_engine,HOLD,0.628,True,risk_score 0.37 (moderate)
+2026-11-25,HCLTECH,1380.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,HCLTECH,1380.0,market_mood,BUY,0.384,True,market mood +0.38 (3/3 inputs)
+2026-11-25,HCLTECH,1380.0,regime_detector,HOLD,0.0,True,"regime range (ADX 20, EMA gap +4.6%)"
+2026-11-25,HCLTECH,1380.0,boss,HOLD,0.163,True,directional_score_floor;min_confidence
+2026-11-25,HDFCBANK,846.2000122070312,market_intel,BUY,0.258,True,proxy flow +0.21 and momentum +0.67 (no real order-flow data)
+2026-11-25,HDFCBANK,846.2000122070312,risk_engine,HOLD,0.713,True,risk_score 0.29 (moderate)
+2026-11-25,HDFCBANK,846.2000122070312,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,HDFCBANK,846.2000122070312,market_mood,BUY,0.671,True,market mood +0.67 (3/3 inputs)
+2026-11-25,HDFCBANK,846.2000122070312,regime_detector,BUY,1.0,True,"regime trend_up (ADX 43, EMA gap +4.5%)"
+2026-11-25,HDFCBANK,846.2000122070312,boss,BUY,0.458,True,"score +0.33, agreement 100%"
+2026-11-25,HDFCLIFE,601.2999877929688,market_intel,BUY,0.202,True,proxy flow +0.23 and momentum +0.49 (no real order-flow data)
+2026-11-25,HDFCLIFE,601.2999877929688,risk_engine,HOLD,0.646,True,risk_score 0.35 (moderate)
+2026-11-25,HDFCLIFE,601.2999877929688,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,HDFCLIFE,601.2999877929688,market_mood,BUY,0.443,True,market mood +0.44 (3/3 inputs)
+2026-11-25,HDFCLIFE,601.2999877929688,regime_detector,BUY,0.549,True,"regime trend_up (ADX 31, EMA gap +1.6%)"
+2026-11-25,HDFCLIFE,601.2999877929688,boss,HOLD,0.292,True,min_confidence
+2026-11-25,HINDALCO,889.9000244140625,market_intel,HOLD,0.033,True,proxy flow +0.08 and momentum +0.06 (no real order-flow data)
+2026-11-25,HINDALCO,889.9000244140625,risk_engine,HOLD,0.488,True,risk_score 0.51 (elevated)
+2026-11-25,HINDALCO,889.9000244140625,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,HINDALCO,889.9000244140625,market_mood,HOLD,0.02,True,market mood -0.02 (3/3 inputs)
+2026-11-25,HINDALCO,889.9000244140625,regime_detector,SELL,0.28,True,"regime trend_down (ADX 26, EMA gap -3.5%)"
+2026-11-25,HINDALCO,889.9000244140625,boss,HOLD,0.109,True,directional_score_floor;min_confidence
+2026-11-25,HINDUNILVR,2141.800048828125,market_intel,BUY,0.228,True,proxy flow +0.08 and momentum +0.64 (no real order-flow data)
+2026-11-25,HINDUNILVR,2141.800048828125,risk_engine,HOLD,0.702,True,risk_score 0.30 (moderate)
+2026-11-25,HINDUNILVR,2141.800048828125,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,HINDUNILVR,2141.800048828125,market_mood,BUY,0.401,True,market mood +0.40 (3/3 inputs)
+2026-11-25,HINDUNILVR,2141.800048828125,regime_detector,SELL,0.472,True,"regime trend_down (ADX 29, EMA gap -0.0%)"
+2026-11-25,HINDUNILVR,2141.800048828125,boss,HOLD,0.172,True,directional_score_floor;min_confidence
+2026-11-25,ICICIBANK,1640.0,market_intel,BUY,0.254,True,proxy flow +0.19 and momentum +0.67 (no real order-flow data)
+2026-11-25,ICICIBANK,1640.0,risk_engine,HOLD,0.727,True,risk_score 0.27 (moderate)
+2026-11-25,ICICIBANK,1640.0,liquidity_engine,HOLD,0.0,True,"sweep above 1,645.00 with CVD divergence"
+2026-11-25,ICICIBANK,1640.0,market_mood,BUY,0.654,True,market mood +0.65 (3/3 inputs)
+2026-11-25,ICICIBANK,1640.0,regime_detector,BUY,1.0,True,"regime trend_up (ADX 53, EMA gap +8.3%)"
+2026-11-25,ICICIBANK,1640.0,boss,BUY,0.453,True,"score +0.35, agreement 100%"
+2026-11-25,INDIGO,5720.0,market_intel,BUY,0.252,True,proxy flow +0.09 and momentum +0.71 (no real order-flow data)
+2026-11-25,INDIGO,5720.0,risk_engine,HOLD,0.671,True,risk_score 0.33 (moderate)
+2026-11-25,INDIGO,5720.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,INDIGO,5720.0,market_mood,BUY,0.567,True,market mood +0.57 (3/3 inputs)
+2026-11-25,INDIGO,5720.0,regime_detector,BUY,0.53,True,"regime trend_up (ADX 31, EMA gap +5.9%)"
+2026-11-25,INDIGO,5720.0,boss,HOLD,0.338,True,min_confidence
+2026-11-25,INFY,1130.0,market_intel,HOLD,0.019,True,proxy flow +0.19 and momentum -0.04 (no real order-flow data)
+2026-11-25,INFY,1130.0,risk_engine,HOLD,0.567,True,risk_score 0.43 (moderate)
+2026-11-25,INFY,1130.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,INFY,1130.0,market_mood,BUY,0.238,True,market mood +0.24 (3/3 inputs)
+2026-11-25,INFY,1130.0,regime_detector,HOLD,0.0,True,"regime range (ADX 12, EMA gap +1.5%)"
+2026-11-25,INFY,1130.0,boss,HOLD,0.101,True,directional_score_floor;min_confidence
+2026-11-25,ITC,309.25,market_intel,BUY,0.206,True,proxy flow +0.12 and momentum +0.56 (no real order-flow data)
+2026-11-25,ITC,309.25,risk_engine,HOLD,0.774,True,risk_score 0.23 (low)
+2026-11-25,ITC,309.25,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,ITC,309.25,market_mood,BUY,0.64,True,market mood +0.64 (3/3 inputs)
+2026-11-25,ITC,309.25,regime_detector,BUY,0.788,True,"regime trend_up (ADX 36, EMA gap +3.1%)"
+2026-11-25,ITC,309.25,boss,BUY,0.392,True,"score +0.27, agreement 100%"
+2026-11-25,JIOFIN,222.85000610351562,market_intel,BUY,0.12,True,proxy flow -0.04 and momentum +0.38 (no real order-flow data)
+2026-11-25,JIOFIN,222.85000610351562,risk_engine,HOLD,0.594,True,risk_score 0.41 (moderate)
+2026-11-25,JIOFIN,222.85000610351562,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,JIOFIN,222.85000610351562,market_mood,HOLD,0.004,True,market mood +0.00 (3/3 inputs)
+2026-11-25,JIOFIN,222.85000610351562,regime_detector,SELL,0.364,True,"regime trend_down (ADX 27, EMA gap -2.8%)"
+2026-11-25,JIOFIN,222.85000610351562,boss,HOLD,0.087,True,directional_score_floor;min_confidence
+2026-11-25,JSWSTEEL,1302.5,market_intel,BUY,0.089,True,proxy flow +0.00 and momentum +0.27 (no real order-flow data)
+2026-11-25,JSWSTEEL,1302.5,risk_engine,HOLD,0.671,True,risk_score 0.33 (moderate)
+2026-11-25,JSWSTEEL,1302.5,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,JSWSTEEL,1302.5,market_mood,HOLD,0.159,True,market mood +0.16 (3/3 inputs)
+2026-11-25,JSWSTEEL,1302.5,regime_detector,BUY,0.1,True,"regime trend_up (ADX 20, EMA gap +3.0%)"
+2026-11-25,JSWSTEEL,1302.5,boss,HOLD,0.06,True,directional_score_floor;min_confidence
+2026-11-25,KOTAKBANK,509.0,market_intel,BUY,0.172,True,proxy flow +0.27 and momentum +0.38 (no real order-flow data)
+2026-11-25,KOTAKBANK,509.0,risk_engine,HOLD,0.759,True,risk_score 0.24 (low)
+2026-11-25,KOTAKBANK,509.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,KOTAKBANK,509.0,market_mood,BUY,0.752,True,market mood +0.75 (3/3 inputs)
+2026-11-25,KOTAKBANK,509.0,regime_detector,BUY,1.0,True,"regime trend_up (ADX 58, EMA gap +11.2%)"
+2026-11-25,KOTAKBANK,509.0,boss,BUY,0.451,True,"score +0.36, agreement 100%"
+2026-11-25,LT,4156.0,market_intel,BUY,0.228,True,proxy flow +0.20 and momentum +0.58 (no real order-flow data)
+2026-11-25,LT,4156.0,risk_engine,HOLD,0.803,True,risk_score 0.20 (low)
+2026-11-25,LT,4156.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,LT,4156.0,market_mood,HOLD,0.185,True,market mood +0.18 (3/3 inputs)
+2026-11-25,LT,4156.0,regime_detector,BUY,1.0,True,"regime trend_up (ADX 46, EMA gap +3.1%)"
+2026-11-25,LT,4156.0,boss,HOLD,0.331,True,min_confidence
+2026-11-25,M&M,3509.5,market_intel,BUY,0.216,True,proxy flow +0.09 and momentum +0.60 (no real order-flow data)
+2026-11-25,M&M,3509.5,risk_engine,HOLD,0.645,True,risk_score 0.36 (moderate)
+2026-11-25,M&M,3509.5,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,M&M,3509.5,market_mood,BUY,0.229,True,market mood +0.23 (3/3 inputs)
+2026-11-25,M&M,3509.5,regime_detector,BUY,1.0,True,"regime trend_up (ADX 50, EMA gap +4.2%)"
+2026-11-25,M&M,3509.5,boss,HOLD,0.327,True,min_confidence
+2026-11-25,MARUTI,14200.0,market_intel,BUY,0.278,True,proxy flow +0.12 and momentum +0.78 (no real order-flow data)
+2026-11-25,MARUTI,14200.0,risk_engine,HOLD,0.664,True,risk_score 0.34 (moderate)
+2026-11-25,MARUTI,14200.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,MARUTI,14200.0,market_mood,BUY,0.297,True,market mood +0.30 (3/3 inputs)
+2026-11-25,MARUTI,14200.0,regime_detector,BUY,1.0,True,"regime trend_up (ADX 43, EMA gap +1.2%)"
+2026-11-25,MARUTI,14200.0,boss,HOLD,0.366,True,directional_score_floor
+2026-11-25,MAXHEALTH,1076.300048828125,market_intel,BUY,0.235,True,proxy flow +0.13 and momentum +0.64 (no real order-flow data)
+2026-11-25,MAXHEALTH,1076.300048828125,risk_engine,HOLD,0.602,True,risk_score 0.40 (moderate)
+2026-11-25,MAXHEALTH,1076.300048828125,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,MAXHEALTH,1076.300048828125,market_mood,BUY,0.414,True,market mood +0.41 (3/3 inputs)
+2026-11-25,MAXHEALTH,1076.300048828125,regime_detector,BUY,0.96,True,"regime trend_up (ADX 39, EMA gap +0.0%)"
+2026-11-25,MAXHEALTH,1076.300048828125,boss,HOLD,0.375,True,directional_score_floor
+2026-11-25,NESTLEIND,1358.5,market_intel,BUY,0.114,True,proxy flow -0.09 and momentum +0.39 (no real order-flow data)
+2026-11-25,NESTLEIND,1358.5,risk_engine,HOLD,0.523,True,risk_score 0.48 (moderate)
+2026-11-25,NESTLEIND,1358.5,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,NESTLEIND,1358.5,market_mood,HOLD,0.009,True,market mood +0.01 (3/3 inputs)
+2026-11-25,NESTLEIND,1358.5,regime_detector,SELL,0.391,True,"regime trend_down (ADX 28, EMA gap -3.8%)"
+2026-11-25,NESTLEIND,1358.5,boss,HOLD,0.094,True,directional_score_floor;min_confidence
+2026-11-25,NTPC,318.0,market_intel,BUY,0.153,True,proxy flow +0.04 and momentum +0.44 (no real order-flow data)
+2026-11-25,NTPC,318.0,risk_engine,HOLD,0.692,True,risk_score 0.31 (moderate)
+2026-11-25,NTPC,318.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,NTPC,318.0,market_mood,HOLD,0.047,True,market mood +0.05 (3/3 inputs)
+2026-11-25,NTPC,318.0,regime_detector,HOLD,0.0,True,"regime range (ADX 18, EMA gap -2.5%)"
+2026-11-25,NTPC,318.0,boss,HOLD,0.061,True,directional_score_floor;min_confidence
+2026-11-25,ONGC,222.0,market_intel,HOLD,0.022,True,proxy flow -0.00 and momentum +0.07 (no real order-flow data)
+2026-11-25,ONGC,222.0,risk_engine,HOLD,0.731,True,risk_score 0.27 (moderate)
+2026-11-25,ONGC,222.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,ONGC,222.0,market_mood,HOLD,0.084,True,market mood +0.08 (3/3 inputs)
+2026-11-25,ONGC,222.0,regime_detector,HOLD,0.0,True,"regime range (ADX 15, EMA gap -2.2%)"
+2026-11-25,ONGC,222.0,boss,HOLD,0.0,True,directional_score_floor;min_confidence
+2026-11-25,POWERGRID,266.75,market_intel,BUY,0.151,True,proxy flow -0.00 and momentum +0.45 (no real order-flow data)
+2026-11-25,POWERGRID,266.75,risk_engine,HOLD,0.691,True,risk_score 0.31 (moderate)
+2026-11-25,POWERGRID,266.75,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,POWERGRID,266.75,market_mood,HOLD,0.115,True,market mood +0.12 (3/3 inputs)
+2026-11-25,POWERGRID,266.75,regime_detector,HOLD,0.0,True,"regime range (ADX 19, EMA gap -1.5%)"
+2026-11-25,POWERGRID,266.75,boss,HOLD,0.06,True,directional_score_floor;min_confidence
+2026-11-25,RELIANCE,1373.9000244140625,market_intel,BUY,0.239,True,proxy flow +0.27 and momentum +0.58 (no real order-flow data)
+2026-11-25,RELIANCE,1373.9000244140625,risk_engine,HOLD,0.659,True,risk_score 0.34 (moderate)
+2026-11-25,RELIANCE,1373.9000244140625,liquidity_engine,HOLD,0.0,True,"sweep above 1,390.00 with CVD divergence"
+2026-11-25,RELIANCE,1373.9000244140625,market_mood,BUY,0.286,True,market mood +0.29 (3/3 inputs)
+2026-11-25,RELIANCE,1373.9000244140625,regime_detector,BUY,0.974,True,"regime trend_up (ADX 39, EMA gap +2.6%)"
+2026-11-25,RELIANCE,1373.9000244140625,boss,HOLD,0.345,True,min_confidence
+2026-11-25,SBILIFE,1823.9000244140625,market_intel,BUY,0.14,True,proxy flow +0.08 and momentum +0.38 (no real order-flow data)
+2026-11-25,SBILIFE,1823.9000244140625,risk_engine,HOLD,0.729,True,risk_score 0.27 (moderate)
+2026-11-25,SBILIFE,1823.9000244140625,liquidity_engine,HOLD,0.0,True,"sweep above 1,839.40 with CVD divergence"
+2026-11-25,SBILIFE,1823.9000244140625,market_mood,HOLD,0.191,True,market mood +0.19 (3/3 inputs)
+2026-11-25,SBILIFE,1823.9000244140625,regime_detector,BUY,0.906,True,"regime trend_up (ADX 38, EMA gap +0.3%)"
+2026-11-25,SBILIFE,1823.9000244140625,boss,HOLD,0.272,True,directional_score_floor;min_confidence
+2026-11-25,SBIN,1138.1500244140625,market_intel,BUY,0.364,True,proxy flow +0.32 and momentum +0.93 (no real order-flow data)
+2026-11-25,SBIN,1138.1500244140625,risk_engine,HOLD,0.742,True,risk_score 0.26 (moderate)
+2026-11-25,SBIN,1138.1500244140625,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,SBIN,1138.1500244140625,market_mood,BUY,0.449,True,market mood +0.45 (3/3 inputs)
+2026-11-25,SBIN,1138.1500244140625,regime_detector,BUY,1.0,True,"regime trend_up (ADX 54, EMA gap +5.0%)"
+2026-11-25,SBIN,1138.1500244140625,boss,BUY,0.435,True,"score +0.33, agreement 100%"
+2026-11-25,SHRIRAMFIN,989.9500122070312,market_intel,BUY,0.18,True,proxy flow -0.05 and momentum +0.57 (no real order-flow data)
+2026-11-25,SHRIRAMFIN,989.9500122070312,risk_engine,HOLD,0.414,True,risk_score 0.59 (elevated)
+2026-11-25,SHRIRAMFIN,989.9500122070312,liquidity_engine,SELL,0.6,True,"a sweep above 1,015.00 with no clear absorption (1 flow confirmations)"
+2026-11-25,SHRIRAMFIN,989.9500122070312,market_mood,HOLD,0.012,True,market mood -0.01 (3/3 inputs)
+2026-11-25,SHRIRAMFIN,989.9500122070312,regime_detector,SELL,0.613,True,"regime trend_down (ADX 32, EMA gap -1.8%)"
+2026-11-25,SHRIRAMFIN,989.9500122070312,boss,HOLD,0.269,True,directional_score_floor;min_confidence
+2026-11-25,SUNPHARMA,1901.0,market_intel,BUY,0.255,True,proxy flow +0.08 and momentum +0.73 (no real order-flow data)
+2026-11-25,SUNPHARMA,1901.0,risk_engine,HOLD,0.783,True,risk_score 0.22 (low)
+2026-11-25,SUNPHARMA,1901.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,SUNPHARMA,1901.0,market_mood,HOLD,0.137,True,market mood +0.14 (3/3 inputs)
+2026-11-25,SUNPHARMA,1901.0,regime_detector,BUY,0.651,True,"regime trend_up (ADX 33, EMA gap +0.6%)"
+2026-11-25,SUNPHARMA,1901.0,boss,HOLD,0.26,True,directional_score_floor;min_confidence
+2026-11-25,TATACONSUM,1185.800048828125,market_intel,BUY,0.281,True,proxy flow +0.35 and momentum +0.67 (no real order-flow data)
+2026-11-25,TATACONSUM,1185.800048828125,risk_engine,HOLD,0.699,True,risk_score 0.30 (moderate)
+2026-11-25,TATACONSUM,1185.800048828125,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,TATACONSUM,1185.800048828125,market_mood,BUY,0.598,True,market mood +0.60 (3/3 inputs)
+2026-11-25,TATACONSUM,1185.800048828125,regime_detector,BUY,1.0,True,"regime trend_up (ADX 42, EMA gap +3.5%)"
+2026-11-25,TATACONSUM,1185.800048828125,boss,BUY,0.447,True,"score +0.30, agreement 100%"
+2026-11-25,TATASTEEL,159.3000030517578,market_intel,SELL,0.187,True,proxy flow -0.37 and momentum -0.38 (no real order-flow data)
+2026-11-25,TATASTEEL,159.3000030517578,risk_engine,HOLD,0.317,True,risk_score 0.68 (elevated)
+2026-11-25,TATASTEEL,159.3000030517578,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,TATASTEEL,159.3000030517578,market_mood,HOLD,0.017,True,market mood -0.02 (3/3 inputs)
+2026-11-25,TATASTEEL,159.3000030517578,regime_detector,SELL,0.248,True,"regime trend_down (ADX 25, EMA gap -3.2%)"
+2026-11-25,TATASTEEL,159.3000030517578,boss,HOLD,0.133,True,directional_score_floor;min_confidence
+2026-11-25,TCS,2517.300048828125,market_intel,HOLD,0.021,True,proxy flow +0.19 and momentum -0.03 (no real order-flow data)
+2026-11-25,TCS,2517.300048828125,risk_engine,HOLD,0.636,True,risk_score 0.36 (moderate)
+2026-11-25,TCS,2517.300048828125,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,TCS,2517.300048828125,market_mood,BUY,0.501,True,market mood +0.50 (3/3 inputs)
+2026-11-25,TCS,2517.300048828125,regime_detector,BUY,0.193,True,"regime trend_up (ADX 24, EMA gap +3.7%)"
+2026-11-25,TCS,2517.300048828125,boss,HOLD,0.224,True,directional_score_floor;min_confidence
+2026-11-25,TECHM,1801.199951171875,market_intel,HOLD,0.048,True,proxy flow +0.25 and momentum +0.02 (no real order-flow data)
+2026-11-25,TECHM,1801.199951171875,risk_engine,HOLD,0.617,True,risk_score 0.38 (moderate)
+2026-11-25,TECHM,1801.199951171875,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,TECHM,1801.199951171875,market_mood,BUY,0.637,True,market mood +0.64 (3/3 inputs)
+2026-11-25,TECHM,1801.199951171875,regime_detector,BUY,0.278,True,"regime trend_up (ADX 26, EMA gap +8.2%)"
+2026-11-25,TECHM,1801.199951171875,boss,HOLD,0.294,True,min_confidence
+2026-11-25,TITAN,4686.60009765625,market_intel,BUY,0.161,True,proxy flow -0.04 and momentum +0.50 (no real order-flow data)
+2026-11-25,TITAN,4686.60009765625,risk_engine,HOLD,0.618,True,risk_score 0.38 (moderate)
+2026-11-25,TITAN,4686.60009765625,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,TITAN,4686.60009765625,market_mood,HOLD,0.01,True,market mood +0.01 (3/3 inputs)
+2026-11-25,TITAN,4686.60009765625,regime_detector,BUY,0.448,True,"regime trend_up (ADX 29, EMA gap +1.1%)"
+2026-11-25,TITAN,4686.60009765625,boss,HOLD,0.173,True,directional_score_floor;min_confidence
+2026-11-25,TMPV,262.1000061035156,market_intel,HOLD,0.045,True,proxy flow -0.22 and momentum -0.03 (no real order-flow data)
+2026-11-25,TMPV,262.1000061035156,risk_engine,HOLD,0.222,True,risk_score 0.78 (elevated)
+2026-11-25,TMPV,262.1000061035156,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,TMPV,262.1000061035156,market_mood,HOLD,0.026,True,market mood -0.03 (3/3 inputs)
+2026-11-25,TMPV,262.1000061035156,regime_detector,SELL,0.241,True,"regime trend_down (ADX 25, EMA gap -9.9%)"
+2026-11-25,TMPV,262.1000061035156,boss,HOLD,0.094,True,directional_score_floor;min_confidence
+2026-11-25,TRENT,3319.60009765625,market_intel,BUY,0.167,True,proxy flow +0.14 and momentum +0.43 (no real order-flow data)
+2026-11-25,TRENT,3319.60009765625,risk_engine,HOLD,0.676,True,risk_score 0.32 (moderate)
+2026-11-25,TRENT,3319.60009765625,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,TRENT,3319.60009765625,market_mood,BUY,0.611,True,market mood +0.61 (3/3 inputs)
+2026-11-25,TRENT,3319.60009765625,regime_detector,BUY,0.726,True,"regime trend_up (ADX 35, EMA gap +5.5%)"
+2026-11-25,TRENT,3319.60009765625,boss,BUY,0.359,True,"score +0.24, agreement 100%"
+2026-11-25,ULTRACEMCO,12800.0,market_intel,BUY,0.173,True,proxy flow +0.22 and momentum +0.41 (no real order-flow data)
+2026-11-25,ULTRACEMCO,12800.0,risk_engine,HOLD,0.764,True,risk_score 0.24 (low)
+2026-11-25,ULTRACEMCO,12800.0,liquidity_engine,HOLD,0.0,True,no liquidity sweep
+2026-11-25,ULTRACEMCO,12800.0,market_mood,BUY,0.525,True,market mood +0.52 (3/3 inputs)
+2026-11-25,ULTRACEMCO,12800.0,regime_detector,BUY,1.0,True,"regime trend_up (ADX 49, EMA gap +5.4%)"
+2026-11-25,ULTRACEMCO,12800.0,boss,BUY,0.391,True,"score +0.30, agreement 100%"
